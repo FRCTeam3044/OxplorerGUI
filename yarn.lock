@@ -3957,7 +3957,7 @@ java-bridge-linux-arm64-gnu@2.4.0:
   resolved "https://registry.yarnpkg.com/java-bridge-linux-arm64-gnu/-/java-bridge-linux-arm64-gnu-2.4.0.tgz#0b9710309a6cd0e3688cf7cbd6e4f896ea68614a"
   integrity sha512-5IyZ5t6JDxEgjsOazhS+ZyBFjpSKN2agNFuCuW+R8wQmZMj459kXhsIZEHujtp7MobmMXc1dTcwaV8n3mqaR1w==
 
-java-bridge-linux-x64-gnu@2.4.0, java-bridge-linux-x64-gnu@^2.4.0:
+java-bridge-linux-x64-gnu@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/java-bridge-linux-x64-gnu/-/java-bridge-linux-x64-gnu-2.4.0.tgz#331368f5e112c8c6d1483721c6bd003530c674f0"
   integrity sha512-9V6kRmEbX1FFGqzRWr+NK9jxf9otiw9wCuLBoLBj/iErAjQpia6l061Z7vydt5c4Yu/lk107oBUo/Hsbtc/syQ==
