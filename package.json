@@ -3,7 +3,7 @@
   "productName": "gui",
   "version": "1.0.0",
   "description": "My Electron application description",
-  "main": ".webpack/main",
+  "main": ".webpack/x64/main",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -42,7 +42,23 @@
   "dependencies": {
     "@types/java": "^0.9.5",
     "copy-webpack-plugin": "^12.0.2",
+    "electron-forge-maker-appimage": "^24.12.0",
     "electron-squirrel-startup": "^1.0.0",
     "java": "^0.14.0"
+  },
+  "config": {
+    "forge": {
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "linux"
+          ]
+        }
+      ]
+    }
+  },
+  "resolutions": {
+    "jackspeak": "2.1.1"
   }
 }
