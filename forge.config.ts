@@ -11,10 +11,14 @@ import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
+    asar: {
+      unpack: 
+          "{node_modules/java-bridge/**,node_modules/java-bridge-*/**}"
+    }
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  //makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [new MakerZIP({}, ["linux"])],
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
@@ -33,6 +37,13 @@ const config: ForgeConfig = {
         ],
       },
     }),
+    {
+      name: "@timfish/forge-externals-plugin",
+      config: {
+        externals: ["java-bridge"],
+        includeDeps: true
+      }
+    }
   ],
 };
 

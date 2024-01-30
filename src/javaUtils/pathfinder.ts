@@ -1,28 +1,30 @@
-import java, { vertexToJava } from "./javaUtils";
-import { Vertex } from "./structures";
-
-let Field = java.import("me.nabdev.pathfinding.utilities.FieldLoader$Field");
+import { appendClasspath, ensureJvm, importClass } from 'java-bridge';
+import { Vertex } from './structures';
+appendClasspath(__dirname + "/oxplorer-0.7.1-all.jar");
+ensureJvm({
+  isPackagedElectron: true,
+});
+let JVertex = importClass("me.nabdev.pathfinding.structures.Vertex");
+let Field = importClass("me.nabdev.pathfinding.utilities.FieldLoader$Field");
+let PathfinderBuilder = importClass("me.nabdev.pathfinding.PathfinderBuilder");
 
 export const generatePath = (start: Vertex, end: Vertex) => {
-  let pathfinderBuilder = java.newInstanceSync(
-    "me.nabdev.pathfinding.PathfinderBuilder",
+  let pathfinderBuilder = new PathfinderBuilder(
     Field.CRESCENDO_2024
   );
   let pathfinder = null;
-  let path = null;
+  let path = [];
 
   pathfinder = pathfinderBuilder.buildSync();
 
   let pathRaw = pathfinder.generatePathSync(
-    vertexToJava(start),
-    vertexToJava(end)
+    new JVertex(start.x, start.y),
+    new JVertex(end.x, end.y)
   );
   let pathDoubleArr = pathRaw.toDoubleArraySync();
 
-  path = [];
-
   // TODO: Why is this necessary?
-  pathDoubleArr[0] = pathRaw.getStartSync().x;
+  //pathDoubleArr[0] = pathRaw.getStartSync().x;
 
   for (let i = 0; i < pathDoubleArr.length; i += 3) {
     path.push({ x: pathDoubleArr[i], y: pathDoubleArr[i + 1] });

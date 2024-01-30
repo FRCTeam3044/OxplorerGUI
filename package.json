@@ -1,9 +1,9 @@
 {
-  "name": "gui",
-  "productName": "gui",
+  "name": "oxplorer-gui",
+  "productName": "Oxplorer GUI",
   "version": "1.0.0",
   "description": "My Electron application description",
-  "main": ".webpack/x64/main",
+  "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -40,23 +40,15 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
+    "@timfish/forge-externals-plugin": "^0.2.1",
     "@types/java": "^0.9.5",
+    "@types/webpack-node-externals": "^3.0.4",
     "copy-webpack-plugin": "^12.0.2",
     "electron-forge-maker-appimage": "^24.12.0",
     "electron-squirrel-startup": "^1.0.0",
-    "java": "^0.14.0"
-  },
-  "config": {
-    "forge": {
-      "makers": [
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "linux"
-          ]
-        }
-      ]
-    }
+    "java-bridge": "^2.4.0",
+    "java-bridge-linux-x64-gnu": "^2.4.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "resolutions": {
     "jackspeak": "2.1.1"
