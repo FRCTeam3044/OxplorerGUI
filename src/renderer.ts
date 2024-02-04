@@ -34,6 +34,9 @@ function render() {
   canvas.height = height * window.devicePixelRatio;
   context.scale(window.devicePixelRatio, window.devicePixelRatio);
   context.clearRect(0, 0, width, height);
+  context.fillStyle = "#202020";
+  context.rect(0, 0, width, height);
+  context.fill();
   canvas.style.transform = "translate(-50%, -50%)";
 
   let fieldWidth = gameData.bottomRight[0] - gameData.topLeft[0];
@@ -111,7 +114,7 @@ function render() {
     return positionPixels;
   };
 
-  for(let v of currentPath) {
+  for (let v of currentPath) {
     drawCircle(calcCoordinates([v.x, v.y]), 3 * pixelsPerInch, "red");
   }
 }

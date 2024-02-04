@@ -1,12 +1,21 @@
+:root {
+  --background-light-1: #f2f2f2;
+  --background-dark-1: #252525;
+}
+
+html,
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  background-color: var(--background-dark-1);
+  margin: 0;
+  padding: 0;
 }
 
 .field {
   position: relative;
   width: 100%;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 250px);
 }
 
 div.canvas-container {
