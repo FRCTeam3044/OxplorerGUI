@@ -1,6 +1,6 @@
-import { appendClasspath, ensureJvm, importClass } from 'java-bridge';
-import { Vertex } from './structures';
-appendClasspath(__dirname + "/oxplorer-0.7.1-all.jar");
+import { appendClasspath, ensureJvm, importClass } from "java-bridge";
+import { Vertex } from "./structures";
+appendClasspath(__dirname + "/oxplorer-0.8.1-all.jar");
 ensureJvm({
   isPackagedElectron: true,
 });
@@ -9,9 +9,7 @@ let Field = importClass("me.nabdev.pathfinding.utilities.FieldLoader$Field");
 let PathfinderBuilder = importClass("me.nabdev.pathfinding.PathfinderBuilder");
 
 export const generatePath = (start: Vertex, end: Vertex) => {
-  let pathfinderBuilder = new PathfinderBuilder(
-    Field.CRESCENDO_2024
-  );
+  let pathfinderBuilder = new PathfinderBuilder(Field.CRESCENDO_2024);
   let pathfinder = null;
   let path = [];
 
@@ -22,9 +20,6 @@ export const generatePath = (start: Vertex, end: Vertex) => {
     new JVertex(end.x, end.y)
   );
   let pathDoubleArr = pathRaw.toDoubleArraySync();
-
-  // TODO: Why is this necessary?
-  //pathDoubleArr[0] = pathRaw.getStartSync().x;
 
   for (let i = 0; i < pathDoubleArr.length; i += 3) {
     path.push({ x: pathDoubleArr[i], y: pathDoubleArr[i + 1] });
