@@ -11,16 +11,74 @@ declare global {
   }
 }
 
-const canvas = document.getElementsByClassName(
-  "field-canvas"
-)[0] as HTMLCanvasElement;
+const canvas = document.querySelector(".field-canvas") as HTMLCanvasElement;
+const container = document.querySelector(".canvas-container") as HTMLDivElement;
+const fieldSelect = document.querySelector("#field") as HTMLSelectElement;
+const injectPointsCheckbox = document.querySelector(
+  "#injectPoints"
+) as HTMLInputElement;
+const normalizeCornersCheckbox = document.querySelector(
+  "#normalizeCorners"
+) as HTMLInputElement;
+const robotLengthInput = document.querySelector(
+  "#robotLength"
+) as HTMLInputElement;
+
+const startXInput = document.querySelector("#startX") as HTMLInputElement;
+const startYInput = document.querySelector("#startY") as HTMLInputElement;
+const straightawayPointSpacingInput = document.querySelector(
+  "#straightawayPointSpacing"
+) as HTMLInputElement;
+const splitPercentSlider = document.querySelector(
+  "#splitPercent"
+) as HTMLInputElement;
+const splitPercentValueSpan = document.querySelector(
+  "#splitPercentValue"
+) as HTMLSpanElement;
+
+const robotWidthInput = document.querySelector(
+  "#robotWidth"
+) as HTMLInputElement;
+const targetXInput = document.querySelector("#targetX") as HTMLInputElement;
+const targetYInput = document.querySelector("#targetY") as HTMLInputElement;
+const cornerPointSpacingInput = document.querySelector(
+  "#cornerPointSpacing"
+) as HTMLInputElement;
+const cornerSizeInput = document.querySelector(
+  "#cornerSize"
+) as HTMLInputElement;
+const robotColorInput = document.querySelector(
+  "#robotColor"
+) as HTMLInputElement;
+const pathRegenInputs = [
+  injectPointsCheckbox,
+  normalizeCornersCheckbox,
+  startXInput,
+  startYInput,
+  targetXInput,
+  targetYInput,
+  robotLengthInput,
+  robotWidthInput,
+  straightawayPointSpacingInput,
+  splitPercentSlider,
+  cornerPointSpacingInput,
+  cornerSizeInput,
+  robotColorInput,
+];
+
+splitPercentSlider.oninput = () => {
+  splitPercentValueSpan.innerText = (parseFloat(splitPercentSlider.value) * 100)
+    .toFixed(0)
+    .toString();
+};
+
 const context = canvas.getContext("2d");
 const image = document.createElement("img");
 canvas.appendChild(image);
 image.src = "/assets/2024.png";
-const container = document.querySelector(".canvas-container") as HTMLDivElement;
 
 const gameData = CRESCENDO_2024;
+let currentPath: Vertex[] = [];
 
 image.onload = () => {
   setInterval(render, 1000 / 60);
@@ -137,11 +195,8 @@ function drawCircle(
   context.closePath();
 }
 
-const generatePathButton = document.getElementById("generate-path");
-let currentPath: Vertex[] = [];
-
-generatePathButton.addEventListener("click", async () => {
+(async () => {
   let start = new Vertex(5, 3);
   let end = new Vertex(6, 4);
   currentPath = await window.api.generatePath(start, end);
-});
+})();
