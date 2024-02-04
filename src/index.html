@@ -1,19 +1,84 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Oxplorer</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Oxplorer</title>
-</head>
-
-<body>
-  <div class="field">
-      <div class="canvas-container" style="position:relative; z-index: 3; user-select: none">
-        <canvas class="field-canvas"></canvas>
+  <body>
+    <div class="container">
+      <div class="field">
+        <div
+          class="canvas-container"
+          style="position: relative; z-index: 3; user-select: none"
+        >
+          <canvas class="field-canvas"></canvas>
+        </div>
       </div>
-  </div>
 
-  <button id="generate-path">Generate Path</button>
-</body>
+      <!-- List of parameters: -->
+      <!-- Group 1: Title "Straightaways" Inject points (boolean), Point spacing, -->
+      <!-- Group 2: Title "Corners" Point spacing, Split percent, Cornor Size, Normalize Corners -->
+      <!-- Group 3: Title "Robot Setup" robot length, robot width, robot color -->
+      <!-- Also include button to generate in group 1 -->
+      <table class="config">
+        <tr>
+          <td>
+            <h2>Point Spacing</h2>
+          </td>
+          <td>
+            <h2>Corners</h2>
+          </td>
+          <td>
+            <h2>Robot Setup</h2>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="injectPoints">Inject Points</label>
+            <input type="checkbox" id="injectPoints" />
+          </td>
 
+          <td>
+            <label for="normalizeCorners">Normalize Corners</label>
+            <input type="checkbox" id="normalizeCorners" />
+          </td>
+          <td>
+            <label for="robotLength">Robot Length</label>
+            <input type="number" id="robotLength" value="0.5" />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="straightawayPointSpacing"
+              >Straightaway Point Spacing</label
+            >
+            <input type="number" id="straightawayPointSpacing" value="0.5" />
+          </td>
+          <td>
+            <label for="splitPercent">Split Percent</label>
+            <input type="number" id="splitPercent" value="0.5" />
+          </td>
+          <td>
+            <label for="robotWidth">Robot Width</label>
+            <input type="number" id="robotWidth" value="0.5" />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="cornerPointSpacing">Corner Point Spacing</label>
+            <input type="number" id="cornerPointSpacing" value="0.5" />
+          </td>
+          <td>
+            <label for="cornerSize">Corner Size</label>
+            <input type="number" id="cornerSize" value="0.5" />
+          </td>
+          <td>
+            <label for="robotColor">Robot Color</label>
+            <input type="color" id="robotColor" value="#000000" />
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
 </html>
