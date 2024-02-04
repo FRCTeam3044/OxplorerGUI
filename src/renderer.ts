@@ -111,7 +111,9 @@ function render() {
     return positionPixels;
   };
 
-  drawCircle(calcCoordinates([1, 1]), 10 * pixelsPerInch, "blue");
+  for(let v of currentPath) {
+    drawCircle(calcCoordinates([v.x, v.y]), 3 * pixelsPerInch, "red");
+  }
 }
 
 function drawCircle(
@@ -133,11 +135,10 @@ function drawCircle(
 }
 
 const generatePathButton = document.getElementById("generate-path");
-const currentPath = document.getElementById("current-path");
+let currentPath: Vertex[] = [];
 
 generatePathButton.addEventListener("click", async () => {
   let start = new Vertex(5, 3);
   let end = new Vertex(6, 4);
-  let path = await window.api.generatePath(start, end);
-  console.log(path);
+  currentPath = await window.api.generatePath(start, end);
 });
