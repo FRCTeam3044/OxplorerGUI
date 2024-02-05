@@ -7,6 +7,14 @@ declare global {
   interface Window {
     api: {
       generatePath: (start: Vertex, target: Vertex) => Promise<Vertex[]>;
+      setPointSpacing: (spacing: number) => void;
+      setCornerPointSpacing: (spacing: number) => void;
+      setCornerDist: (distance: number) => void;
+      setInjectPoints: (inject: boolean) => void;
+      setNormalizeCorners: (normalize: boolean) => void;
+      setCornerSplitPercent: (percent: number) => void;
+      setRobotLength: (height: number) => void;
+      setRobotWidth: (width: number) => void;
     };
   }
 }
@@ -50,27 +58,64 @@ const cornerSizeInput = document.querySelector(
 const robotColorInput = document.querySelector(
   "#robotColor"
 ) as HTMLInputElement;
-const pathRegenInputs = [
-  injectPointsCheckbox,
-  normalizeCornersCheckbox,
-  startXInput,
-  startYInput,
-  targetXInput,
-  targetYInput,
-  robotLengthInput,
-  robotWidthInput,
-  straightawayPointSpacingInput,
-  splitPercentSlider,
-  cornerPointSpacingInput,
-  cornerSizeInput,
-  robotColorInput,
-];
+
+injectPointsCheckbox.onchange = () => {
+  window.api.setInjectPoints(injectPointsCheckbox.checked);
+  regeneratePath();
+};
+
+normalizeCornersCheckbox.onchange = () => {
+  window.api.setNormalizeCorners(normalizeCornersCheckbox.checked);
+  regeneratePath();
+};
+
+robotLengthInput.onchange = () => {
+  window.api.setRobotLength(parseFloat(robotLengthInput.value));
+  regeneratePath();
+};
+
+robotWidthInput.onchange = () => {
+  window.api.setRobotWidth(parseFloat(robotWidthInput.value));
+  regeneratePath();
+};
+
+straightawayPointSpacingInput.onchange = () => {
+  window.api.setPointSpacing(parseFloat(straightawayPointSpacingInput.value));
+  regeneratePath();
+};
+
+cornerPointSpacingInput.onchange = () => {
+  window.api.setCornerPointSpacing(parseFloat(cornerPointSpacingInput.value));
+  regeneratePath();
+};
+
+cornerSizeInput.onchange = () => {
+  window.api.setCornerDist(parseFloat(cornerSizeInput.value));
+  regeneratePath();
+};
 
 splitPercentSlider.oninput = () => {
   splitPercentValueSpan.innerText = (parseFloat(splitPercentSlider.value) * 100)
     .toFixed(0)
     .toString();
+  window.api.setCornerSplitPercent(parseFloat(splitPercentSlider.value));
+  regeneratePath();
 };
+
+let pathInputs = [startXInput, startYInput, targetXInput, targetYInput];
+for (let input of pathInputs) {
+  input.onchange = () => {
+    currentStart = new Vertex(
+      parseFloat(startXInput.value),
+      parseFloat(startYInput.value)
+    );
+    currentEnd = new Vertex(
+      parseFloat(targetXInput.value),
+      parseFloat(targetYInput.value)
+    );
+    regeneratePath();
+  };
+}
 
 const context = canvas.getContext("2d");
 const image = document.createElement("img");
@@ -78,6 +123,8 @@ canvas.appendChild(image);
 image.src = "/assets/2024.png";
 
 const gameData = CRESCENDO_2024;
+let currentStart = new Vertex(4, 3);
+let currentEnd = new Vertex(14, 6);
 let currentPath: Vertex[] = [];
 
 image.onload = () => {
@@ -195,8 +242,8 @@ function drawCircle(
   context.closePath();
 }
 
-(async () => {
-  let start = new Vertex(5, 3);
-  let end = new Vertex(6, 4);
-  currentPath = await window.api.generatePath(start, end);
-})();
+async function regeneratePath() {
+  currentPath = await window.api.generatePath(currentStart, currentEnd);
+}
+
+regeneratePath();
