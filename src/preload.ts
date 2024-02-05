@@ -31,4 +31,22 @@ contextBridge.exposeInMainWorld("api", {
   setRobotWidth: (width: number) => {
     ipcRenderer.invoke("setRobotWidth", width);
   },
+  getPointSpacing: () => {
+    return ipcRenderer.invoke("getPointSpacing");
+  },
+  getCornerPointSpacing: () => {
+    return ipcRenderer.invoke("getCornerPointSpacing");
+  },
+  getCornerDist: () => {
+    return ipcRenderer.invoke("getCornerDist");
+  },
+  getInjectPoints: () => {
+    return ipcRenderer.invoke("getInjectPoints");
+  },
+  getNormalizeCorners: () => {
+    return ipcRenderer.invoke("getNormalizeCorners");
+  },
+  getCornerSplitPercent: () => {
+    return ipcRenderer.invoke("getCornerSplitPercent");
+  },
 });

@@ -1,6 +1,12 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import {
   generatePath,
+  getCornerDist,
+  getCornerPointSpacing,
+  getCornerSplitPercent,
+  getInjectPoints,
+  getNormalizeCorners,
+  getPointSpacing,
   setCornerDist,
   setCornerPointSpacing,
   setCornerSplitPercent,
@@ -82,7 +88,6 @@ ipcMain.handle("setCornerDist", async (event, distance: number) => {
 });
 
 ipcMain.handle("setInjectPoints", async (event, inject: boolean) => {
-  console.log("Inject points: ", inject);
   return setInjectPoints(inject);
 });
 
@@ -100,4 +105,28 @@ ipcMain.handle("setRobotLength", async (event, height: number) => {
 
 ipcMain.handle("setRobotWidth", async (event, width: number) => {
   return setRobotWidth(width);
+});
+
+ipcMain.handle("getPointSpacing", async (event) => {
+  return getPointSpacing();
+});
+
+ipcMain.handle("getCornerPointSpacing", async (event) => {
+  return getCornerPointSpacing();
+});
+
+ipcMain.handle("getCornerDist", async (event) => {
+  return getCornerDist();
+});
+
+ipcMain.handle("getInjectPoints", async (event) => {
+  return getInjectPoints();
+});
+
+ipcMain.handle("getNormalizeCorners", async (event) => {
+  return getNormalizeCorners();
+});
+
+ipcMain.handle("getCornerSplitPercent", async (event) => {
+  return getCornerSplitPercent();
 });

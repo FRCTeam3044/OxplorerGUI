@@ -64,3 +64,27 @@ export const setRobotWidth = (width: number) => {
   pathfinderBuilder.setRobotWidthSync(width);
   pathfinder = pathfinderBuilder.buildSync();
 };
+
+export const getPointSpacing = () => {
+  return pathfinder.getPointSpacingSync();
+};
+
+export const getCornerPointSpacing = () => {
+  return pathfinder.getCornerPointSpacingSync();
+};
+
+export const getCornerDist = () => {
+  return pathfinder.getCornerDistSync();
+};
+
+export const getInjectPoints = () => {
+  return pathfinder.getInjectPointsSync();
+};
+
+export const getNormalizeCorners = () => {
+  return pathfinder.getNormalizeCornersSync();
+};
+
+export const getCornerSplitPercent = () => {
+  return pathfinder.getCornerSplitPercentSync();
+};

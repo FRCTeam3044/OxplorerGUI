@@ -15,6 +15,12 @@ declare global {
       setCornerSplitPercent: (percent: number) => void;
       setRobotLength: (height: number) => void;
       setRobotWidth: (width: number) => void;
+      getCornerPointSpacing: () => Promise<number>;
+      getPointSpacing: () => Promise<number>;
+      getCornerDist: () => Promise<number>;
+      getInjectPoints: () => Promise<boolean>;
+      getNormalizeCorners: () => Promise<boolean>;
+      getCornerSplitPercent: () => Promise<number>;
     };
   }
 }
@@ -218,9 +224,16 @@ function render() {
     }
     return positionPixels;
   };
-
+  context.strokeStyle = "#eb9800";
+  context.lineWidth = 2.5 * pixelsPerInch;
+  context.beginPath();
   for (let v of currentPath) {
-    drawCircle(calcCoordinates([v.x, v.y]), 3 * pixelsPerInch, "red");
+    //drawCircle(calcCoordinates([v.x, v.y]), 3 * pixelsPerInch, "red");
+    context.lineTo(...calcCoordinates([v.x, v.y]));
+  }
+  context.stroke();
+  for (let v of currentPath) {
+    drawCircle(calcCoordinates([v.x, v.y]), 2.5 * pixelsPerInch, "red");
   }
 }
 
@@ -246,4 +259,20 @@ async function regeneratePath() {
   currentPath = await window.api.generatePath(currentStart, currentEnd);
 }
 
+async function updateInputs() {
+  straightawayPointSpacingInput.value = (
+    await window.api.getPointSpacing()
+  ).toString();
+  cornerPointSpacingInput.value = (
+    await window.api.getCornerPointSpacing()
+  ).toString();
+  cornerSizeInput.value = (await window.api.getCornerDist()).toString();
+  injectPointsCheckbox.checked = await window.api.getInjectPoints();
+  normalizeCornersCheckbox.checked = await window.api.getNormalizeCorners();
+  splitPercentSlider.value = (
+    await window.api.getCornerSplitPercent()
+  ).toString();
+}
+
+updateInputs();
 regeneratePath();
