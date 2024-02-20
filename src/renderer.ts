@@ -2,7 +2,8 @@ import "./index.css";
 import { Vertex } from "./javaUtils/structures";
 import { CRESCENDO_2024 } from "./constants";
 import { convert } from "./utils/units";
-
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 declare global {
   interface Window {
     api: {
@@ -256,7 +257,17 @@ function drawCircle(
 }
 
 async function regeneratePath() {
-  currentPath = await window.api.generatePath(currentStart, currentEnd);
+  try {
+    currentPath = await window.api.generatePath(currentStart, currentEnd);
+  } catch (e) {
+    Toastify({
+      text: "Failed to generate path: " + e.message,
+      duration: 3000,
+      gravity: "bottom",
+      position: "right",
+      backgroundColor: "red",
+    }).showToast();
+  }
 }
 
 async function updateInputs() {
