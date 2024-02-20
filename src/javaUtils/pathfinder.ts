@@ -1,8 +1,19 @@
+import path from "path";
 import { appendClasspath, ensureJvm, importClass } from "java-bridge";
 import { Vertex } from "./structures";
-appendClasspath(__dirname + "/oxplorer-0.8.1-all.jar");
+appendClasspath(
+  path
+    .join(__dirname, "java-libs/oxplorer-0.9.0-all.jar")
+    .replace("app.asar", "app.asar.unpacked")
+);
 ensureJvm({
   isPackagedElectron: true,
+  // javaLibPath: path
+  //   .join(
+  //     app.getAppPath(),
+  //     "node_modules/java-bridge/java-src/build/libs/JavaBridge-2.1.1.jar"
+  //   )
+  //   .replace("app.asar", "app.asar.unpacked"),
 });
 let JVertex = importClass("me.nabdev.pathfinding.structures.Vertex");
 let Field = importClass("me.nabdev.pathfinding.utilities.FieldLoader$Field");

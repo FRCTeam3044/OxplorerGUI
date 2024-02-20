@@ -126,7 +126,7 @@ for (let input of pathInputs) {
 const context = canvas.getContext("2d");
 const image = document.createElement("img");
 canvas.appendChild(image);
-image.src = "/assets/2024.png";
+image.src = "../main_window/static/img/2024.png";
 
 const gameData = CRESCENDO_2024;
 let currentStart = new Vertex(4, 3);
@@ -276,3 +276,7 @@ async function updateInputs() {
 
 updateInputs();
 regeneratePath();
+
+function joinPath(...segments: string[]) {
+  return segments.join("/").replace(/\/+/g, "/");
+}

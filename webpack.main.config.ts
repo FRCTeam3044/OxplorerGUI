@@ -9,10 +9,13 @@ let myPlugins = [
   ...plugins,
   new CopyPlugin({
     patterns: [
-      { from: "./oxplorer-0.8.1-all.jar", to: "." },
+      {
+        from: "./src/java-libs/oxplorer-0.9.0-all.jar",
+        to: "./java-libs/oxplorer-0.9.0-all.jar",
+      },
       {
         from: "./node_modules/java-bridge/java-src/build/libs/JavaBridge-2.1.1.jar",
-        to: "../java-src/build/libs",
+        to: "../java-src/build/libs/JavaBridge-2.1.1.jar",
       },
     ],
   }),

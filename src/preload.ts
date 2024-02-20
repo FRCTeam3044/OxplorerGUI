@@ -3,6 +3,11 @@
 import { Vertex } from "./javaUtils/structures";
 import { contextBridge, ipcRenderer } from "electron";
 
+contextBridge.exposeInMainWorld("assets", {
+  getAssetPath: (asset: string) => {
+    return ipcRenderer.invoke("getAssetPath", asset);
+  },
+});
 contextBridge.exposeInMainWorld("api", {
   generatePath: async (start: Vertex, target: Vertex) => {
     return ipcRenderer.invoke("generatePath", start, target);

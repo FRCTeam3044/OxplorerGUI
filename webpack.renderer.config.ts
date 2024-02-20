@@ -14,12 +14,7 @@ rules.push({
 const myPlugins = [
   ...plugins,
   new CopyWebpackPlugin({
-    patterns: [
-      {
-        from: path.resolve(__dirname, "src", "assets"),
-        to: path.resolve(__dirname, ".webpack/renderer", "assets"),
-      },
-    ],
+    patterns: [{ from: "src/img", to: "main_window/static/img" }],
   }),
 ];
 
