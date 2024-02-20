@@ -3,7 +3,7 @@ import { appendClasspath, ensureJvm, importClass } from "java-bridge";
 import { Vertex } from "./structures";
 appendClasspath(
   path
-    .join(__dirname, "java-libs/oxplorer-0.9.0-all.jar")
+    .join(__dirname, "java-libs/oxplorer-0.9.11-all.jar")
     .replace("app.asar", "app.asar.unpacked")
 );
 ensureJvm({
