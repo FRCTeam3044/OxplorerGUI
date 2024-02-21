@@ -5,6 +5,8 @@ A frontend for oxplorer to easily visualize and edit paths in real time as well 
 TODO:
 
 - [ ] Command list with parameters
+- [ ] Import command list from file
 - [ ] Export/Import path settings
 - [ ] Export/Import autos
 - [ ] Branding
+- [ ] Refactor code

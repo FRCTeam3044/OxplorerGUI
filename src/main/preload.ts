@@ -1,6 +1,6 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
-import { SnapMode, Vertex } from "./javaUtils/structures";
+import { SnapMode, Vertex } from "../utils/structures";
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("api", {
