@@ -1,13 +1,8 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
-import { Vertex } from "./javaUtils/structures";
+import { SnapMode, Vertex } from "./javaUtils/structures";
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("assets", {
-  getAssetPath: (asset: string) => {
-    return ipcRenderer.invoke("getAssetPath", asset);
-  },
-});
 contextBridge.exposeInMainWorld("api", {
   generatePath: async (start: Vertex, target: Vertex) => {
     return ipcRenderer.invoke("generatePath", start, target);
@@ -36,6 +31,12 @@ contextBridge.exposeInMainWorld("api", {
   setRobotWidth: (width: number) => {
     ipcRenderer.invoke("setRobotWidth", width);
   },
+  setCornerCutDist: (dist: number) => {
+    ipcRenderer.invoke("setCornerCutDist", dist);
+  },
+  setSnapMode: (snap: SnapMode) => {
+    ipcRenderer.invoke("setSnapMode", snap);
+  },
   getPointSpacing: () => {
     return ipcRenderer.invoke("getPointSpacing");
   },
@@ -53,5 +54,8 @@ contextBridge.exposeInMainWorld("api", {
   },
   getCornerSplitPercent: () => {
     return ipcRenderer.invoke("getCornerSplitPercent");
+  },
+  getSnapMode: () => {
+    return ipcRenderer.invoke("getSnapMode");
   },
 });

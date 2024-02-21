@@ -1,6 +1,6 @@
 import path from "path";
 import { appendClasspath, ensureJvm, importClass } from "java-bridge";
-import { Vertex } from "./structures";
+import { SnapMode, Vertex } from "./structures";
 appendClasspath(
   path
     .join(__dirname, "java-libs/oxplorer-0.9.11-all.jar")
@@ -18,15 +18,20 @@ ensureJvm({
 let JVertex = importClass("me.nabdev.pathfinding.structures.Vertex");
 let Field = importClass("me.nabdev.pathfinding.utilities.FieldLoader$Field");
 let PathfinderBuilder = importClass("me.nabdev.pathfinding.PathfinderBuilder");
+let JSnapMode = importClass(
+  "me.nabdev.pathfinding.Pathfinder$PathfindSnapMode"
+);
 
 let pathfinderBuilder = new PathfinderBuilder(Field.CRESCENDO_2024);
 let pathfinder = pathfinderBuilder.buildSync();
+let snapMode = JSnapMode.SNAP_ALL;
 
 export const generatePath = (start: Vertex, end: Vertex) => {
   let path = [];
   let pathRaw = pathfinder.generatePathSync(
     new JVertex(start.x, start.y),
-    new JVertex(end.x, end.y)
+    new JVertex(end.x, end.y),
+    snapMode
   );
   let pathDoubleArr = pathRaw.toDoubleArraySync();
 
@@ -76,6 +81,15 @@ export const setRobotWidth = (width: number) => {
   pathfinder = pathfinderBuilder.buildSync();
 };
 
+export const setCornerCutDist = (dist: number) => {
+  pathfinderBuilder.setCornerCutDistSync(dist);
+  pathfinder = pathfinderBuilder.buildSync();
+};
+
+export const setSnapMode = (snap: SnapMode) => {
+  snapMode = JSnapMode[snap];
+};
+
 export const getPointSpacing = () => {
   return pathfinder.getPointSpacingSync();
 };
@@ -98,4 +112,8 @@ export const getNormalizeCorners = () => {
 
 export const getCornerSplitPercent = () => {
   return pathfinder.getCornerSplitPercentSync();
+};
+
+export const getSnapMode = () => {
+  return snapMode.toString() as SnapMode;
 };

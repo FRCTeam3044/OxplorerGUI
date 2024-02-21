@@ -7,3 +7,19 @@ export class Vertex {
     this.y = y;
   }
 }
+
+export type SnapMode = "NONE" | "SNAP_ALL" | "SNAP_START" | "SNAP_TARGET";
+export type AutoCommand = {
+  type: "command";
+  name: string;
+  id: string;
+  parameters: { [key: string]: string };
+};
+export type AutoGroup = {
+  type: "group";
+  name: string;
+  id: string;
+  children: AutoStep[];
+};
+export type AutoStep = AutoCommand | AutoGroup;
+export type Auto = AutoStep[];
