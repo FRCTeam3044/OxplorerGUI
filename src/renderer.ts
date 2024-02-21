@@ -442,7 +442,6 @@ let diagram = $(go.Diagram, "gojs", {
   //   layerSpacing: 10,
   // }),
   layout: $(go.LayeredDigraphLayout, {
-    direction: 90,
     columnSpacing: 10,
     layerSpacing: 10,
   }),
@@ -464,8 +463,13 @@ diagram.nodeTemplate = $(
     "Auto",
     {
       alignment: go.Spot.BottomCenter,
-      padding: new go.Margin(30, 10, 0, 10),
+      // If the node is in a group, bottom center. If it is in the outermost layer, right center
+
+      padding: new go.Margin(30, 0, 0, 0),
     },
+    new go.Binding("alignment", "isRoot", function (isRoot: boolean) {
+      return isRoot ? go.Spot.RightCenter : go.Spot.BottomCenter;
+    }),
     $(go.Shape, "PlusLine", {
       width: 10,
       height: 10,
@@ -497,7 +501,7 @@ diagram.nodeTemplate = $(
     click: function (e: any, obj: any) {
       let node = obj.part;
       let step = node.data.step as AutoStep;
-      updateGraphInputs(step);
+      updateGraphInputs(step, node.data.parent);
     },
   }
 );
@@ -527,7 +531,7 @@ diagram.groupTemplate = $(
     stroke: "gray",
     strokeWidth: 3,
   }), // increased border thickness
-  $(go.Placeholder, { padding: new go.Margin(30, 5, 5, 5) }),
+  $(go.Placeholder, { padding: new go.Margin(30, 5, 20, 5) }),
   $(
     go.TextBlock, // this is the text
     {
@@ -537,11 +541,38 @@ diagram.groupTemplate = $(
     }, // added top margin
     new go.Binding("text", "text")
   ),
+  $(
+    go.Panel,
+    "Auto",
+    {
+      alignment: go.Spot.BottomCenter,
+      padding: new go.Margin(30, 10, 0, 10),
+    },
+    $(go.Shape, "PlusLine", {
+      width: 10,
+      height: 10,
+      margin: 4,
+      click: function (e: any, obj: any) {
+        let node = obj.part;
+        let step = node.data.step as AutoStep;
+        let newStep = {
+          type: "command",
+          id: "new_command",
+          name: "New Command",
+          parameters: {},
+        };
+        let parent = node.data.parent;
+        let index = parent.indexOf(step);
+        parent.splice(index + 1, 0, newStep);
+        regenerateGraph();
+      },
+    })
+  ),
   {
     click: function (e: any, obj: any) {
       let node = obj.part;
       let step = node.data.step as AutoStep;
-      updateGraphInputs(step);
+      updateGraphInputs(step, node.data.parent);
     },
   }
 );
@@ -555,6 +586,7 @@ type NodeData = {
   parent: AutoStep[];
   isGroup: boolean;
   group?: number;
+  isRoot?: boolean;
 };
 
 type LinkData = {
@@ -587,6 +619,7 @@ function processStep(
     parent,
     isGroup: step.type === "group",
     group: parentKey !== null ? parentKey : undefined,
+    isRoot: parentKey === null,
   });
   if (index < parent.length - 1) {
     linkDataArray.push({
@@ -633,7 +666,7 @@ function regenerateGraph() {
 
 let form = document.querySelector("#form");
 
-function updateGraphInputs(step: AutoStep) {
+function updateGraphInputs(step: AutoStep, parent: AutoStep[]) {
   form.innerHTML = "";
   let nameInput = document.createElement("input");
   let nameLabel = document.createElement("label");
@@ -660,6 +693,10 @@ function updateGraphInputs(step: AutoStep) {
   form.appendChild(idInput);
   form.appendChild(document.createElement("br"));
   let typeInput = document.createElement("select");
+  let typeLabel = document.createElement("label");
+  typeLabel.className = "form-label";
+  typeLabel.innerText = "Type: ";
+  form.appendChild(typeLabel);
   let types = ["command", "group"];
   for (let type of types) {
     let option = document.createElement("option");
@@ -676,13 +713,14 @@ function updateGraphInputs(step: AutoStep) {
       step.parameters = {};
     }
     regenerateGraph();
-    updateGraphInputs(step);
+    updateGraphInputs(step, parent);
   };
   form.appendChild(typeInput);
   form.appendChild(document.createElement("br"));
   if (step.type === "group") {
     let addCommandButton = document.createElement("button");
-    addCommandButton.innerText = "Add Child";
+    addCommandButton.innerText = "+ Add Child";
+    addCommandButton.className = "form-button";
     addCommandButton.onclick = () => {
       step.children.push({
         type: "command",
@@ -710,14 +748,13 @@ function updateGraphInputs(step: AutoStep) {
   }
 
   let removeButton = document.createElement("button");
-  removeButton.innerText = "Remove";
+  removeButton.innerText = "- Remove";
+  removeButton.className = "form-button";
   removeButton.onclick = () => {
-    //let parent = step.parent;
-    // The above wont work because parent is not a property of the step
-    // Will needto find the parent by iterating through the auto
-    // let index = parent.indexOf(step);
-    // parent.splice(index, 1);
-    // regenerateGraph();
+    let index = parent.indexOf(step);
+    parent.splice(index, 1);
+    regenerateGraph();
   };
+  form.appendChild(removeButton);
 }
 regenerateGraph();

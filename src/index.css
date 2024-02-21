@@ -163,7 +163,7 @@ input {
   width: calc(100% - 300px);
 }
 
-#form {
+#inspector {
   position: absolute;
   top: 30px;
   background-color: var(--background-dark-2);
@@ -171,9 +171,35 @@ input {
   bottom: 0;
   width: 300px;
   z-index: 10;
+  padding: 0;
 }
 
+#inspector h2 {
+  margin: 5px 10px;
+  padding: 0;
+  color: white;
+}
+
+#form {
+  margin: 10px;
+}
 .form-label {
   color: white;
   margin: 5px;
+}
+
+.form-button {
+  background-color: var(--background-dark-3);
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin: 5px 0px;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background-color: var(--background-light-3);
 }
