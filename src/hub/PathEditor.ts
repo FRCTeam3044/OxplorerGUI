@@ -53,7 +53,7 @@ export default function initialize() {
   ) as HTMLInputElement;
   injectPointsCheckbox.onchange = () => {
     try {
-      window.api.setInjectPoints(injectPointsCheckbox.checked);
+      window.java.setInjectPoints(injectPointsCheckbox.checked);
     } catch (e) {
       handleError(e);
     }
@@ -62,7 +62,7 @@ export default function initialize() {
 
   normalizeCornersCheckbox.onchange = () => {
     try {
-      window.api.setNormalizeCorners(normalizeCornersCheckbox.checked);
+      window.java.setNormalizeCorners(normalizeCornersCheckbox.checked);
     } catch (e) {
       handleError(e);
     }
@@ -71,7 +71,7 @@ export default function initialize() {
 
   robotLengthInput.onchange = () => {
     try {
-      window.api.setRobotLength(parseFloat(robotLengthInput.value));
+      window.java.setRobotLength(parseFloat(robotLengthInput.value));
     } catch (e) {
       handleError(e);
     }
@@ -80,7 +80,7 @@ export default function initialize() {
 
   robotWidthInput.onchange = () => {
     try {
-      window.api.setRobotWidth(parseFloat(robotWidthInput.value));
+      window.java.setRobotWidth(parseFloat(robotWidthInput.value));
     } catch (e) {
       handleError(e);
     }
@@ -89,7 +89,7 @@ export default function initialize() {
 
   straightawayPointSpacingInput.onchange = () => {
     try {
-      window.api.setPointSpacing(
+      window.java.setPointSpacing(
         parseFloat(straightawayPointSpacingInput.value)
       );
     } catch (e) {
@@ -100,7 +100,7 @@ export default function initialize() {
 
   cornerPointSpacingInput.onchange = () => {
     try {
-      window.api.setCornerPointSpacing(
+      window.java.setCornerPointSpacing(
         parseFloat(cornerPointSpacingInput.value)
       );
     } catch (e) {
@@ -111,7 +111,7 @@ export default function initialize() {
 
   cornerSizeInput.onchange = () => {
     try {
-      window.api.setCornerDist(parseFloat(cornerSizeInput.value));
+      window.java.setCornerDist(parseFloat(cornerSizeInput.value));
     } catch (e) {
       handleError(e);
     }
@@ -120,7 +120,7 @@ export default function initialize() {
 
   cornerCutDistInput.onchange = () => {
     try {
-      window.api.setCornerCutDist(parseFloat(cornerCutDistInput.value));
+      window.java.setCornerCutDist(parseFloat(cornerCutDistInput.value));
     } catch (e) {
       handleError(e);
     }
@@ -129,7 +129,7 @@ export default function initialize() {
 
   snapModeSelect.onchange = () => {
     try {
-      window.api.setSnapMode(snapModeSelect.value as SnapMode);
+      window.java.setSnapMode(snapModeSelect.value as SnapMode);
     } catch (e) {
       handleError(e);
     }
@@ -143,7 +143,7 @@ export default function initialize() {
       .toFixed(0)
       .toString();
     try {
-      window.api.setCornerSplitPercent(parseFloat(splitPercentSlider.value));
+      window.java.setCornerSplitPercent(parseFloat(splitPercentSlider.value));
     } catch (e) {
       handleError(e);
     }
@@ -299,7 +299,7 @@ export default function initialize() {
 
   async function regeneratePath() {
     try {
-      currentPath = await window.api.generatePath(currentStart, currentEnd);
+      currentPath = await window.java.generatePath(currentStart, currentEnd);
     } catch (e) {
       handleError(e);
     }
@@ -307,18 +307,18 @@ export default function initialize() {
 
   async function updateInputs() {
     straightawayPointSpacingInput.value = (
-      await window.api.getPointSpacing()
+      await window.java.getPointSpacing()
     ).toString();
     cornerPointSpacingInput.value = (
-      await window.api.getCornerPointSpacing()
+      await window.java.getCornerPointSpacing()
     ).toString();
-    cornerSizeInput.value = (await window.api.getCornerDist()).toString();
-    injectPointsCheckbox.checked = await window.api.getInjectPoints();
-    normalizeCornersCheckbox.checked = await window.api.getNormalizeCorners();
+    cornerSizeInput.value = (await window.java.getCornerDist()).toString();
+    injectPointsCheckbox.checked = await window.java.getInjectPoints();
+    normalizeCornersCheckbox.checked = await window.java.getNormalizeCorners();
     splitPercentSlider.value = (
-      await window.api.getCornerSplitPercent()
+      await window.java.getCornerSplitPercent()
     ).toString();
-    snapModeSelect.value = (await window.api.getSnapMode()).toString();
+    snapModeSelect.value = (await window.java.getSnapMode()).toString();
   }
 
   updateInputs();

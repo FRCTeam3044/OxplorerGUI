@@ -3,7 +3,19 @@
 import { SnapMode, Vertex } from "../utils/structures";
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("api", {
+contextBridge.exposeInMainWorld("files", {
+  openFile: () => {
+    return ipcRenderer.invoke("openFile");
+  },
+  openFileFromPath: (path: string) => {
+    return ipcRenderer.invoke("openFileFromPath", path);
+  },
+  getRecentFiles: () => {
+    return ipcRenderer.invoke("getRecentFiles");
+  },
+});
+
+contextBridge.exposeInMainWorld("java", {
   generatePath: async (start: Vertex, target: Vertex) => {
     return ipcRenderer.invoke("generatePath", start, target);
   },

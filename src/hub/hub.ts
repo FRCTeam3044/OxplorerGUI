@@ -7,7 +7,12 @@ import PathEditor from "./PathEditor";
 
 declare global {
   interface Window {
-    api: {
+    files: {
+      openFile: () => Promise<string>;
+      openFileFromPath: (path: string) => Promise<string>;
+      getRecentFiles: () => Promise<string[]>;
+    };
+    java: {
       generatePath: (start: Vertex, target: Vertex) => Promise<Vertex[]>;
       setPointSpacing: (spacing: number) => void;
       setCornerPointSpacing: (spacing: number) => void;

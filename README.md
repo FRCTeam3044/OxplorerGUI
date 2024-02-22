@@ -2,6 +2,8 @@
 
 A frontend for oxplorer to easily visualize and edit paths in real time as well as visiualizing and editing autos.
 
+Made using [GoJS](https://gojs.net/latest/index.html), with permission.
+
 TODO:
 
 - [ ] Command list with parameters
@@ -9,4 +11,4 @@ TODO:
 - [ ] Export/Import path settings
 - [ ] Export/Import autos
 - [ ] Branding
-- [ ] Refactor code
+- [x] Refactor code

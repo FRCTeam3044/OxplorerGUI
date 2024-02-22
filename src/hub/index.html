@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Oxplorer</title>
-  </head>
 
-  <body>
-    <div class="tab-buttons">
-            <button class="tab-button active" data-tab-target="#tab2">Auto Editor</button>
-      <button class="tab-button" data-tab-target="#tab1">Path Editor</button>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Oxplorer</title>
+</head>
 
-    <div id="tab1" class="tab">
+<body>
+  <div class="tab-buttons">
+    <button class="tab-button active" data-tab-target="#tab2">Auto Editor</button>
+    <button class="tab-button" data-tab-target="#tab1">Path Editor</button>
+  </div>
+
+  <div id="tab1" class="tab">
     <div class="container">
       <div class="field">
-        <div
-          class="canvas-container"
-          style="position: relative; z-index: 3; user-select: none"
-        >
+        <div class="canvas-container" style="position: relative; z-index: 3; user-select: none">
           <canvas class="field-canvas"></canvas>
         </div>
       </div>
@@ -78,28 +76,13 @@
             <input type="number" id="startY" value="3" />)
           </td>
           <td>
-            <label for="straightawayPointSpacing"
-              >Straightaway Point Spacing</label
-            >
-            <input
-              type="number"
-              id="straightawayPointSpacing"
-              value="0.15"
-              step="0.01"
-            />
+            <label for="straightawayPointSpacing">Straightaway Point Spacing</label>
+            <input type="number" id="straightawayPointSpacing" value="0.15" step="0.01" />
           </td>
           <td>
             <label for="splitPercent">Split Percent</label>
             <div class="slidecontainer">
-              <input
-                type="range"
-                min="0"
-                max="0.5"
-                step="0.01"
-                value="0.45"
-                class="slider"
-                id="splitPercent"
-              />
+              <input type="range" min="0" max="0.5" step="0.01" value="0.45" class="slider" id="splitPercent" />
               <p><span id="splitPercentValue">45</span>%</p>
             </div>
           </td>
@@ -126,12 +109,7 @@
           </td>
           <td>
             <label for="cornerPointSpacing">Corner Point Spacing</label>
-            <input
-              type="number"
-              id="cornerPointSpacing"
-              value="0.08"
-              step="0.01"
-            />
+            <input type="number" id="cornerPointSpacing" value="0.08" step="0.01" />
           </td>
           <td>
             <label for="cornerSize">Corner Size</label>
@@ -144,19 +122,33 @@
         </tr>
       </table>
     </div>
+  </div>
+  <div id="tab2" class="tab active">
+    <div id="auto-editor-file-select">
+      <div id="recent">
+        <h3>Recent</h3>
+        <div class="divider"> </div>
+        <div id="recent-files"></div>
+      </div>
+      <div id="start">
+        <button id="autos-open">Open</button>
+        <button id="autos-new">Create New</button>
+      </div>
     </div>
-    <div id="tab2" class="tab active">
+    <div class="auto-editor-content">
       <div id="gojs"></div>
       <div id="inspector">
         <h2>Inspector</h2>
         <div class="divider"> </div>
         <div id="form"></div>
+        <div class="divider"> </div>
+        <div class="save-buttons">
+          <button id="saveButton">Save</button>
+          <button id="saveAsButton">Save As</button>
+        </div>
       </div>
-      <svg style="display: none;">
-  <g id="plus-button" fill="#000000" stroke="none">
-    <path d="M10,0 L10,20 M0,10 L20,10" stroke="#000000" stroke-width="2"/>
-  </g>
-</svg>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

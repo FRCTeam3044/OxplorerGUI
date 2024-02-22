@@ -1,63 +1,42 @@
 import * as go from "gojs";
 import { Auto, AutoCommand, AutoStep } from "../utils/structures";
 
+let currentAuto: Auto;
 export default function initialize() {
-  let auto = JSON.parse(`[
-  {
-    "type": "group",
-    "id": "deadline",
-    "name": "Drive Until Note",
-    "children": [
-      {
-        "name": "Wait for Note",
-        "type": "command",
-        "id": "wait_for_note",
-        "parameters": {}
-      },
-      {
-        "name": "Go to and Track Point",
-        "type": "command",
-        "id": "go_to_and_track_point",
-        "parameters": {
-          "targetX": 3,
-          "targetY": 0,
-          "trackX": 0,
-          "trackY": 3
+  let fileSelect = document.querySelector(
+    "#auto-editor-file-select"
+  ) as HTMLSelectElement;
+  let mainContent = document.querySelector(
+    ".auto-editor-content"
+  ) as HTMLDivElement;
+  let openBtn = document.querySelector("#autos-open") as HTMLButtonElement;
+  let newBtn = document.querySelector("#autos-new") as HTMLButtonElement;
+  let recentDiv = document.querySelector("#recent-files") as HTMLDivElement;
+  openBtn.onclick = async () => {
+    let file = await window.files.openFile();
+    if (file) {
+      currentAuto = JSON.parse(file) as Auto;
+      regenerateGraph();
+    }
+  };
+  const loadRecents = async () => {
+    let files = await window.files.getRecentFiles();
+    recentDiv.innerHTML = "";
+    for (let file of files) {
+      let btn = document.createElement("a");
+      // TODO: Add linux support
+      btn.innerText = file.split("\\").pop();
+      btn.onclick = async () => {
+        let fileContent = await window.files.openFileFromPath(file);
+        if (fileContent) {
+          currentAuto = JSON.parse(fileContent) as Auto;
+          regenerateGraph();
         }
-      },
-      {
-    "type": "group",
-    "id": "deadline",
-    "name": "Drive Until Note",
-    "children": [
-      {
-        "name": "Wait for Note",
-        "type": "command",
-        "id": "wait_for_note",
-        "parameters": {}
-      },
-      {
-        "name": "Go to and Track Point",
-        "type": "command",
-        "id": "go_to_and_track_point",
-        "parameters": {
-          "targetX": 3,
-          "targetY": 0,
-          "trackX": 0,
-          "trackY": 3
-        }
-      }
-    ]
-  }
-    ]
-  },
-  {
-    "name": "Go to Note",
-    "type": "command",
-    "id": "go_to_note",
-    "parameters": {}
-  }
-]`) as Auto;
+      };
+      recentDiv.appendChild(btn);
+    }
+  };
+  loadRecents();
 
   let $ = go.GraphObject.make;
   let diagram = $(go.Diagram, "gojs", {
@@ -118,7 +97,6 @@ export default function initialize() {
             let index = parent.indexOf(step);
             parent.splice(index + 1, 0, newStep);
           }
-          console.log(auto);
           regenerateGraph();
         },
       })
@@ -226,7 +204,7 @@ export default function initialize() {
   let linkDataArray: LinkData[] = [];
 
   let key = 0;
-  let toProcess = [{ auto, parent: null }] as {
+  let toProcess = [] as {
     auto: Auto;
     parent: number | null;
   }[];
@@ -270,8 +248,11 @@ export default function initialize() {
     key = 0;
     nodeDataArray = [];
     linkDataArray = [];
+    if (currentAuto === undefined) return;
+    mainContent.style.display = "block";
+    fileSelect.style.display = "none";
     // clear the graph
-    toProcess = [{ auto, parent: null }] as {
+    toProcess = [{ auto: currentAuto, parent: null }] as {
       auto: Auto;
       parent: number | null;
     }[];
