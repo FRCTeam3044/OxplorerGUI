@@ -13,6 +13,9 @@ contextBridge.exposeInMainWorld("files", {
   getRecentFiles: () => {
     return ipcRenderer.invoke("getRecentFiles");
   },
+  getFileSeperator: () => {
+    return ipcRenderer.invoke("getFileSeperator");
+  },
 });
 
 contextBridge.exposeInMainWorld("java", {

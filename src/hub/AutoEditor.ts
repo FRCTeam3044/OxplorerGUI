@@ -2,9 +2,10 @@ import * as go from "gojs";
 import { Auto, AutoCommand, AutoStep } from "../utils/structures";
 
 let currentAuto: Auto;
+let currentAutoPath: string;
 export default function initialize() {
   let fileSelect = document.querySelector(
-    "#auto-editor-file-select"
+    "#auto-editor-startup"
   ) as HTMLSelectElement;
   let mainContent = document.querySelector(
     ".auto-editor-content"
@@ -15,7 +16,8 @@ export default function initialize() {
   openBtn.onclick = async () => {
     let file = await window.files.openFile();
     if (file) {
-      currentAuto = JSON.parse(file) as Auto;
+      currentAuto = JSON.parse(file.data) as Auto;
+      currentAutoPath = file.path;
       regenerateGraph();
     }
   };
@@ -24,12 +26,22 @@ export default function initialize() {
     recentDiv.innerHTML = "";
     for (let file of files) {
       let btn = document.createElement("a");
-      // TODO: Add linux support
-      btn.innerText = file.split("\\").pop();
+      let fileNameSpan = document.createElement("span");
+
+      fileNameSpan.innerText = file
+        .split(await window.files.getFileSeperator())
+        .pop();
+      fileNameSpan.className = "file-name-span";
+      let pathSpan = document.createElement("span");
+      pathSpan.innerText = file;
+      pathSpan.className = "path-span";
+      btn.appendChild(fileNameSpan);
+      btn.appendChild(pathSpan);
       btn.onclick = async () => {
         let fileContent = await window.files.openFileFromPath(file);
         if (fileContent) {
           currentAuto = JSON.parse(fileContent) as Auto;
+          currentAutoPath = file;
           regenerateGraph();
         }
       };
@@ -217,7 +229,7 @@ export default function initialize() {
     let currentKey = key++;
     nodeDataArray.push({
       key: currentKey,
-      text: `${step.name} (${step.id})`,
+      text: step.name !== undefined ? `${step.name} (${step.id})` : step.id,
       color: step.type === "group" ? "lightblue" : "lightgreen",
       step,
       index,

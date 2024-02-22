@@ -40,6 +40,7 @@ const createWindow = (): void => {
     width: 800,
     minHeight: 525,
     minWidth: 750,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       webviewTag: true,
@@ -87,7 +88,7 @@ ipcMain.handle("openFile", async (event) => {
   } else {
     const content = fs.readFileSync(file.filePaths[0], "utf-8");
     addToRecent(file.filePaths[0]);
-    return content;
+    return { data: content, path: file.filePaths[0] };
   }
 });
 
@@ -99,6 +100,10 @@ ipcMain.handle("openFileFromPath", async (event, path: string) => {
 
 ipcMain.handle("getRecentFiles", async (event) => {
   return getRecent();
+});
+
+ipcMain.handle("getFileSeperator", async (event) => {
+  return path.sep;
 });
 
 // In this file you can include the rest of your app's specific main process

@@ -8,9 +8,13 @@ import PathEditor from "./PathEditor";
 declare global {
   interface Window {
     files: {
-      openFile: () => Promise<string>;
+      openFile: () => Promise<{
+        data: string;
+        path: string;
+      }>;
       openFileFromPath: (path: string) => Promise<string>;
       getRecentFiles: () => Promise<string[]>;
+      getFileSeperator: () => Promise<string>;
     };
     java: {
       generatePath: (start: Vertex, target: Vertex) => Promise<Vertex[]>;

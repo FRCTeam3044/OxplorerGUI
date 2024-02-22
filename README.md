@@ -12,3 +12,4 @@ TODO:
 - [ ] Export/Import autos
 - [ ] Branding
 - [x] Refactor code
+- [ ] Light/Dark theme
