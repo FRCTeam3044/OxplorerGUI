@@ -7,8 +7,9 @@ Made using [GoJS](https://gojs.net/latest/index.html), with permission.
 TODO:
 
 - [ ] Import path settings
-- [ ] Github Actions/Releases
+- [ ] Auto Updates
 - [ ] Better parameter validation
+- [x] Github Actions/Releases
 - [x] Undo/Redo
 - [x] Command list with parameters
 - [x] Import command list from file
