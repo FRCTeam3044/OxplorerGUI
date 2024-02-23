@@ -420,6 +420,20 @@ let menuTemplate: Electron.MenuItemConstructorOptions[] = [
     label: "Edit",
     submenu: [
       {
+        label: "Undo",
+        click: () => {
+          BrowserWindow.getFocusedWindow()?.webContents.send("undo");
+        },
+        accelerator: "CmdOrCtrl+Z",
+      },
+      {
+        label: "Redo",
+        click: () => {
+          BrowserWindow.getFocusedWindow()?.webContents.send("redo");
+        },
+        accelerator: "CmdOrCtrl+Y",
+      },
+      {
         label: "Preferences",
         click: () => {
           const prefsWindow = new BrowserWindow({

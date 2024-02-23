@@ -116,3 +116,15 @@ window.ipc.on("importTemplates", async (commands: Template[]) => {
     AutoEditor.importTemplates(commands);
   }
 });
+
+window.ipc.on("undo", async () => {
+  if (isAutoEditorActive()) {
+    AutoEditor.undo();
+  }
+});
+
+window.ipc.on("redo", async () => {
+  if (isAutoEditorActive()) {
+    AutoEditor.redo();
+  }
+});

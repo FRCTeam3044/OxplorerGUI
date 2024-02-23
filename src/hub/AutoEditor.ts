@@ -15,12 +15,16 @@ let currentAutoPath: string;
 let unsaved = false;
 let templateList: Template[];
 
+let undoList: Auto[] = [];
+let redoList: Auto[] = [];
+
 let open;
 let newHandler;
 let save;
 let saveAs;
 let form = document.querySelector("#form") as HTMLDivElement;
-
+let undo: () => void;
+let redo: () => void;
 export function importTemplates(commands: Template[]) {
   templateList = commands;
   form.innerHTML = "";
@@ -66,6 +70,7 @@ export async function initialize() {
         currentAuto = JSON.parse(file.data) as Auto;
         currentAutoPath = file.path;
         form.innerHTML = "";
+        undoList = [];
         regenerateGraph();
       }
     } catch (e) {
@@ -87,6 +92,7 @@ export async function initialize() {
         currentAuto = JSON.parse(file.data) as Auto;
         currentAutoPath = file.path;
         form.innerHTML = "";
+        undoList = [];
         regenerateGraph();
       }
     } catch (e) {
@@ -205,10 +211,29 @@ export async function initialize() {
     }
   };
   loadRecents();
+  undo = () => {
+    if (undoList.length > 0) {
+      console.log(undoList, currentAuto);
+      redoList.push(JSON.parse(JSON.stringify(currentAuto)));
+      undoList.pop();
+      currentAuto = undoList[undoList.length - 1];
+      regenerateGraph(true);
+      form.innerHTML = "";
+    }
+  };
+
+  redo = () => {
+    if (redoList.length > 0) {
+      undoList.push(JSON.parse(JSON.stringify(currentAuto)));
+      currentAuto = redoList.pop();
+      regenerateGraph(true);
+      form.innerHTML = "";
+    }
+  };
 
   let $ = go.GraphObject.make;
   let diagram = $(go.Diagram, "gojs", {
-    "undoManager.isEnabled": true,
+    "undoManager.isEnabled": false,
     "animationManager.isEnabled": false,
     //layout: $(go.TreeLayout, { angle: 90, layerSpacing: 35 }),
     // layout: $(go.LayeredDigraphLayout, {
@@ -220,6 +245,16 @@ export async function initialize() {
       layerSpacing: 10,
     }),
   });
+
+  diagram.commandHandler.doKeyDown = function () {
+    let e = diagram.lastInput;
+    let control = e.control || e.meta;
+    if (control && e.key === "Z") {
+      undo();
+    } else if (control && e.key === "Y") {
+      redo();
+    }
+  };
 
   diagram.toolManager.hoverDelay = 75;
   diagram.nodeTemplate = $(
@@ -454,12 +489,13 @@ export async function initialize() {
     }
   }
 
-  function regenerateGraph() {
+  function regenerateGraph(skipUndo = false) {
     key = 0;
     nodeDataArray = [];
     linkDataArray = [];
     onFocus();
     if (currentAuto === undefined) return;
+    if (!skipUndo) undoList.push(JSON.parse(JSON.stringify(currentAuto)));
     mainContent.style.display = "block";
     fileSelect.style.display = "none";
     // clear the graph
@@ -632,4 +668,4 @@ export async function initialize() {
   regenerateGraph();
 }
 
-export { open, newHandler as new, save, saveAs };
+export { open, newHandler as new, save, saveAs, undo, redo };

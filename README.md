@@ -8,7 +8,8 @@ TODO:
 
 - [ ] Import path settings
 - [ ] Github Actions/Releases
-- [ ] Undo/Redo
+- [ ] Better parameter validation
+- [x] Undo/Redo
 - [x] Command list with parameters
 - [x] Import command list from file
 - [x] Export path settings
