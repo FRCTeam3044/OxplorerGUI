@@ -78,3 +78,34 @@ tabButtons.forEach((button) => {
 AutoEditor.initialize();
 AutoEditor.onFocus();
 PathEditor.initialize();
+
+function isAutoEditorActive() {
+  return (
+    (document.querySelector(".tab-button.active") as HTMLButtonElement).dataset
+      .tabTarget === "#autoeditor"
+  );
+}
+
+window.ipc.on("openFile", async () => {
+  if (isAutoEditorActive()) {
+    AutoEditor.open();
+  }
+});
+
+window.ipc.on("saveFile", async () => {
+  if (isAutoEditorActive()) {
+    AutoEditor.save();
+  }
+});
+
+window.ipc.on("newFile", async () => {
+  if (isAutoEditorActive()) {
+    AutoEditor.new();
+  }
+});
+
+window.ipc.on("saveFileAs", async () => {
+  if (isAutoEditorActive()) {
+    AutoEditor.saveAs();
+  }
+});

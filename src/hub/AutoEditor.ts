@@ -6,6 +6,11 @@ let currentAuto: Auto;
 let currentAutoPath: string;
 let unsaved = false;
 
+let open;
+let newHandler;
+let save;
+let saveAs;
+
 export async function onFocus() {
   window.util.updateWindowState({
     tab: "editor",
@@ -39,7 +44,7 @@ export function initialize() {
   let newGroupBtn = document.querySelector(
     "#autos-new-group"
   ) as HTMLButtonElement;
-  openBtn.onclick = async () => {
+  open = async () => {
     try {
       let file = await window.files.openFile();
       if (file) {
@@ -58,8 +63,9 @@ export function initialize() {
       }).showToast();
     }
   };
-  inspectorOpenBtn.onclick = openBtn.onclick;
-  newBtn.onclick = async () => {
+  openBtn.onclick = open;
+  inspectorOpenBtn.onclick = open;
+  newHandler = async () => {
     try {
       let file = await window.files.newFile();
       if (file) {
@@ -78,8 +84,9 @@ export function initialize() {
       }).showToast();
     }
   };
-  inspectorNewBtn.onclick = newBtn.onclick;
-  saveBtn.onclick = async () => {
+  newBtn.onclick = newHandler;
+  inspectorNewBtn.onclick = newHandler;
+  save = async () => {
     console.log(currentAutoPath, currentAuto);
     if (currentAutoPath) {
       try {
@@ -102,7 +109,8 @@ export function initialize() {
       saveAsBtn.click();
     }
   };
-  saveAsBtn.onclick = async () => {
+  saveBtn.onclick = save;
+  saveAs = async () => {
     try {
       let path = await window.files.saveFileAs(
         JSON.stringify(currentAuto, null, 2)
@@ -122,7 +130,7 @@ export function initialize() {
       }).showToast();
     }
   };
-
+  saveAsBtn.onclick = saveAs;
   newCommandBtn.onclick = () => {
     currentAuto.push({
       type: "command",
@@ -541,3 +549,5 @@ export function initialize() {
   }
   regenerateGraph();
 }
+
+export { open, newHandler as new, save, saveAs };

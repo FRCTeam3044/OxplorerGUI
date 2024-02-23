@@ -47,6 +47,9 @@ const config: ForgeConfig = {
             html: "./src/hub/about.html",
             name: "about_window",
             js: "./src/hub/about.ts",
+            preload: {
+              js: "./src/main/aboutPreload.ts",
+            },
           },
         ],
       },

@@ -14,4 +14,4 @@ TODO:
 - [x] Refactor code
 - [x] Light/Dark theme
 - [x] Add star to title when unsaved
-- [ ] Populate Menu Bar
+- [x] Populate Menu Bar

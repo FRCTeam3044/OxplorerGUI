@@ -35,6 +35,7 @@ import path from "path";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const ABOUT_WINDOW_WEBPACK_ENTRY: string;
+declare const ABOUT_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const PREFERENCES_WINDOW_WEBPACK_ENTRY: string;
 declare const PREFERENCES_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
@@ -121,6 +122,11 @@ ipcMain.handle(
 ipcMain.handle("getTheme", async (event) => {
   return getPref("theme", "system");
 });
+
+ipcMain.handle("getVersion", async (event) => {
+  return app.getVersion();
+});
+
 ipcMain.handle("openFile", async (event) => {
   if (isDialogOpen) {
     return null;
@@ -333,24 +339,28 @@ let menuTemplate: Electron.MenuItemConstructorOptions[] = [
         click: () => {
           BrowserWindow.getFocusedWindow()?.webContents.send("newFile");
         },
+        accelerator: "CmdOrCtrl+N",
       },
       {
         label: "Open",
         click: () => {
           BrowserWindow.getFocusedWindow()?.webContents.send("openFile");
         },
+        accelerator: "CmdOrCtrl+O",
       },
       {
         label: "Save",
         click: () => {
           BrowserWindow.getFocusedWindow()?.webContents.send("saveFile");
         },
+        accelerator: "CmdOrCtrl+S",
       },
       {
         label: "Save As",
         click: () => {
           BrowserWindow.getFocusedWindow()?.webContents.send("saveFileAs");
         },
+        accelerator: "CmdOrCtrl+Shift+S",
       },
     ],
   },
@@ -387,9 +397,32 @@ let menuTemplate: Electron.MenuItemConstructorOptions[] = [
             resizable: false,
             autoHideMenuBar: true,
             title: "About",
+            webPreferences: {
+              preload: ABOUT_WINDOW_PRELOAD_WEBPACK_ENTRY,
+            },
           });
           aboutWindow.loadURL(ABOUT_WINDOW_WEBPACK_ENTRY);
+          var handleRedirect = (e: Electron.Event, url: string) => {
+            if (url != aboutWindow.webContents.getURL()) {
+              e.preventDefault();
+              require("electron").shell.openExternal(url);
+            }
+          };
+          aboutWindow.webContents.on("will-navigate", handleRedirect);
         },
+      },
+      // Reload App (with shortcut)
+      {
+        label: "Reload",
+        role: "reload",
+      },
+      {
+        label: "Force Reload",
+        role: "forceReload",
+      },
+      {
+        label: "Toggle Developer Tools",
+        role: "toggleDevTools",
       },
     ],
   },
