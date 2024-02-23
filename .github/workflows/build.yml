@@ -99,7 +99,7 @@ jobs:
       - name: Build with electron forge
         run: yarn make -- --arch=${{ matrix.arch }} --platform darwin
       - name: Prepare artifact
-        run: mv out/make/OxplorerGUI-${{ matrix.arch }}/OxplorerGUI*.dmg OxplorerGUI-${{ matrix.arch }}-dev.dmg
+        run: mv out/make/OxplorerGUI*.dmg OxplorerGUI-${{ matrix.arch }}-dev.dmg
       - name: Upload development artifact
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v3
@@ -142,8 +142,8 @@ jobs:
           - arch: { electronArch: "armv7l", flatpakArch: "" }
             format: "flatpak"
     env:
-      TARGETS: '{"deb": "@electron-forge/maker-deb", "rpm": "@electron-forge/maker-rpm", "AppImage", "electron-forge-maker-appimage"}'
-      BUILD_DIR: '{"deb": "deb", "rpm": "rpm", "AppImage", "."}'
+      TARGETS: '{"deb": "@electron-forge/maker-deb", "rpm": "@electron-forge/maker-rpm", "AppImage": "electron-forge-maker-appimage"}'
+      BUILD_DIR: '{"deb": "deb", "rpm": "rpm", "AppImage": "."}'
 
     steps:
       - name: Checkout repository
