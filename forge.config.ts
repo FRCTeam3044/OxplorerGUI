@@ -3,7 +3,6 @@ import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
 import { MakerDeb } from "@electron-forge/maker-deb";
 import { MakerRpm } from "@electron-forge/maker-rpm";
-import { AutoUnpackNativesPlugin } from "@electron-forge/plugin-auto-unpack-natives";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 
 import { mainConfig } from "./webpack.main.config";
@@ -16,10 +15,31 @@ const config: ForgeConfig = {
     //     "{**/node_modules/java-bridge/**,node_modules/java-bridge-*/**,**/node_modules/java-libs/**}",
     // },
     asar: false,
+    icon: "./src/icons/icon",
   },
   rebuildConfig: {},
-  //makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
-  makers: [new MakerZIP({}, ["linux"])],
+  makers: [
+    new MakerSquirrel({
+      setupIcon: "./src/icons/icon.ico",
+    }),
+    new MakerZIP({}, ["darwin"]),
+    new MakerRpm({
+      options: {
+        name: "OxplorerGUI",
+        productName: "OxplorerGUI",
+        bin: "OxplorerGUI",
+        icon: "./src/icons/png/1024x1024.png",
+      },
+    }),
+    new MakerDeb({
+      options: {
+        name: "OxplorerGUI",
+        productName: "OxplorerGUI",
+        bin: "OxplorerGUI",
+        icon: "./src/icons/png/1024x1024.png",
+      },
+    }),
+  ],
   plugins: [
     //new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({

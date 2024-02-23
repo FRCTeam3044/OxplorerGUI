@@ -1,9 +1,10 @@
 import path from "path";
 import { appendClasspath, ensureJvm, importClass } from "java-bridge";
 import { SnapMode, Vertex } from "./structures";
+import { OXPLORER_VERSION } from "./constants";
 appendClasspath(
   path
-    .join(__dirname, "java-libs/oxplorer-0.9.11-all.jar")
+    .join(__dirname, `java-libs/oxplorer-${OXPLORER_VERSION}-all.jar`)
     .replace("app.asar", "app.asar.unpacked")
 );
 ensureJvm({

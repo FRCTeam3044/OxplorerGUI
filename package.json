@@ -2,7 +2,7 @@
   "name": "oxplorer-gui",
   "productName": "OxplorerGUI",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "A frontend for Oxplorer with auto planning and path building capabilities",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

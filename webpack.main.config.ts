@@ -3,20 +3,21 @@ import type { Configuration } from "webpack";
 import { rules } from "./webpack.rules";
 import { plugins } from "./webpack.plugins";
 import CopyPlugin from "copy-webpack-plugin";
-import nodeExternals from "webpack-node-externals";
+import { OXPLORER_VERSION } from "./src/utils/constants";
 
 let myPlugins = [
   ...plugins,
   new CopyPlugin({
     patterns: [
       {
-        from: "./src/java-libs/oxplorer-0.9.11-all.jar",
-        to: "./java-libs/oxplorer-0.9.11-all.jar",
+        from: `./src/java-libs/oxplorer-${OXPLORER_VERSION}-all.jar`,
+        to: `./java-libs/oxplorer-${OXPLORER_VERSION}-all.jar`,
       },
       {
         from: "./node_modules/java-bridge/java-src/build/libs/JavaBridge-2.1.1.jar",
         to: "../java-src/build/libs/JavaBridge-2.1.1.jar",
       },
+      { from: "src/icons", to: "../icons" },
     ],
   }),
 ];

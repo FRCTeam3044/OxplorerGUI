@@ -15,3 +15,4 @@ TODO:
 - [x] Light/Dark theme
 - [x] Add star to title when unsaved
 - [x] Populate Menu Bar
+- [ ] Github Actions/Releases
