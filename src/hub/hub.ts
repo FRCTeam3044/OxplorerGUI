@@ -1,17 +1,26 @@
 import "./index.css";
-import { SnapMode, Vertex } from "../utils/structures";
+import { SnapMode, Vertex, WindowState } from "../utils/structures";
 import "toastify-js/src/toastify.css";
 
-import AutoEditor from "./AutoEditor";
-import PathEditor from "./PathEditor";
+import * as AutoEditor from "./AutoEditor";
+import * as PathEditor from "./PathEditor";
 
 declare global {
   interface Window {
+    util: {
+      updateWindowState: (state: WindowState) => void;
+    };
     files: {
       openFile: () => Promise<{
         data: string;
         path: string;
       }>;
+      newFile: () => Promise<{
+        data: string;
+        path: string;
+      }>;
+      saveFile: (data: string, path: string) => Promise<void>;
+      saveFileAs: (data: string) => Promise<string>;
       openFileFromPath: (path: string) => Promise<string>;
       getRecentFiles: () => Promise<string[]>;
       getFileSeperator: () => Promise<string>;
@@ -53,8 +62,15 @@ tabButtons.forEach((button) => {
 
     button.classList.add("active");
     target.classList.add("active");
+
+    if (button.dataset.tabTarget === "#autoeditor") {
+      AutoEditor.onFocus();
+    } else if (button.dataset.tabTarget === "#patheditor") {
+      PathEditor.onFocus();
+    }
   });
 });
 
-AutoEditor();
-PathEditor();
+AutoEditor.initialize();
+AutoEditor.onFocus();
+PathEditor.initialize();

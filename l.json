@@ -1,0 +1,23 @@
+[
+  {
+    "type": "command",
+    "id": "new_command",
+    "name": "New Command",
+    "parameters": {}
+  },
+  {
+    "type": "group",
+    "id": "new_command",
+    "name": "New Command",
+    "parameters": {},
+    "children": [
+      {
+        "type": "group",
+        "id": "new_command",
+        "name": "New Command",
+        "parameters": {},
+        "children": []
+      }
+    ]
+  }
+]

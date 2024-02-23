@@ -8,11 +8,11 @@
 
 <body>
   <div class="tab-buttons">
-    <button class="tab-button active" data-tab-target="#tab2">Auto Editor</button>
-    <button class="tab-button" data-tab-target="#tab1">Path Editor</button>
+    <button class="tab-button active" data-tab-target="#autoeditor">Auto Editor</button>
+    <button class="tab-button" data-tab-target="#patheditor">Path Editor</button>
   </div>
 
-  <div id="tab1" class="tab">
+  <div id="patheditor" class="tab">
     <div class="container">
       <div class="field">
         <div class="canvas-container" style="position: relative; z-index: 3; user-select: none">
@@ -123,19 +123,24 @@
       </table>
     </div>
   </div>
-  <div id="tab2" class="tab active">
+  <div id="autoeditor" class="tab active">
     <div id="auto-editor-startup">
-    <div id="file-select">
-      <div id="recent">
-        <h3>Recent</h3>
-        <div class="divider"> </div>
-        <div id="recent-files"></div>
+      <div id="file-select">
+        <div id="recent">
+          <h3>Recent</h3>
+          <div class="divider"> </div>
+          <div id="recent-files"></div>
+        </div>
+        <div id="start">
+          <button id="autos-open">Open</button>
+          <button id="autos-new">Create New</button>
+          <div id="templates">
+            <h3>Templates</h3>
+            <div class=" divider"> </div>
+            <p class="template">Coming soon!</p>
+          </div>
+        </div>
       </div>
-      <div id="start">
-        <button id="autos-open">Open</button>
-        <button id="autos-new">Create New</button>
-      </div>
-    </div>
     </div>
     <div class="auto-editor-content">
       <div id="gojs"></div>
@@ -144,9 +149,16 @@
         <div class="divider"> </div>
         <div id="form"></div>
         <div class="divider"> </div>
+        <div class="graph-buttons">
+          <button id="autos-new-command">New Command</button>
+          <button id="autos-new-group">New Group</button>
+        </div>
+        <div class="divider"> </div>
         <div class="save-buttons">
-          <button id="saveButton">Save</button>
-          <button id="saveAsButton">Save As</button>
+          <button id="autos-save">Save</button>
+          <button id="autos-save-as">Save As</button>
+          <button id="autos-inspector-new">New</button>
+          <button id="autos-inspector-open">Open</button>
         </div>
       </div>
     </div>

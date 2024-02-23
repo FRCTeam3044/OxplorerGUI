@@ -1,9 +1,23 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
-import { SnapMode, Vertex } from "../utils/structures";
+import { SnapMode, Vertex, WindowState } from "../utils/structures";
 import { contextBridge, ipcRenderer } from "electron";
 
+contextBridge.exposeInMainWorld("util", {
+  updateWindowState: (state: WindowState) => {
+    ipcRenderer.invoke("updateWindowState", state);
+  },
+});
 contextBridge.exposeInMainWorld("files", {
+  saveFile(data: string, path: string) {
+    return ipcRenderer.invoke("saveFile", data, path);
+  },
+  saveFileAs(data: string) {
+    return ipcRenderer.invoke("saveFileAs", data);
+  },
+  newFile: () => {
+    return ipcRenderer.invoke("newFile");
+  },
   openFile: () => {
     return ipcRenderer.invoke("openFile");
   },

@@ -23,3 +23,17 @@ export type AutoGroup = {
 };
 export type AutoStep = AutoCommand | AutoGroup;
 export type Auto = AutoStep[];
+
+type EditorState = {
+  tab: "editor";
+  filename?: string;
+  unsaved: boolean;
+};
+
+type PathState = {
+  tab: "path";
+  filename?: never;
+  unsaved?: never;
+};
+
+export type WindowState = EditorState | PathState;

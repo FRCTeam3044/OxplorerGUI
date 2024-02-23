@@ -3,7 +3,18 @@ import { Auto, AutoCommand, AutoStep } from "../utils/structures";
 
 let currentAuto: Auto;
 let currentAutoPath: string;
-export default function initialize() {
+let unsaved = false;
+
+export async function onFocus() {
+  window.util.updateWindowState({
+    tab: "editor",
+    filename: currentAutoPath
+      ? currentAutoPath.split(await window.files.getFileSeperator()).pop()
+      : undefined,
+    unsaved,
+  });
+}
+export function initialize() {
   let fileSelect = document.querySelector(
     "#auto-editor-startup"
   ) as HTMLSelectElement;
@@ -12,14 +23,85 @@ export default function initialize() {
   ) as HTMLDivElement;
   let openBtn = document.querySelector("#autos-open") as HTMLButtonElement;
   let newBtn = document.querySelector("#autos-new") as HTMLButtonElement;
+  let inspectorOpenBtn = document.querySelector(
+    "#autos-inspector-open"
+  ) as HTMLButtonElement;
+  let inspectorNewBtn = document.querySelector(
+    "#autos-inspector-new"
+  ) as HTMLButtonElement;
+  let saveBtn = document.querySelector("#autos-save") as HTMLButtonElement;
+  let saveAsBtn = document.querySelector("#autos-save-as") as HTMLButtonElement;
   let recentDiv = document.querySelector("#recent-files") as HTMLDivElement;
+  let newCommandBtn = document.querySelector(
+    "#autos-new-command"
+  ) as HTMLButtonElement;
+  let newGroupBtn = document.querySelector(
+    "#autos-new-group"
+  ) as HTMLButtonElement;
   openBtn.onclick = async () => {
     let file = await window.files.openFile();
     if (file) {
       currentAuto = JSON.parse(file.data) as Auto;
       currentAutoPath = file.path;
+      form.innerHTML = "";
       regenerateGraph();
     }
+  };
+  inspectorOpenBtn.onclick = openBtn.onclick;
+  newBtn.onclick = async () => {
+    let file = await window.files.newFile();
+    if (file) {
+      currentAuto = JSON.parse(file.data) as Auto;
+      currentAutoPath = file.path;
+      form.innerHTML = "";
+      regenerateGraph();
+    }
+  };
+  inspectorNewBtn.onclick = newBtn.onclick;
+  saveBtn.onclick = async () => {
+    console.log(currentAutoPath, currentAuto);
+    if (currentAutoPath) {
+      await window.files.saveFile(
+        JSON.stringify(currentAuto, null, 2),
+        currentAutoPath
+      );
+      unsaved = false;
+      onFocus();
+    } else {
+      saveAsBtn.click();
+    }
+  };
+  saveAsBtn.onclick = async () => {
+    let path = await window.files.saveFileAs(
+      JSON.stringify(currentAuto, null, 2)
+    );
+    if (path) {
+      currentAutoPath = path;
+      unsaved = false;
+      onFocus();
+    }
+  };
+
+  newCommandBtn.onclick = () => {
+    currentAuto.push({
+      type: "command",
+      id: "new_command",
+      name: "New Command",
+      parameters: {},
+    });
+    unsaved = true;
+    regenerateGraph();
+  };
+
+  newGroupBtn.onclick = () => {
+    currentAuto.push({
+      type: "group",
+      id: "new_group",
+      name: "New Group",
+      children: [],
+    });
+    unsaved = true;
+    regenerateGraph();
   };
   const loadRecents = async () => {
     let files = await window.files.getRecentFiles();
@@ -65,28 +147,32 @@ export default function initialize() {
     }),
   });
 
+  diagram.toolManager.hoverDelay = 75;
   diagram.nodeTemplate = $(
     go.Node,
     "Auto",
     $(
       go.Shape,
       "Rectangle",
-      { fill: "white", stroke: "black" },
+      { stroke: "black" },
       new go.Binding("fill", "color")
     ),
-    $(go.TextBlock, { margin: 8 }, new go.Binding("text", "text")),
-    // Add a plus button to add children to the auto, then regenerate the graph
+    $(
+      go.TextBlock,
+      new go.Binding("text", "text"),
+      new go.Binding("margin", "isRoot", function (isRoot: boolean) {
+        return isRoot ? new go.Margin(8, 18, 8, 8) : new go.Margin(5, 8, 12, 8);
+      })
+    ),
     $(
       go.Panel,
       "Auto",
-      {
-        alignment: go.Spot.BottomCenter,
-        // If the node is in a group, bottom center. If it is in the outermost layer, right center
-
-        padding: new go.Margin(30, 0, 0, 0),
-      },
+      {},
       new go.Binding("alignment", "isRoot", function (isRoot: boolean) {
         return isRoot ? go.Spot.RightCenter : go.Spot.BottomCenter;
+      }),
+      new go.Binding("padding", "isRoot", function (isRoot: boolean) {
+        return isRoot ? new go.Margin(0, 0, 0, 0) : new go.Margin(20, 0, 0, 0);
       }),
       $(go.Shape, "PlusLine", {
         width: 10,
@@ -109,8 +195,15 @@ export default function initialize() {
             let index = parent.indexOf(step);
             parent.splice(index + 1, 0, newStep);
           }
+          unsaved = true;
           regenerateGraph();
         },
+        toolTip: $(
+          go.Adornment,
+          "Auto",
+          $(go.Shape, { fill: "#FFFFCC" }),
+          $(go.TextBlock, { margin: 4 }, "Add command after")
+        ),
       })
     ),
     // add click event to the node to update the inputs
@@ -144,17 +237,25 @@ export default function initialize() {
     "Auto",
     { layout: $(go.LayeredDigraphLayout, { direction: 90 }) },
     $(go.Shape, "Rectangle", {
-      fill: "transparent",
+      // Semi transparent grey fill
+      fill: "rgba(150,150,150,0.4)",
       stroke: "gray",
       strokeWidth: 3,
     }), // increased border thickness
-    $(go.Placeholder, { padding: new go.Margin(30, 5, 20, 5) }),
+    $(
+      go.Placeholder,
+      new go.Binding("padding", "isRoot", function (isRoot: boolean) {
+        return isRoot
+          ? new go.Margin(30, 30, 20, 5)
+          : new go.Margin(30, 5, 20, 5);
+      })
+    ),
     $(
       go.TextBlock, // this is the text
       {
         alignment: go.Spot.Top,
         font: "Bold 12pt Sans-Serif",
-        margin: new go.Margin(10, 0, 0, 0),
+        margin: new go.Margin(10, 10, 0, 10),
       }, // added top margin
       new go.Binding("text", "text")
     ),
@@ -165,10 +266,19 @@ export default function initialize() {
         alignment: go.Spot.BottomCenter,
         padding: new go.Margin(30, 10, 0, 10),
       },
+      new go.Binding("alignment", "isRoot", function (isRoot: boolean) {
+        return isRoot ? go.Spot.RightCenter : go.Spot.BottomCenter;
+      }),
+      new go.Binding("padding", "isRoot", function (isRoot: boolean) {
+        return isRoot
+          ? new go.Margin(10, 10, 10, 10)
+          : new go.Margin(30, 10, 0, 10);
+      }),
       $(go.Shape, "PlusLine", {
-        width: 10,
-        height: 10,
-        margin: 4,
+        width: 15,
+        height: 15,
+        margin: new go.Margin(4, 0, 4, 0),
+        strokeWidth: 2,
         click: function (e: any, obj: any) {
           let node = obj.part;
           let step = node.data.step as AutoStep;
@@ -181,8 +291,15 @@ export default function initialize() {
           let parent = node.data.parent;
           let index = parent.indexOf(step);
           parent.splice(index + 1, 0, newStep);
+          unsaved = true;
           regenerateGraph();
         },
+        toolTip: $(
+          go.Adornment,
+          "Auto",
+          $(go.Shape, { fill: "#FFFFCC" }),
+          $(go.TextBlock, { margin: 4 }, "Add command after")
+        ),
       })
     ),
     {
@@ -260,6 +377,7 @@ export default function initialize() {
     key = 0;
     nodeDataArray = [];
     linkDataArray = [];
+    onFocus();
     if (currentAuto === undefined) return;
     mainContent.style.display = "block";
     fileSelect.style.display = "none";
@@ -296,6 +414,7 @@ export default function initialize() {
     form.appendChild(nameLabel);
     nameInput.onchange = () => {
       step.name = nameInput.value;
+      unsaved = true;
       regenerateGraph();
     };
     form.appendChild(nameInput);
@@ -308,6 +427,7 @@ export default function initialize() {
     form.appendChild(idLabel);
     idInput.onchange = () => {
       step.id = idInput.value;
+      unsaved = true;
       regenerateGraph();
     };
     form.appendChild(idInput);
@@ -332,6 +452,7 @@ export default function initialize() {
       } else if (step.type === "command" && !step.parameters) {
         step.parameters = {};
       }
+      unsaved = true;
       regenerateGraph();
       updateGraphInputs(step, parent);
     };
@@ -348,6 +469,7 @@ export default function initialize() {
           name: "New Command",
           parameters: {},
         } as AutoCommand);
+        unsaved = true;
         regenerateGraph();
       };
       form.appendChild(addCommandButton);
@@ -355,12 +477,14 @@ export default function initialize() {
     }
 
     let removeButton = document.createElement("button");
-    removeButton.innerText = "- Remove";
+    removeButton.innerText = "Remove";
     removeButton.className = "form-button";
     removeButton.onclick = () => {
       let index = parent.indexOf(step);
       parent.splice(index, 1);
+      unsaved = true;
       regenerateGraph();
+      form.innerHTML = "";
     };
     form.appendChild(removeButton);
   }

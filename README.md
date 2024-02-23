@@ -9,7 +9,8 @@ TODO:
 - [ ] Command list with parameters
 - [ ] Import command list from file
 - [ ] Export/Import path settings
-- [ ] Export/Import autos
+- [x] Export/Import autos
 - [ ] Branding
 - [x] Refactor code
 - [ ] Light/Dark theme
+- [x] Add star to title when unsaved

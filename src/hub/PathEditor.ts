@@ -3,7 +3,10 @@ import { SnapMode, Vertex } from "../utils/structures";
 import { convert } from "../utils/units";
 import Toastify from "toastify-js";
 
-export default function initialize() {
+export function onFocus() {
+  window.util.updateWindowState({ tab: "path" });
+}
+export function initialize() {
   const canvas = document.querySelector(".field-canvas") as HTMLCanvasElement;
   const container = document.querySelector(
     ".canvas-container"
