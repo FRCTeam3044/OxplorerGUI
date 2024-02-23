@@ -12,7 +12,7 @@ on:
 
 jobs:
   compile:
-    name: Check Fromatting
+    name: Check Formatting
     runs-on: ubuntu-latest
 
     steps:
@@ -166,11 +166,6 @@ jobs:
           sudo flatpak install flathub org.freedesktop.Platform/${{ matrix.arch.flatpakArch }}/22.08 --assumeyes
           sudo flatpak install flathub org.freedesktop.Sdk/${{ matrix.arch.flatpakArch }}/22.08 --assumeyes
           sudo flatpak install flathub org.electronjs.Electron2.BaseApp/${{ matrix.arch.flatpakArch }}/22.08 --assumeyes
-      - name: Download bundles
-        uses: actions/download-artifact@v3
-        with:
-          name: bundles
-          path: bundles
       - name: Build app
         run: |
           yarn make -- --arch=${{ matrix.arch.electronArch }} --platform linux --targets ${{ fromJSON(env.TARGETS)[matrix.format] }}
