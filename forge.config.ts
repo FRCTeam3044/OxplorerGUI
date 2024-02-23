@@ -1,12 +1,13 @@
 import type { ForgeConfig } from "@electron-forge/shared-types";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
-import { MakerZIP } from "@electron-forge/maker-zip";
 import { MakerDeb } from "@electron-forge/maker-deb";
 import { MakerRpm } from "@electron-forge/maker-rpm";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 
 import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
+import MakerDMG from "@electron-forge/maker-dmg";
+import MakerAppImage from "electron-forge-maker-appimage";
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -22,7 +23,10 @@ const config: ForgeConfig = {
     new MakerSquirrel({
       setupIcon: "./src/icons/icon.ico",
     }),
-    new MakerZIP({}, ["darwin"]),
+    new MakerDMG({
+      icon: "./src/icons/icon.icns",
+      name: "OxplorerGUI",
+    }),
     new MakerRpm({
       options: {
         name: "OxplorerGUI",
@@ -32,6 +36,14 @@ const config: ForgeConfig = {
       },
     }),
     new MakerDeb({
+      options: {
+        name: "OxplorerGUI",
+        productName: "OxplorerGUI",
+        bin: "OxplorerGUI",
+        icon: "./src/icons/png/1024x1024.png",
+      },
+    }),
+    new MakerAppImage({
       options: {
         name: "OxplorerGUI",
         productName: "OxplorerGUI",
