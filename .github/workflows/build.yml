@@ -168,7 +168,7 @@ jobs:
       - name: Prepare artifact
         run: |
           shopt -s nocaseglob
-          for file in out/make/${{ steps.build_dir.outputs.dir }}/*[oO][xX][pP][lL][oO][rR][eE][rR]*.${{ matrix.format }}; do
+          for file in out/make/${{ fromJson(steps.build_dir.outputs.dir)[matrix.format] }}/*[oO][xX][pP][lL][oO][rR][eE][rR]*.${{ matrix.format }}; do
               mv "$file" OxplorerGUI-${{ matrix.arch.electronArch }}-dev.${{ matrix.format }}
           done
           shopt -u nocaseglob
