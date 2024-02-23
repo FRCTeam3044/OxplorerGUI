@@ -17,7 +17,7 @@ const config: ForgeConfig = {
     // },
     asar: false,
     icon: "./src/icons/icon",
-    executableName: "OxplorerGUI",
+    executableName: "oxplorer-gui",
   },
   rebuildConfig: {},
   makers: [
