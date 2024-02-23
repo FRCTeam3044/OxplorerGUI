@@ -12,5 +12,6 @@ TODO:
 - [x] Export/Import autos
 - [ ] Branding
 - [x] Refactor code
-- [ ] Light/Dark theme
+- [x] Light/Dark theme
 - [x] Add star to title when unsaved
+- [ ] Populate Menu Bar

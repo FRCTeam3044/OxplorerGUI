@@ -3,6 +3,12 @@
 import { SnapMode, Vertex, WindowState } from "../utils/structures";
 import { contextBridge, ipcRenderer } from "electron";
 
+contextBridge.exposeInMainWorld("ipc", {
+  on: (channel: string, func: (...args: any[]) => void) => {
+    // Deliberately strip event as it includes `sender`
+    ipcRenderer.on(channel, (event, ...args) => func(...args));
+  },
+});
 contextBridge.exposeInMainWorld("util", {
   updateWindowState: (state: WindowState) => {
     ipcRenderer.invoke("updateWindowState", state);

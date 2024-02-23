@@ -190,7 +190,11 @@ export function initialize() {
     canvas.height = height * window.devicePixelRatio;
     context.scale(window.devicePixelRatio, window.devicePixelRatio);
     context.clearRect(0, 0, width, height);
-    context.fillStyle = "#202020";
+    context.fillStyle = "#e9e9e9";
+    // if dark mode
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      context.fillStyle = "#202020";
+    }
     context.rect(0, 0, width, height);
     context.fill();
     canvas.style.transform = "translate(-50%, -50%)";

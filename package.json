@@ -43,7 +43,6 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
-    "@joint/core": "^4.0.1",
     "@timfish/forge-externals-plugin": "^0.2.1",
     "copy-webpack-plugin": "^12.0.2",
     "electron-forge-maker-appimage": "^24.12.0",

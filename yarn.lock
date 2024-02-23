@@ -492,11 +492,6 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@joint/core@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@joint/core/-/core-4.0.1.tgz#8821fa42b89142006ba46da8f919367dd4a9cf02"
-  integrity sha512-/nI64MhSUhTJ4rVT0UeaVBYyFYE8SLGbz1M6nB3lcE9pub1a8cudXG6+8MqhmQMMBOZ2SwNUpHebZXyl5gqDZg==
-
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.3"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz"

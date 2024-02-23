@@ -1,4 +1,5 @@
-import "./index.css";
+import "./vars.css";
+import "./hub.css";
 import { SnapMode, Vertex, WindowState } from "../utils/structures";
 import "toastify-js/src/toastify.css";
 
@@ -7,6 +8,9 @@ import * as PathEditor from "./PathEditor";
 
 declare global {
   interface Window {
+    ipc: {
+      on: (channel: string, func: (...args: any[]) => void) => void;
+    };
     util: {
       updateWindowState: (state: WindowState) => void;
     };

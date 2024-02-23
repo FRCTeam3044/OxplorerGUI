@@ -1,0 +1,26 @@
+:root {
+  --dark-1: #252525;
+  --dark-2: #353535;
+  --dark-3: #454545;
+  --light-1: #f2f2f2;
+  --light-2: #e0e0e0;
+  --light-3: #d0d0d0;
+  --main-text: black;
+  --secondary-text: rgb(131, 131, 131);
+  --table-border: rgba(0, 0, 0, 0.7);
+  --table-border-light: rgba(0, 0, 0, 0.5);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --dark-1: #f2f2f2;
+    --dark-2: #e0e0e0;
+    --dark-3: #d0d0d0;
+    --light-1: #252525;
+    --light-2: #353535;
+    --light-3: #454545;
+    --main-text: white;
+    --secondary-text: grey;
+    --table-border: rgba(255, 255, 255, 0.7);
+    --table-border-light: rgba(255, 255, 255, 0.5);
+  }
+}

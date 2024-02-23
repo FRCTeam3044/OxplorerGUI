@@ -19,7 +19,7 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   //makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
-  makers: [new MakerZIP({}, ["win32"])],
+  makers: [new MakerZIP({}, ["linux"])],
   plugins: [
     //new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
@@ -34,6 +34,19 @@ const config: ForgeConfig = {
             preload: {
               js: "./src/main/preload.ts",
             },
+          },
+          {
+            html: "./src/hub/preferences.html",
+            js: "./src/hub/preferences.ts",
+            name: "preferences_window",
+            preload: {
+              js: "./src/main/preferencesPreload.ts",
+            },
+          },
+          {
+            html: "./src/hub/about.html",
+            name: "about_window",
+            js: "./src/hub/about.ts",
           },
         ],
       },

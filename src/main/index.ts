@@ -1,4 +1,11 @@
-import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  Menu,
+  nativeTheme,
+} from "electron";
 import {
   generatePath,
   getCornerDist,
@@ -27,6 +34,9 @@ import path from "path";
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const ABOUT_WINDOW_WEBPACK_ENTRY: string;
+declare const PREFERENCES_WINDOW_WEBPACK_ENTRY: string;
+declare const PREFERENCES_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -34,13 +44,13 @@ if (require("electron-squirrel-startup")) {
 }
 
 const createWindow = (): void => {
+  nativeTheme.themeSource = getPref("theme", "system");
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
     minHeight: 525,
     minWidth: 750,
-    autoHideMenuBar: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       webviewTag: true,
@@ -76,8 +86,41 @@ app.on("activate", () => {
   }
 });
 
-let isDialogOpen = false;
+function getPref(key: string, def: any) {
+  let prefPath = path.join(app.getPath("userData"), "prefs.json");
+  if (!fs.existsSync(prefPath)) {
+    fs.writeFileSync(prefPath, "{}");
+  }
+  let prefs = JSON.parse(fs.readFileSync(prefPath, "utf-8"));
+  if (prefs[key] === undefined) {
+    prefs[key] = def;
+    fs.writeFileSync(prefPath, JSON.stringify(prefs));
+  }
+  return prefs[key];
+}
 
+function setPref(key: string, value: any) {
+  let prefPath = path.join(app.getPath("userData"), "prefs.json");
+  if (!fs.existsSync(prefPath)) {
+    fs.writeFileSync(prefPath, "{}");
+  }
+  let prefs = JSON.parse(fs.readFileSync(prefPath, "utf-8"));
+  prefs[key] = value;
+  fs.writeFileSync(prefPath, JSON.stringify(prefs));
+}
+
+let isDialogOpen = false;
+ipcMain.handle(
+  "setTheme",
+  async (event, theme: "dark" | "light" | "system") => {
+    setPref("theme", theme);
+    nativeTheme.themeSource = theme;
+  }
+);
+
+ipcMain.handle("getTheme", async (event) => {
+  return getPref("theme", "system");
+});
 ipcMain.handle("openFile", async (event) => {
   if (isDialogOpen) {
     return null;
@@ -276,3 +319,81 @@ function getRecent() {
   }
   return JSON.parse(fs.readFileSync(recentPath, "utf-8")) as string[];
 }
+
+// Add File, Edit, and Help menu items
+// File - New, Open, Save, Save As
+// Edit - Preferences
+// Help - About
+let menuTemplate: Electron.MenuItemConstructorOptions[] = [
+  {
+    label: "File",
+    submenu: [
+      {
+        label: "New",
+        click: () => {
+          BrowserWindow.getFocusedWindow()?.webContents.send("newFile");
+        },
+      },
+      {
+        label: "Open",
+        click: () => {
+          BrowserWindow.getFocusedWindow()?.webContents.send("openFile");
+        },
+      },
+      {
+        label: "Save",
+        click: () => {
+          BrowserWindow.getFocusedWindow()?.webContents.send("saveFile");
+        },
+      },
+      {
+        label: "Save As",
+        click: () => {
+          BrowserWindow.getFocusedWindow()?.webContents.send("saveFileAs");
+        },
+      },
+    ],
+  },
+  {
+    label: "Edit",
+    submenu: [
+      {
+        label: "Preferences",
+        click: () => {
+          const prefsWindow = new BrowserWindow({
+            height: 150,
+            width: 200,
+            resizable: false,
+            autoHideMenuBar: true,
+            title: "Preferences",
+            webPreferences: {
+              preload: PREFERENCES_WINDOW_PRELOAD_WEBPACK_ENTRY,
+            },
+          });
+          prefsWindow.loadURL(PREFERENCES_WINDOW_WEBPACK_ENTRY);
+        },
+      },
+    ],
+  },
+  {
+    label: "Help",
+    submenu: [
+      {
+        label: "About",
+        click: () => {
+          const aboutWindow = new BrowserWindow({
+            height: 250,
+            width: 300,
+            resizable: false,
+            autoHideMenuBar: true,
+            title: "About",
+          });
+          aboutWindow.loadURL(ABOUT_WINDOW_WEBPACK_ENTRY);
+        },
+      },
+    ],
+  },
+];
+
+const menu = Menu.buildFromTemplate(menuTemplate);
+Menu.setApplicationMenu(menu);

@@ -1,5 +1,6 @@
 import * as go from "gojs";
 import { Auto, AutoCommand, AutoStep } from "../utils/structures";
+import Toastify from "toastify-js";
 
 let currentAuto: Auto;
 let currentAutoPath: string;
@@ -39,46 +40,86 @@ export function initialize() {
     "#autos-new-group"
   ) as HTMLButtonElement;
   openBtn.onclick = async () => {
-    let file = await window.files.openFile();
-    if (file) {
-      currentAuto = JSON.parse(file.data) as Auto;
-      currentAutoPath = file.path;
-      form.innerHTML = "";
-      regenerateGraph();
+    try {
+      let file = await window.files.openFile();
+      if (file) {
+        currentAuto = JSON.parse(file.data) as Auto;
+        currentAutoPath = file.path;
+        form.innerHTML = "";
+        regenerateGraph();
+      }
+    } catch (e) {
+      Toastify({
+        text: "Unable to load file: " + e.message.split("Error: ")[1],
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "red",
+      }).showToast();
     }
   };
   inspectorOpenBtn.onclick = openBtn.onclick;
   newBtn.onclick = async () => {
-    let file = await window.files.newFile();
-    if (file) {
-      currentAuto = JSON.parse(file.data) as Auto;
-      currentAutoPath = file.path;
-      form.innerHTML = "";
-      regenerateGraph();
+    try {
+      let file = await window.files.newFile();
+      if (file) {
+        currentAuto = JSON.parse(file.data) as Auto;
+        currentAutoPath = file.path;
+        form.innerHTML = "";
+        regenerateGraph();
+      }
+    } catch (e) {
+      Toastify({
+        text: "Unable to create file: " + e.message.split("Error: ")[1],
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "red",
+      }).showToast();
     }
   };
   inspectorNewBtn.onclick = newBtn.onclick;
   saveBtn.onclick = async () => {
     console.log(currentAutoPath, currentAuto);
     if (currentAutoPath) {
-      await window.files.saveFile(
-        JSON.stringify(currentAuto, null, 2),
-        currentAutoPath
-      );
-      unsaved = false;
-      onFocus();
+      try {
+        await window.files.saveFile(
+          JSON.stringify(currentAuto, null, 2),
+          currentAutoPath
+        );
+        unsaved = false;
+        onFocus();
+      } catch (e) {
+        Toastify({
+          text: "Unable to save file: " + e.message.split("Error: ")[1],
+          duration: 3000,
+          gravity: "bottom",
+          position: "right",
+          backgroundColor: "red",
+        }).showToast();
+      }
     } else {
       saveAsBtn.click();
     }
   };
   saveAsBtn.onclick = async () => {
-    let path = await window.files.saveFileAs(
-      JSON.stringify(currentAuto, null, 2)
-    );
-    if (path) {
-      currentAutoPath = path;
-      unsaved = false;
-      onFocus();
+    try {
+      let path = await window.files.saveFileAs(
+        JSON.stringify(currentAuto, null, 2)
+      );
+      if (path) {
+        currentAutoPath = path;
+        unsaved = false;
+        onFocus();
+      }
+    } catch (e) {
+      Toastify({
+        text: "Unable to save file: " + e.message.split("Error: ")[1],
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "red",
+      }).showToast();
     }
   };
 
@@ -120,11 +161,21 @@ export function initialize() {
       btn.appendChild(fileNameSpan);
       btn.appendChild(pathSpan);
       btn.onclick = async () => {
-        let fileContent = await window.files.openFileFromPath(file);
-        if (fileContent) {
-          currentAuto = JSON.parse(fileContent) as Auto;
-          currentAutoPath = file;
-          regenerateGraph();
+        try {
+          let fileContent = await window.files.openFileFromPath(file);
+          if (fileContent) {
+            currentAuto = JSON.parse(fileContent) as Auto;
+            currentAutoPath = file;
+            regenerateGraph();
+          }
+        } catch (e) {
+          Toastify({
+            text: "Unable to load file: " + e.message.split("Error: ")[1],
+            duration: 3000,
+            gravity: "bottom",
+            position: "right",
+            backgroundColor: "red",
+          }).showToast();
         }
       };
       recentDiv.appendChild(btn);
