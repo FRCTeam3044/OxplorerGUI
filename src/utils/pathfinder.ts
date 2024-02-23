@@ -5,7 +5,7 @@ import { OXPLORER_VERSION } from "./constants";
 appendClasspath(
   path
     .join(__dirname, `java-libs/oxplorer-${OXPLORER_VERSION}-all.jar`)
-    .replace("app.asar", "app.asar.unpacked")
+    .replace("app.asar", "app.asar.unpacked"),
 );
 ensureJvm({
   isPackagedElectron: true,
@@ -20,7 +20,7 @@ let JVertex = importClass("me.nabdev.pathfinding.structures.Vertex");
 let Field = importClass("me.nabdev.pathfinding.utilities.FieldLoader$Field");
 let PathfinderBuilder = importClass("me.nabdev.pathfinding.PathfinderBuilder");
 let JSnapMode = importClass(
-  "me.nabdev.pathfinding.Pathfinder$PathfindSnapMode"
+  "me.nabdev.pathfinding.Pathfinder$PathfindSnapMode",
 );
 
 let pathfinderBuilder = new PathfinderBuilder(Field.CRESCENDO_2024);
@@ -32,7 +32,7 @@ export const generatePath = (start: Vertex, end: Vertex) => {
   let pathRaw = pathfinder.generatePathSync(
     new JVertex(start.x, start.y),
     new JVertex(end.x, end.y),
-    snapMode
+    snapMode,
   );
   let pathDoubleArr = pathRaw.toDoubleArraySync();
 
