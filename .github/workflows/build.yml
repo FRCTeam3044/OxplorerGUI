@@ -99,7 +99,7 @@ jobs:
       - name: Build with electron forge
         run: yarn make -- --arch=${{ matrix.arch }} --platform darwin
       - name: Prepare artifact
-        run: mv out/make/OxplorerGUI-${{ matrix.arch }}/dmg/OxplorerGUI*.dmg OxplorerGUI-${{ matrix.arch }}-dev.dmg
+        run: mv out/make/OxplorerGUI-${{ matrix.arch }}/OxplorerGUI*.dmg OxplorerGUI-${{ matrix.arch }}-dev.dmg
       - name: Upload development artifact
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v3
@@ -168,11 +168,11 @@ jobs:
           sudo flatpak install flathub org.electronjs.Electron2.BaseApp/${{ matrix.arch.flatpakArch }}/22.08 --assumeyes
       - name: Build app
         run: |
-          yarn make -- --arch=${{ matrix.arch.electronArch }} --platform linux --targets ${{ fromJSON(env.TARGETS)[matrix.format] }}
+          yarn make -- --arch=${{ matrix.arch.electronArch }} --platform linux --targets ${{ fromJson(env.TARGETS)[matrix.format] }}
       - name: Prepare artifact
         run: |
           shopt -s nocaseglob
-          for file in out/make/${{ fromJSON(env.BUILD_DIR)[matrix.format] }}/*[oO][xX][pP][lL][oO][rR][eE][rR][gG][uU][iI]*.${{ matrix.format }}; do
+          for file in out/make/${{ fromJson(env.BUILD_DIR)[matrix.format] }}/*[oO][xX][pP][lL][oO][rR][eE][rR][gG][uU][iI]*.${{ matrix.format }}; do
               mv "$file" OxplorerGUI-${{ matrix.arch.electronArch }}-dev.${{ matrix.format }}
           done
           shopt -u nocaseglob
