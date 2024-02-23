@@ -143,6 +143,7 @@ jobs:
             format: "flatpak"
     env:
       TARGETS: '{"deb": "@electron-forge/maker-deb", "rpm": "@electron-forge/maker-rpm", "AppImage": "electron-forge-maker-appimage"}'
+      BUILD_DIR: '{"deb": "deb", "rpm": "rpm", "AppImage": "."}'
 
     steps:
       - name: Checkout repository
@@ -163,7 +164,7 @@ jobs:
       - name: Prepare artifact
         run: |
           shopt -s nocaseglob
-          for file in out/make/*[oO][xX][pP][lL][oO][rR][eE][rR][gG][uU][iI]*.${{ matrix.format }}; do
+          for file in out/make/${{ fromJson(env.BUILD_DIR)[matrix.format] }}/*[oO][xX][pP][lL][oO][rR][eE][rR]*.${{ matrix.format }}; do
               mv "$file" OxplorerGUI-${{ matrix.arch.electronArch }}-dev.${{ matrix.format }}
           done
           shopt -u nocaseglob
