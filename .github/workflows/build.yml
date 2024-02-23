@@ -163,7 +163,7 @@ jobs:
       - name: Set BUILD_DIR
         id: build_dir
         run: |
-          echo "::set-output name=dir::$(echo '{\"deb\": \"deb/'${{ matrix.arch.electronArch }}'\", \"rpm\": \"rpm/'${{ matrix.arch.electronArch }}'\", \"AppImage\": \".\"}')"
+          echo "::set-output name=dir::$(echo '{"deb": "deb/${{ matrix.arch.electronArch }}", "rpm": "rpm/${{ matrix.arch.electronArch }}", "AppImage": "."}')"
 
       - name: Prepare artifact
         run: |
