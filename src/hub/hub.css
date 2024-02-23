@@ -305,3 +305,7 @@ input {
   color: var(--main-text);
   margin: 10px 5px;
 }
+
+#export {
+  padding: 10px;
+}

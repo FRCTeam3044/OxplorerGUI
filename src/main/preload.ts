@@ -13,6 +13,9 @@ contextBridge.exposeInMainWorld("util", {
   updateWindowState: (state: WindowState) => {
     ipcRenderer.invoke("updateWindowState", state);
   },
+  getTemplates: () => {
+    return ipcRenderer.invoke("getTemplates");
+  },
 });
 contextBridge.exposeInMainWorld("files", {
   saveFile(data: string, path: string) {

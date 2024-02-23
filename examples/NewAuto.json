@@ -1,0 +1,20 @@
+[
+  {
+    "type": "command",
+    "id": "go_to_waypoints",
+    "name": "New Command",
+    "parameters": {
+      "waypoints": [
+        {
+          "x": 7,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "rotDegrees": 0
+    }
+  }
+]

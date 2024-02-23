@@ -1,6 +1,6 @@
 import "./vars.css";
 import "./hub.css";
-import { SnapMode, Vertex, WindowState } from "../utils/structures";
+import { SnapMode, Template, Vertex, WindowState } from "../utils/structures";
 import "toastify-js/src/toastify.css";
 
 import * as AutoEditor from "./AutoEditor";
@@ -13,6 +13,7 @@ declare global {
     };
     util: {
       updateWindowState: (state: WindowState) => void;
+      getTemplates: () => Promise<Template[]>;
     };
     files: {
       openFile: () => Promise<{
@@ -107,5 +108,11 @@ window.ipc.on("newFile", async () => {
 window.ipc.on("saveFileAs", async () => {
   if (isAutoEditorActive()) {
     AutoEditor.saveAs();
+  }
+});
+
+window.ipc.on("importTemplates", async (commands: Template[]) => {
+  if (isAutoEditorActive()) {
+    AutoEditor.importTemplates(commands);
   }
 });

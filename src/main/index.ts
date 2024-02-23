@@ -27,7 +27,7 @@ import {
   setRobotWidth,
   setSnapMode,
 } from "../utils/pathfinder";
-import { SnapMode, Vertex, WindowState } from "../utils/structures";
+import { SnapMode, Template, Vertex, WindowState } from "../utils/structures";
 import fs from "fs";
 import path from "path";
 import { GITHUB_BASE_URL } from "../utils/constants";
@@ -118,6 +118,14 @@ ipcMain.handle(
     nativeTheme.themeSource = theme;
   }
 );
+
+ipcMain.handle("getTemplates", async (event) => {
+  let templatesPath = path.join(app.getPath("userData"), "templates.json");
+  if (!fs.existsSync(templatesPath)) {
+    fs.writeFileSync(templatesPath, "[]");
+  }
+  return JSON.parse(fs.readFileSync(templatesPath, "utf-8"));
+});
 
 ipcMain.handle("getTheme", async (event) => {
   return getPref("theme", "system");
@@ -361,6 +369,50 @@ let menuTemplate: Electron.MenuItemConstructorOptions[] = [
           BrowserWindow.getFocusedWindow()?.webContents.send("saveFileAs");
         },
         accelerator: "CmdOrCtrl+Shift+S",
+      },
+      {
+        label: "Import Template List",
+        click: async () => {
+          if (isDialogOpen) {
+            return null;
+          }
+          isDialogOpen = true;
+          let file = await dialog.showOpenDialog({
+            properties: ["openFile"],
+            filters: [{ name: "JSON", extensions: ["json"] }],
+          });
+          isDialogOpen = false;
+          if (file.canceled) {
+            return null;
+          } else {
+            const content = fs.readFileSync(file.filePaths[0], "utf-8");
+            let templates = JSON.parse(content);
+            if (!Array.isArray(templates)) {
+              dialog.showErrorBox("Error", "Invalid template list");
+              return;
+            }
+            if (
+              templates.some((c: Template) => {
+                if (c.type !== "command" && c.type !== "group") return true;
+                if (c.id === undefined) return true;
+                return c.type === "command" && c.parameters === undefined;
+              })
+            ) {
+              dialog.showErrorBox("Error", "Invalid template list");
+              return;
+            }
+            // Save to userData
+            let templatesPath = path.join(
+              app.getPath("userData"),
+              "templates.json"
+            );
+            fs.writeFileSync(templatesPath, content);
+            BrowserWindow.getFocusedWindow()?.webContents.send(
+              "importTemplates",
+              templates
+            );
+          }
+        },
       },
     ],
   },

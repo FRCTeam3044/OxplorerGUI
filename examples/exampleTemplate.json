@@ -1,0 +1,84 @@
+[
+  {
+    "type": "group",
+    "id": "deadline"
+  },
+  {
+    "type": "group",
+    "id": "race"
+  },
+  {
+    "type": "group",
+    "id": "parallel"
+  },
+  {
+    "type": "command",
+    "id": "wait_for_note",
+    "parameters": {}
+  },
+  {
+    "type": "command",
+    "id": "go_to_note",
+    "parameters": {}
+  },
+  {
+    "type": "command",
+    "id": "go_to_and_track_point",
+    "parameters": {
+      "targetX": 0,
+      "targetY": 0,
+      "trackX": 0,
+      "trackY": 0
+    }
+  },
+  {
+    "type": "command",
+    "id": "go_to_point",
+    "parameters": {
+      "targetX": 0,
+      "targetY": 0,
+      "rotDegrees": 0
+    }
+  },
+  {
+    "type": "command",
+    "id": "go_to_waypoints",
+    "parameters": {
+      "waypoints": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "rotDegrees": 0
+    }
+  },
+  {
+    "type": "command",
+    "id": "go_to_waypoints_and_track",
+    "parameters": {
+      "waypoints": [
+        {
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "trackX": 0,
+      "trackY": 0
+    }
+  },
+  {
+    "type": "command",
+    "id": "set_intake_angle",
+    "parameters": {}
+  },
+  {
+    "type": "command",
+    "id": "set_amp_angle",
+    "parameters": {}
+  }
+]

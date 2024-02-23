@@ -6,13 +6,15 @@ Made using [GoJS](https://gojs.net/latest/index.html), with permission.
 
 TODO:
 
-- [ ] Command list with parameters
-- [ ] Import command list from file
-- [ ] Export/Import path settings
+- [ ] Import path settings
+- [ ] Github Actions/Releases
+- [ ] Undo/Redo
+- [x] Command list with parameters
+- [x] Import command list from file
+- [x] Export path settings
 - [x] Export/Import autos
-- [ ] Branding
+- [x] Branding
 - [x] Refactor code
 - [x] Light/Dark theme
 - [x] Add star to title when unsaved
 - [x] Populate Menu Bar
-- [ ] Github Actions/Releases

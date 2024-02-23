@@ -37,3 +37,16 @@ type PathState = {
 };
 
 export type WindowState = EditorState | PathState;
+
+export type Template = GroupTemplate | CommandTemplate;
+
+export type GroupTemplate = {
+  type: "group";
+  id: string;
+};
+
+export type CommandTemplate = {
+  type: "command";
+  id: string;
+  parameters: { [key: string]: string };
+};

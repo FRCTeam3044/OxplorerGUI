@@ -1,16 +1,30 @@
 import * as go from "gojs";
-import { Auto, AutoCommand, AutoStep } from "../utils/structures";
+import {
+  Auto,
+  AutoCommand,
+  AutoStep,
+  CommandTemplate,
+  Template,
+} from "../utils/structures";
 import Toastify from "toastify-js";
+import JSONEditor, { JSONEditorOptions } from "jsoneditor";
+import "jsoneditor/dist/jsoneditor.css";
 
 let currentAuto: Auto;
 let currentAutoPath: string;
 let unsaved = false;
+let templateList: Template[];
 
 let open;
 let newHandler;
 let save;
 let saveAs;
+let form = document.querySelector("#form") as HTMLDivElement;
 
+export function importTemplates(commands: Template[]) {
+  templateList = commands;
+  form.innerHTML = "";
+}
 export async function onFocus() {
   window.util.updateWindowState({
     tab: "editor",
@@ -20,7 +34,8 @@ export async function onFocus() {
     unsaved,
   });
 }
-export function initialize() {
+export async function initialize() {
+  templateList = await window.util.getTemplates();
   let fileSelect = document.querySelector(
     "#auto-editor-startup"
   ) as HTMLSelectElement;
@@ -134,7 +149,7 @@ export function initialize() {
   newCommandBtn.onclick = () => {
     currentAuto.push({
       type: "command",
-      id: "new_command",
+      id: templateList.find((t) => t.type === "command").id ?? "new_command",
       name: "New Command",
       parameters: {},
     });
@@ -145,7 +160,7 @@ export function initialize() {
   newGroupBtn.onclick = () => {
     currentAuto.push({
       type: "group",
-      id: "new_group",
+      id: templateList.find((t) => t.type === "group").id ?? "new_group",
       name: "New Group",
       children: [],
     });
@@ -242,7 +257,9 @@ export function initialize() {
           let step = node.data.step as AutoStep;
           let newStep = {
             type: "command",
-            id: "new_command",
+            id:
+              templateList.find((t) => t.type === "command").id ??
+              "new_command",
             name: "New Command",
             parameters: {},
           };
@@ -343,7 +360,9 @@ export function initialize() {
           let step = node.data.step as AutoStep;
           let newStep = {
             type: "command",
-            id: "new_command",
+            id:
+              templateList.find((t) => t.type === "command").id ??
+              "new_command",
             name: "New Command",
             parameters: {},
           };
@@ -405,7 +424,10 @@ export function initialize() {
     let currentKey = key++;
     nodeDataArray.push({
       key: currentKey,
-      text: step.name !== undefined ? `${step.name} (${step.id})` : step.id,
+      text:
+        step.name !== undefined
+          ? `${step.name}${step.type === "group" ? " " : "\n"}(${step.id})`
+          : step.id,
       color: step.type === "group" ? "lightblue" : "lightgreen",
       step,
       index,
@@ -461,8 +483,6 @@ export function initialize() {
     diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
   }
 
-  let form = document.querySelector("#form");
-
   function updateGraphInputs(step: AutoStep, parent: AutoStep[]) {
     form.innerHTML = "";
     let nameInput = document.createElement("input");
@@ -478,9 +498,8 @@ export function initialize() {
     };
     form.appendChild(nameInput);
     form.appendChild(document.createElement("br"));
-    let idInput = document.createElement("input");
+    let idInput = document.createElement("select");
     let idLabel = document.createElement("label");
-    idInput.value = step.id;
     idLabel.className = "form-label";
     idLabel.innerText = "ID: ";
     form.appendChild(idLabel);
@@ -488,7 +507,16 @@ export function initialize() {
       step.id = idInput.value;
       unsaved = true;
       regenerateGraph();
+      updateGraphInputs(step, parent);
     };
+    for (let template of templateList) {
+      if (template.type !== step.type) continue;
+      let option = document.createElement("option");
+      option.value = template.id;
+      option.innerText = template.id;
+      idInput.appendChild(option);
+    }
+    idInput.value = step.id;
     form.appendChild(idInput);
     form.appendChild(document.createElement("br"));
     let typeInput = document.createElement("select");
@@ -524,7 +552,8 @@ export function initialize() {
       addCommandButton.onclick = () => {
         step.children.push({
           type: "command",
-          id: "new_command",
+          id:
+            templateList.find((t) => t.type === "command").id ?? "new_command",
           name: "New Command",
           parameters: {},
         } as AutoCommand);
@@ -533,6 +562,59 @@ export function initialize() {
       };
       form.appendChild(addCommandButton);
       form.appendChild(document.createElement("br"));
+    } else {
+      let template = templateList.find(
+        (t) => t.id === step.id
+      ) as CommandTemplate;
+      if (!template) {
+        let error = document.createElement("span");
+        error.innerText = "No template found for this command";
+        error.style.color = "red";
+        form.appendChild(error);
+      } else {
+        // for (let key in template.parameters) {
+        //   let input = document.createElement("input");
+        //   let label = document.createElement("label");
+        //   label.className = "form-label";
+        //   label.innerText = key + ": ";
+        //   input.value = step.parameters[key] ?? template.parameters[key];
+        //   input.onchange = () => {
+        //     step.parameters[key] = input.value;
+        //     unsaved = true;
+        //   };
+        //   form.appendChild(label);
+        //   form.appendChild(input);
+        //   form.appendChild(document.createElement("br"));
+        // }
+        // if template parameters has no properties, dont create a json editor
+        let parameters = template.parameters;
+        // Fill in any paramaters from step.parameters, leaving the rest as default
+        for (let key in step.parameters) {
+          parameters[key] = step.parameters[key];
+        }
+
+        if (Object.keys(template.parameters).length !== 0) {
+          let jsoneditor = document.createElement("div");
+          jsoneditor.id = "jsoneditor";
+          form.appendChild(jsoneditor);
+          let containsArray = Object.values(template.parameters).some(
+            Array.isArray
+          );
+          console.log(containsArray);
+          const options: JSONEditorOptions = {
+            onChangeJSON: (json) => {
+              step.parameters = json;
+              unsaved = true;
+              regenerateGraph();
+            },
+            mode: containsArray ? "tree" : "form",
+            mainMenuBar: false,
+            name: "Parameters",
+          };
+          const editor = new JSONEditor(jsoneditor, options);
+          editor.set(parameters);
+        }
+      }
     }
 
     let removeButton = document.createElement("button");

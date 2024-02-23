@@ -54,6 +54,30 @@ export function initialize() {
   const cornerCutDistInput = document.querySelector(
     "#cornerCutDist"
   ) as HTMLInputElement;
+  let exportButton = document.querySelector("#export") as HTMLButtonElement;
+  exportButton.onclick = async () => {
+    let config = `new PathfinderBuilder(Field.CRESCENDO_2024)
+.setRobotLength(${robotLengthInput.value})
+.setRobotWidth(${robotWidthInput.value})
+.setPointSpacing(${straightawayPointSpacingInput.value})
+.setCornerPointSpacing(${cornerPointSpacingInput.value})
+.setCornerDist(${cornerSizeInput.value})
+.setInjectPoints(${injectPointsCheckbox.checked})
+.setNormalizeCorners(${normalizeCornersCheckbox.checked})
+.setCornerSplitPercent(${splitPercentSlider.value})
+.setCornerCutDist(${cornerCutDistInput.value})
+.build();
+`;
+    // Copy to clipboard
+    navigator.clipboard.writeText(config);
+    Toastify({
+      text: `Config copied to clipboard! You can paste it into your robot code. To use your selected snap mode, use PathfindSnapMode.${snapModeSelect.value} when generating paths.`,
+      duration: 3000,
+      gravity: "bottom",
+      position: "right",
+      backgroundColor: "green",
+    }).showToast();
+  };
   injectPointsCheckbox.onchange = () => {
     try {
       window.java.setInjectPoints(injectPointsCheckbox.checked);

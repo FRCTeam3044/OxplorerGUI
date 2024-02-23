@@ -1,0 +1,14 @@
+[
+  {
+    "type": "group",
+    "id": "deadline"
+  },
+  {
+    "type": "group",
+    "id": "race"
+  },
+  {
+    "type": "group",
+    "id": "parallel"
+  }
+]
