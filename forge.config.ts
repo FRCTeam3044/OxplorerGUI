@@ -54,7 +54,6 @@ const config: ForgeConfig = {
     }),
   ],
   plugins: [
-    //new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
       mainConfig,
       renderer: {

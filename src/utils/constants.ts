@@ -8,7 +8,8 @@ export const CRESCENDO_2024 = {
 
 export const OXPLORER_VERSION = "0.9.11";
 
-export const GITHUB_BASE_URL = "https://github.com/nab138/OxplorerGUI";
+export const REPOSITORY = "nab138/OxplorerGUI";
+export const GITHUB_BASE_URL = "https://github.com/" + REPOSITORY;
 
 export const defaultTemplates = [
   {
