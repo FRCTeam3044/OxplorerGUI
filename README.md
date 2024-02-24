@@ -33,5 +33,4 @@ yarn make
 Roadmap:
 
 - [ ] Import path settings
-- [ ] Auto Updates
 - [ ] Improved parameter validation
