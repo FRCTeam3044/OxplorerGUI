@@ -128,7 +128,7 @@ jobs:
           asset_content_type: "application/octet-stream"
 
   build-linux:
-    name: Build for Linux/${{ matrix.format }} (${{ matrix.arch }})
+    name: Build for Linux (${{ matrix.arch }})
     needs: compile
     runs-on: ubuntu-latest
     permissions:
@@ -137,10 +137,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        format: ["deb", "rpm", "AppImage"]
         arch: ["x64", "arm64", "armv7l"]
-    env:
-      TARGETS: '{"deb": "@electron-forge/maker-deb", "rpm": "@electron-forge/maker-rpm", "AppImage": "electron-forge-maker-appimage"}'
 
     steps:
       - name: Checkout repository
@@ -157,40 +154,86 @@ jobs:
           sudo apt-get update; sudo apt-get install --no-install-recommends -y libarchive-tools
       - name: Build app
         run: |
-          yarn make -- --arch=${{ matrix.arch }} --platform linux --targets ${{ fromJson(env.TARGETS)[matrix.format] }}
+          yarn make -- --arch=${{ matrix.arch }} --platform linux
       - name: Set BUILD_DIR
         id: build_dir
         run: |
           echo "::set-output name=dir::$(echo '{"deb": "deb/${{ matrix.arch }}", "rpm": "rpm/${{ matrix.arch }}", "AppImage": "."}')"
 
-      - name: Prepare artifact
+      - name: Prepare deb artifact
         run: |
           shopt -s nocaseglob
-          for file in out/make/${{ fromJson(steps.build_dir.outputs.dir)[matrix.format] }}/*[oO][xX][pP][lL][oO][rR][eE][rR]*.${{ matrix.format }}; do
-              mv "$file" OxplorerGUI-${{ matrix.arch }}-dev.${{ matrix.format }}
+          for file in out/make/deb/*[oO][xX][pP][lL][oO][rR][eE][rR]*.deb; do
+              mv "$file" OxplorerGUI-${{ matrix.arch }}-dev.deb
           done
           shopt -u nocaseglob
-      - name: Upload development artifact
+      - name: Prepare rpm artifact
+        run: |
+          shopt -s nocaseglob
+          for file in out/make/rpm/*[oO][xX][pP][lL][oO][rR][eE][rR]*.rpm; do
+              mv "$file" OxplorerGUI-${{ matrix.arch }}-dev.rpm
+          done
+          shopt -u nocaseglob
+      - name: Prepare AppImage artifact
+        run: |
+          shopt -s nocaseglob
+          for file in out/make/*[oO][xX][pP][lL][oO][rR][eE][rR]*.AppImage; do
+              mv "$file" OxplorerGUI-${{ matrix.arch }}-dev.AppImage
+          done
+          shopt -u nocaseglob
+      - name: Upload development deb artifact
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v3
         with:
-          name: OxplorerGUI-${{ matrix.arch }}-dev.${{ matrix.format }}
-          path: OxplorerGUI-${{ matrix.arch }}-dev.${{ matrix.format }}
+          name: OxplorerGUI-${{ matrix.arch }}-dev.deb
+          path: OxplorerGUI-${{ matrix.arch }}-dev.deb
+      - name: Upload development rpm artifact
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v3
+        with:
+          name: OxplorerGUI-${{ matrix.arch }}-dev.rpm
+          path: OxplorerGUI-${{ matrix.arch }}-dev.rpm
+      - name: Upload development AppImage artifact
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v3
+        with:
+          name: OxplorerGUI-${{ matrix.arch }}-dev.AppImage
+          path: OxplorerGUI-${{ matrix.arch }}-dev.AppImage
       - name: "Release: Get release info"
         if: github.event_name == 'release'
         id: get_release_info
         uses: kaliber5/action-get-release@v1
         with:
           token: ${{ github.token }}
-      - name: "Release: Upload artifact"
+      - name: "Release: Upload deb artifact"
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: OxplorerGUI-${{ matrix.arch }}-dev.${{ matrix.format }}
-          asset_name: OxplorerGUI-linux-${{ matrix.arch }}-${{ steps.get_release_info.outputs.tag_name }}.${{ matrix.format }}
+          asset_path: OxplorerGUI-${{ matrix.arch }}-dev.deb
+          asset_name: OxplorerGUI-linux-${{ matrix.arch }}-${{ steps.get_release_info.outputs.tag_name }}.deb
+          asset_content_type: "application/octet-stream"
+      - name: "Release: Upload rpm artifact"
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: OxplorerGUI-${{ matrix.arch }}-dev.rpm
+          asset_name: OxplorerGUI-linux-${{ matrix.arch }}-${{ steps.get_release_info.outputs.tag_name }}.rpm
+          asset_content_type: "application/octet-stream"
+      - name: "Release: Upload AppImage artifact"
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: OxplorerGUI-${{ matrix.arch }}-dev.AppImage
+          asset_name: OxplorerGUI-linux-${{ matrix.arch }}-${{ steps.get_release_info.outputs.tag_name }}.AppImage
           asset_content_type: "application/octet-stream"
 
   finalize-release:

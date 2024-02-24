@@ -33,4 +33,6 @@ yarn make
 Roadmap:
 
 - [ ] Import path settings
-- [ ] Improved parameter validation
+- [ ] Path Waypoints
+- [ ] Export Built paths
+- [ ] Improved autonomous parameter validation

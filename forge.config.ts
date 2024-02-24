@@ -33,7 +33,7 @@ const config: ForgeConfig = {
         name: "OxplorerGUI",
         productName: "OxplorerGUI",
         bin: "OxplorerGUI",
-        icon: "./src/icons/png/1024x1024.png",
+        icon: "./src/icons/png/512x512.png",
       },
     }),
     new MakerDeb({
@@ -41,7 +41,7 @@ const config: ForgeConfig = {
         name: "OxplorerGUI",
         productName: "OxplorerGUI",
         bin: "OxplorerGUI",
-        icon: "./src/icons/png/1024x1024.png",
+        icon: "./src/icons/png/512x512.png",
       },
     }),
     new MakerAppImage({
@@ -49,7 +49,7 @@ const config: ForgeConfig = {
         name: "OxplorerGUI",
         productName: "OxplorerGUI",
         bin: "OxplorerGUI",
-        icon: "./src/icons/png/1024x1024.png",
+        icon: "./src/icons/png/512x512.png",
       },
     }),
   ],
