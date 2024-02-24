@@ -37,7 +37,7 @@ export default class UpdateChecker {
             pragma: "no-cache",
             "cache-control": "no-cache",
           },
-        }
+        },
       );
       releaseData = await response.json();
     } catch (error) {
