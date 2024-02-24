@@ -1,4 +1,4 @@
-# OxplorerGUI
+# OxplorerGUI - WIP
 
 A frontend for oxplorer to easily visualize and edit paths in real time as well as visiualizing and editing autos.
 
