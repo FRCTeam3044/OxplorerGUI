@@ -155,22 +155,18 @@ jobs:
       - name: Build app
         run: |
           yarn make -- --arch=${{ matrix.arch }} --platform linux
-      - name: Set BUILD_DIR
-        id: build_dir
-        run: |
-          echo "::set-output name=dir::$(echo '{"deb": "deb/${{ matrix.arch }}", "rpm": "rpm/${{ matrix.arch }}", "AppImage": "."}')"
 
       - name: Prepare deb artifact
         run: |
           shopt -s nocaseglob
-          for file in out/make/deb/*[oO][xX][pP][lL][oO][rR][eE][rR]*.deb; do
+          for file in out/make/deb/${{ matrix.arch }}/*[oO][xX][pP][lL][oO][rR][eE][rR]*.deb; do
               mv "$file" OxplorerGUI-${{ matrix.arch }}-dev.deb
           done
           shopt -u nocaseglob
       - name: Prepare rpm artifact
         run: |
           shopt -s nocaseglob
-          for file in out/make/rpm/*[oO][xX][pP][lL][oO][rR][eE][rR]*.rpm; do
+          for file in out/make/rpm/${{ matrix.arch }}/*[oO][xX][pP][lL][oO][rR][eE][rR]*.rpm; do
               mv "$file" OxplorerGUI-${{ matrix.arch }}-dev.rpm
           done
           shopt -u nocaseglob
