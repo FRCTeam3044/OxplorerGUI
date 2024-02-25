@@ -54,7 +54,7 @@ declare global {
 }
 
 const tabButtons = document.querySelectorAll(
-  ".tab-button"
+  ".tab-button",
 ) as NodeListOf<HTMLButtonElement>;
 const tabs = document.querySelectorAll(".tab");
 

@@ -14,7 +14,7 @@ declare global {
 async function initialize() {
   const themeSelect = document.getElementById("theme") as HTMLSelectElement;
   const autoUpdateSelect = document.getElementById(
-    "updates"
+    "updates",
   ) as HTMLSelectElement;
   themeSelect.addEventListener("change", () => {
     window.prefs.setTheme(themeSelect.value as "system" | "dark" | "light");

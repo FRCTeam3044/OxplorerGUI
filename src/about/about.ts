@@ -16,6 +16,6 @@ window.aboutUtil.getVersion().then((version) => {
 });
 
 let oxplorerVersionSpan = document.querySelector(
-  "#oxplorerVersion"
+  "#oxplorerVersion",
 ) as HTMLSpanElement;
 oxplorerVersionSpan.textContent = OXPLORER_VERSION;
