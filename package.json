@@ -1,7 +1,7 @@
 {
   "name": "oxplorer-gui",
   "productName": "OxplorerGUI",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A frontend for Oxplorer with auto planning and path building capabilities",
   "main": ".webpack/main",
   "scripts": {
@@ -43,7 +43,7 @@
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^6.0.0",
     "electron": "28.2.0",
-    "electron-forge-maker-appimage": "https://github.com/Marcus10110/electron-forge-maker-appimage.git",
+    "electron-forge-maker-appimage": "https://github.com/nab138/electron-forge-maker-appimage",
     "eslint": "^8.0.1",
     "eslint-plugin-import": "^2.25.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",

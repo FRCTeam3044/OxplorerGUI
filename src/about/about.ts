@@ -1,4 +1,4 @@
-import "./vars.css";
+import "../theme.css";
 import "./about.css";
 import { OXPLORER_VERSION } from "../utils/constants";
 
@@ -16,6 +16,6 @@ window.aboutUtil.getVersion().then((version) => {
 });
 
 let oxplorerVersionSpan = document.querySelector(
-  "#oxplorerVersion",
+  "#oxplorerVersion"
 ) as HTMLSpanElement;
 oxplorerVersionSpan.textContent = OXPLORER_VERSION;

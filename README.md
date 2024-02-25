@@ -27,7 +27,7 @@ yarn make
 
 - Made using [GoJS](https://gojs.net/latest/index.html), with permission.
 - Bundles [Oxplorer](https://github.com/FRCTeam3044/Oxplorer)
-- Uses code from [AdvantageScope](https://github.com/Mechanical-Advantage/AdvantageScope) to render the field
+- Uses code from [AdvantageScope](https://github.com/Mechanical-Advantage/AdvantageScope) to render the field and handle updates
 - Field Images from [Chiefdelphi](https://www.chiefdelphi.com/t/2024-crescendo-top-down-field-renders/447764)
 
 Roadmap:

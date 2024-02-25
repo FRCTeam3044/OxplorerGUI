@@ -3,7 +3,6 @@ import type { Configuration } from "webpack";
 import { rules } from "./webpack.rules";
 import { plugins } from "./webpack.plugins";
 
-import path from "path";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 
 rules.push({

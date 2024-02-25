@@ -32,7 +32,7 @@ const config: ForgeConfig = {
         name: "OxplorerGUI",
         productName: "OxplorerGUI",
         bin: "OxplorerGUI",
-        icon: "./src/icons/png/512x512.png",
+        icon: "./src/icons/linux/512x512.png",
       },
     }),
     new MakerDeb({
@@ -40,7 +40,7 @@ const config: ForgeConfig = {
         name: "OxplorerGUI",
         productName: "OxplorerGUI",
         bin: "OxplorerGUI",
-        icon: "./src/icons/png/512x512.png",
+        icon: "./src/icons/linux/512x512.png",
       },
     }),
     new MakerAppImage({
@@ -48,7 +48,7 @@ const config: ForgeConfig = {
         name: "OxplorerGUI",
         productName: "OxplorerGUI",
         bin: "OxplorerGUI",
-        icon: "./src/icons/png/512x512.png",
+        icon: "./src/icons/linux",
       },
     }),
   ],
@@ -63,23 +63,23 @@ const config: ForgeConfig = {
             js: "./src/hub/hub.ts",
             name: "main_window",
             preload: {
-              js: "./src/main/preload.ts",
+              js: "./src/hub/preload.ts",
             },
           },
           {
-            html: "./src/hub/preferences.html",
-            js: "./src/hub/preferences.ts",
+            html: "./src/preferences/preferences.html",
+            js: "./src/preferences/preferences.ts",
             name: "preferences_window",
             preload: {
-              js: "./src/main/preferencesPreload.ts",
+              js: "./src/preferences/preferencesPreload.ts",
             },
           },
           {
-            html: "./src/hub/about.html",
+            html: "./src/about/about.html",
             name: "about_window",
-            js: "./src/hub/about.ts",
+            js: "./src/about/about.ts",
             preload: {
-              js: "./src/main/aboutPreload.ts",
+              js: "./src/about/aboutPreload.ts",
             },
           },
         ],

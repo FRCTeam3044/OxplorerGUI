@@ -2356,9 +2356,9 @@ electron-fetch@^1.9.1:
   dependencies:
     encoding "^0.1.13"
 
-"electron-forge-maker-appimage@https://github.com/Marcus10110/electron-forge-maker-appimage.git":
+"electron-forge-maker-appimage@https://github.com/nab138/electron-forge-maker-appimage":
   version "1.0.0"
-  resolved "https://github.com/Marcus10110/electron-forge-maker-appimage.git#b1317b0a27b993e840e0048c00a450f60d1b279d"
+  resolved "https://github.com/nab138/electron-forge-maker-appimage#2ed2845f02be4e2b358787daea0c1735c13c0c3b"
   dependencies:
     "@electron-forge/maker-base" "^7.1.0"
     "@electron-forge/shared-types" "^7.1.0"

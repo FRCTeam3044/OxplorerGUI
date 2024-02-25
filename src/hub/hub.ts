@@ -1,4 +1,4 @@
-import "./vars.css";
+import "../theme.css";
 import "./hub.css";
 import { SnapMode, Template, Vertex, WindowState } from "../utils/structures";
 import "toastify-js/src/toastify.css";
@@ -54,7 +54,7 @@ declare global {
 }
 
 const tabButtons = document.querySelectorAll(
-  ".tab-button",
+  ".tab-button"
 ) as NodeListOf<HTMLButtonElement>;
 const tabs = document.querySelectorAll(".tab");
 

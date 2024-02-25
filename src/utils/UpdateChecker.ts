@@ -1,7 +1,7 @@
 // Taken From https://github.com/Mechanical-Advantage/AdvantageScope/blob/58bde6d4e171b7ff23ab3b8bb23b856def6df4db/src/main/UpdateChecker.ts
 import { app, dialog, shell } from "electron";
 import fetch from "electron-fetch";
-import { GITHUB_BASE_URL, REPOSITORY } from "../utils/constants";
+import { GITHUB_BASE_URL, REPOSITORY } from "./constants";
 import { gt } from "semver";
 
 /** Checks for updates from GitHub and prompts the user when requested. */
@@ -37,7 +37,7 @@ export default class UpdateChecker {
             pragma: "no-cache",
             "cache-control": "no-cache",
           },
-        },
+        }
       );
       releaseData = await response.json();
     } catch (error) {
