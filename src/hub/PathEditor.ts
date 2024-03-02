@@ -9,50 +9,50 @@ export function onFocus() {
 export function initialize() {
   const canvas = document.querySelector(".field-canvas") as HTMLCanvasElement;
   const container = document.querySelector(
-    ".canvas-container",
+    ".canvas-container"
   ) as HTMLDivElement;
   const fieldSelect = document.querySelector("#field") as HTMLSelectElement;
   const injectPointsCheckbox = document.querySelector(
-    "#injectPoints",
+    "#injectPoints"
   ) as HTMLInputElement;
   const normalizeCornersCheckbox = document.querySelector(
-    "#normalizeCorners",
+    "#normalizeCorners"
   ) as HTMLInputElement;
   const robotLengthInput = document.querySelector(
-    "#robotLength",
+    "#robotLength"
   ) as HTMLInputElement;
 
   const startXInput = document.querySelector("#startX") as HTMLInputElement;
   const startYInput = document.querySelector("#startY") as HTMLInputElement;
   const straightawayPointSpacingInput = document.querySelector(
-    "#straightawayPointSpacing",
+    "#straightawayPointSpacing"
   ) as HTMLInputElement;
   const splitPercentSlider = document.querySelector(
-    "#splitPercent",
+    "#splitPercent"
   ) as HTMLInputElement;
   const splitPercentValueSpan = document.querySelector(
-    "#splitPercentValue",
+    "#splitPercentValue"
   ) as HTMLSpanElement;
 
   const robotWidthInput = document.querySelector(
-    "#robotWidth",
+    "#robotWidth"
   ) as HTMLInputElement;
   const targetXInput = document.querySelector("#targetX") as HTMLInputElement;
   const targetYInput = document.querySelector("#targetY") as HTMLInputElement;
   const cornerPointSpacingInput = document.querySelector(
-    "#cornerPointSpacing",
+    "#cornerPointSpacing"
   ) as HTMLInputElement;
   const cornerSizeInput = document.querySelector(
-    "#cornerSize",
+    "#cornerSize"
   ) as HTMLInputElement;
   const robotColorInput = document.querySelector(
-    "#robotColor",
+    "#robotColor"
   ) as HTMLInputElement;
   const snapModeSelect = document.querySelector(
-    "#snapMode",
+    "#snapMode"
   ) as HTMLSelectElement;
   const cornerCutDistInput = document.querySelector(
-    "#cornerCutDist",
+    "#cornerCutDist"
   ) as HTMLInputElement;
   let exportButton = document.querySelector("#export") as HTMLButtonElement;
   exportButton.onclick = async () => {
@@ -117,7 +117,7 @@ export function initialize() {
   straightawayPointSpacingInput.onchange = () => {
     try {
       window.java.setPointSpacing(
-        parseFloat(straightawayPointSpacingInput.value),
+        parseFloat(straightawayPointSpacingInput.value)
       );
     } catch (e) {
       handleError(e);
@@ -128,7 +128,7 @@ export function initialize() {
   cornerPointSpacingInput.onchange = () => {
     try {
       window.java.setCornerPointSpacing(
-        parseFloat(cornerPointSpacingInput.value),
+        parseFloat(cornerPointSpacingInput.value)
       );
     } catch (e) {
       handleError(e);
@@ -182,11 +182,11 @@ export function initialize() {
     input.onchange = () => {
       currentStart = new Vertex(
         parseFloat(startXInput.value),
-        parseFloat(startYInput.value),
+        parseFloat(startYInput.value)
       );
       currentEnd = new Vertex(
         parseFloat(targetXInput.value),
-        parseFloat(targetYInput.value),
+        parseFloat(targetYInput.value)
       );
       regeneratePath();
     };
@@ -257,7 +257,7 @@ export function initialize() {
       renderValues[0],
       renderValues[1],
       renderValues[4],
-      renderValues[5],
+      renderValues[5]
     );
 
     let canvasFieldLeft = renderValues[0] + gameData.topLeft[0] * imageScalar;
@@ -270,9 +270,10 @@ export function initialize() {
       2;
 
     // Convert translation to pixel coordinates
+
     let calcCoordinates = (
       translation: [number, number],
-      alwaysFlipped = false,
+      alwaysFlipped = false
     ): [number, number] => {
       if (!gameData) return [0, 0];
       let positionInches = [
@@ -297,6 +298,30 @@ export function initialize() {
       }
       return positionPixels;
     };
+
+    let pixelsToCoordinates = (
+      translation: [number, number],
+      alwaysFlipped = false
+    ): [number, number] => {
+      if (!gameData) return [0, 0];
+      let positionPixels: [number, number] = [
+        translation[0] - canvasFieldLeft,
+        translation[1] - canvasFieldTop,
+      ];
+      if (alwaysFlipped) {
+        positionPixels[0] =
+          canvasFieldWidth - (positionPixels[0] - canvasFieldLeft);
+        positionPixels[1] =
+          canvasFieldHeight - (positionPixels[1] - canvasFieldTop);
+      }
+      let positionInches: [number, number] = [
+        positionPixels[0] * (gameData.widthInches / canvasFieldWidth),
+        positionPixels[1] * (gameData.heightInches / canvasFieldHeight),
+      ];
+      positionInches[1] = gameData.heightInches - positionInches[1];
+      positionInches[1] *= -1;
+      return positionInches;
+    };
     context.strokeStyle = "#eb9800";
     context.lineWidth = 2.5 * pixelsPerInch;
     context.beginPath();
@@ -308,13 +333,26 @@ export function initialize() {
     for (let v of currentPath) {
       drawCircle(calcCoordinates([v.x, v.y]), 2.5 * pixelsPerInch, "red");
     }
+    // If the mouse is on the canvas, get the coordinates
+    canvas.onmousemove = (e) => {
+      let rect = canvas.getBoundingClientRect();
+      let x = e.clientX - rect.left;
+      let y = e.clientY - rect.top;
+      let coords = pixelsToCoordinates([x, y]);
+      let xCoord = coords[0];
+      let yCoord = -coords[1];
+      let xInch = convert(xCoord, "inches", "meters").toFixed(2);
+      let yInch = convert(yCoord, "inches", "meters").toFixed(2);
+      document.querySelector("#mouseX").innerHTML = xInch;
+      document.querySelector("#mouseY").innerHTML = yInch;
+    };
   }
 
   function drawCircle(
     center: [number, number],
     radius: number,
     color: string,
-    fill = true,
+    fill = true
   ) {
     context.beginPath();
     context.arc(center[0], center[1], radius, 0, Math.PI * 2);

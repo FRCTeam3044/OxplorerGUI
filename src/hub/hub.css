@@ -152,7 +152,7 @@ input {
 }
 #gojs {
   height: 100%;
-  width: calc(100% - 300px);
+  width: calc(100% - 350px);
 }
 
 #inspector {
@@ -161,7 +161,7 @@ input {
   background-color: var(--light-2);
   right: 0;
   bottom: 0;
-  width: 300px;
+  width: 350px;
   z-index: 10;
   padding: 0;
 }
@@ -308,4 +308,11 @@ input {
 
 #export {
   padding: 10px;
+}
+
+.mouseCoords {
+  position: absolute;
+  top: 10px;
+  left: 2px;
+  z-index: 100;
 }

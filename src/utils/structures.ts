@@ -10,7 +10,7 @@ export class Vertex {
 
 export type SnapMode = "NONE" | "SNAP_ALL" | "SNAP_START" | "SNAP_TARGET";
 export type AutoCommand = {
-  type: "command";
+  type: "command" | "macro";
   name: string;
   id: string;
   parameters: { [key: string]: string };
@@ -46,7 +46,7 @@ export type GroupTemplate = {
 };
 
 export type CommandTemplate = {
-  type: "command";
+  type: "command" | "macro";
   id: string;
   parameters: { [key: string]: string };
 };

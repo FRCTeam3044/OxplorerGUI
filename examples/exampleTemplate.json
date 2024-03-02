@@ -12,14 +12,36 @@
     "id": "parallel"
   },
   {
+    "type": "group",
+    "id": "sequence"
+  },
+  {
     "type": "command",
     "id": "wait_for_note",
     "parameters": {}
   },
   {
     "type": "command",
+    "id": "wait_for_note_in_area",
+    "parameters": {
+      "regionX": 0,
+      "regionY": 0,
+      "regionRadius": 0
+    }
+  },
+  {
+    "type": "command",
     "id": "go_to_note",
     "parameters": {}
+  },
+  {
+    "type": "command",
+    "id": "go_to_note_in_area",
+    "parameters": {
+      "regionX": 0,
+      "regionY": 0,
+      "regionRadius": 0
+    }
   },
   {
     "type": "command",
@@ -80,5 +102,14 @@
     "type": "command",
     "id": "set_amp_angle",
     "parameters": {}
+  },
+  {
+    "type": "macro",
+    "id": "pickup_note",
+    "parameters": {
+      "regionX": 0,
+      "regionY": 0,
+      "regionRadius": 0
+    }
   }
 ]
