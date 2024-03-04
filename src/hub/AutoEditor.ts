@@ -2,6 +2,7 @@ import * as go from "gojs";
 import {
   Auto,
   AutoCommand,
+  AutoCondition,
   AutoStep,
   CommandTemplate,
   Template,
@@ -41,27 +42,27 @@ export async function onFocus() {
 export async function initialize() {
   templateList = await window.util.getTemplates();
   let fileSelect = document.querySelector(
-    "#auto-editor-startup",
+    "#auto-editor-startup"
   ) as HTMLSelectElement;
   let mainContent = document.querySelector(
-    ".auto-editor-content",
+    ".auto-editor-content"
   ) as HTMLDivElement;
   let openBtn = document.querySelector("#autos-open") as HTMLButtonElement;
   let newBtn = document.querySelector("#autos-new") as HTMLButtonElement;
   let inspectorOpenBtn = document.querySelector(
-    "#autos-inspector-open",
+    "#autos-inspector-open"
   ) as HTMLButtonElement;
   let inspectorNewBtn = document.querySelector(
-    "#autos-inspector-new",
+    "#autos-inspector-new"
   ) as HTMLButtonElement;
   let saveBtn = document.querySelector("#autos-save") as HTMLButtonElement;
   let saveAsBtn = document.querySelector("#autos-save-as") as HTMLButtonElement;
   let recentDiv = document.querySelector("#recent-files") as HTMLDivElement;
   let newCommandBtn = document.querySelector(
-    "#autos-new-command",
+    "#autos-new-command"
   ) as HTMLButtonElement;
   let newGroupBtn = document.querySelector(
-    "#autos-new-group",
+    "#autos-new-group"
   ) as HTMLButtonElement;
   open = async () => {
     try {
@@ -113,7 +114,7 @@ export async function initialize() {
       try {
         await window.files.saveFile(
           JSON.stringify(currentAuto, null, 2),
-          currentAutoPath,
+          currentAutoPath
         );
         unsaved = false;
         onFocus();
@@ -134,7 +135,7 @@ export async function initialize() {
   saveAs = async () => {
     try {
       let path = await window.files.saveFileAs(
-        JSON.stringify(currentAuto, null, 2),
+        JSON.stringify(currentAuto, null, 2)
       );
       if (path) {
         currentAutoPath = path;
@@ -257,6 +258,56 @@ export async function initialize() {
   };
 
   diagram.toolManager.hoverDelay = 75;
+
+  diagram.groupTemplateMap.add(
+    "conditional",
+    $(
+      go.Group,
+      "Auto",
+      { layout: $(go.LayeredDigraphLayout, { direction: 90 }) },
+      $(go.Shape, "Rectangle", {
+        fill: "lightblue",
+        stroke: "gray",
+        strokeWidth: 3,
+      }),
+      $(
+        go.Panel,
+        "Table",
+        $(go.RowColumnDefinition, { row: 0, separatorStroke: "black" }),
+        $(go.RowColumnDefinition, { row: 1, separatorStroke: "black" }),
+        $(
+          go.Placeholder,
+          { row: 0, padding: new go.Margin(30, 30, 20, 5) },
+          new go.Binding("itemArray", "conditions")
+        ),
+        $(
+          go.Placeholder,
+          { row: 1, padding: new go.Margin(30, 5, 20, 5) },
+          new go.Binding("itemArray", "child")
+        )
+      ),
+      $(
+        go.TextBlock,
+        {
+          alignment: go.Spot.Top,
+          font: "Bold 12pt Sans-Serif",
+          margin: new go.Margin(10, 10, 0, 10),
+        },
+        new go.Binding("text", "text")
+      )
+    )
+  );
+
+  // Define new node template for "conditions"
+  diagram.nodeTemplateMap.add(
+    "condition",
+    $(
+      go.Node,
+      "Auto",
+      $(go.Shape, "Diamond", { fill: "lightgreen" }),
+      $(go.TextBlock, { margin: 5 }, new go.Binding("text", "key"))
+    )
+  );
   diagram.nodeTemplate = $(
     go.Node,
     "Auto",
@@ -264,14 +315,14 @@ export async function initialize() {
       go.Shape,
       "Rectangle",
       { stroke: "black" },
-      new go.Binding("fill", "color"),
+      new go.Binding("fill", "color")
     ),
     $(
       go.TextBlock,
       new go.Binding("text", "text"),
       new go.Binding("margin", "isRoot", function (isRoot: boolean) {
         return isRoot ? new go.Margin(8, 18, 8, 8) : new go.Margin(5, 8, 12, 8);
-      }),
+      })
     ),
     $(
       go.Panel,
@@ -313,9 +364,9 @@ export async function initialize() {
           go.Adornment,
           "Auto",
           $(go.Shape, { fill: "#FFFFCC" }),
-          $(go.TextBlock, { margin: 4 }, "Add command after"),
+          $(go.TextBlock, { margin: 4 }, "Add command after")
         ),
-      }),
+      })
     ),
     // add click event to the node to update the inputs
     {
@@ -324,7 +375,7 @@ export async function initialize() {
         let step = node.data.step as AutoStep;
         updateGraphInputs(step, node.data.parent);
       },
-    },
+    }
   );
 
   diagram.linkTemplate = $(
@@ -333,14 +384,14 @@ export async function initialize() {
     $(
       go.Shape,
       { strokeWidth: 3, stroke: "black" },
-      new go.Binding("stroke", "color"),
+      new go.Binding("stroke", "color")
     ), // this is the link shape
     $(
       go.Shape,
       { toArrow: "Standard", stroke: "black", fill: "black" },
       new go.Binding("stroke", "color"),
-      new go.Binding("fill", "color"),
-    ), // this is the arrow at the end of the link
+      new go.Binding("fill", "color")
+    ) // this is the arrow at the end of the link
   );
 
   diagram.groupTemplate = $(
@@ -359,7 +410,7 @@ export async function initialize() {
         return isRoot
           ? new go.Margin(30, 30, 20, 5)
           : new go.Margin(30, 5, 20, 5);
-      }),
+      })
     ),
     $(
       go.TextBlock, // this is the text
@@ -368,7 +419,7 @@ export async function initialize() {
         font: "Bold 12pt Sans-Serif",
         margin: new go.Margin(10, 10, 0, 10),
       }, // added top margin
-      new go.Binding("text", "text"),
+      new go.Binding("text", "text")
     ),
     $(
       go.Panel,
@@ -411,9 +462,9 @@ export async function initialize() {
           go.Adornment,
           "Auto",
           $(go.Shape, { fill: "#FFFFCC" }),
-          $(go.TextBlock, { margin: 4 }, "Add command after"),
+          $(go.TextBlock, { margin: 4 }, "Add command after")
         ),
-      }),
+      })
     ),
     {
       click: function (e: any, obj: any) {
@@ -421,7 +472,7 @@ export async function initialize() {
         let step = node.data.step as AutoStep;
         updateGraphInputs(step, node.data.parent);
       },
-    },
+    }
   );
 
   type NodeData = {
@@ -434,6 +485,9 @@ export async function initialize() {
     isGroup: boolean;
     group?: number;
     isRoot?: boolean;
+    category?: string;
+    condition?: AutoCondition;
+    child: AutoStep;
   };
 
   type LinkData = {
@@ -454,22 +508,42 @@ export async function initialize() {
     step: AutoStep,
     parent: Auto,
     index: number,
-    parentKey: number | null,
+    parentKey: number | null
   ) {
     let currentKey = key++;
+    let displayId;
+    if (
+      step.type === "group" ||
+      step.type === "command" ||
+      step.type === "macro"
+    ) {
+      displayId = step.id;
+    } else {
+      displayId = step.type;
+    }
+    console.log(
+      step.type === "if" || step.type === "while" ? "conditional" : ""
+    );
     nodeDataArray.push({
       key: currentKey,
       text:
         step.name !== undefined
-          ? `${step.name}${step.type === "group" ? " " : "\n"}(${step.id})`
-          : step.id,
+          ? `${step.name}${step.type === "group" ? " " : "\n"}(${displayId})`
+          : displayId,
       color: step.type === "group" ? "lightblue" : "lightgreen",
       step,
       index,
       parent,
-      isGroup: step.type === "group",
+      isGroup:
+        step.type === "group" || step.type === "if" || step.type === "while",
       group: parentKey !== null ? parentKey : undefined,
       isRoot: parentKey === null,
+      category:
+        step.type === "if" || step.type === "while" ? "conditional" : "",
+      condition:
+        step.type === "if" || step.type === "while" ? step.condtion : undefined,
+      child:
+        step.type === "if" || step.type === "while" ? step.child : undefined,
     });
     if (index < parent.length - 1) {
       linkDataArray.push({
@@ -511,7 +585,7 @@ export async function initialize() {
           current.auto,
           i,
           //i == 0 ? current.parent : null
-          current.parent,
+          current.parent
         );
       }
     }
@@ -534,33 +608,39 @@ export async function initialize() {
     };
     form.appendChild(nameInput);
     form.appendChild(document.createElement("br"));
-    let idInput = document.createElement("select");
-    let idLabel = document.createElement("label");
-    idLabel.className = "form-label";
-    idLabel.innerText = "ID: ";
-    form.appendChild(idLabel);
-    idInput.onchange = () => {
-      step.id = idInput.value;
-      unsaved = true;
-      regenerateGraph();
-      updateGraphInputs(step, parent);
-    };
-    for (let template of templateList) {
-      if (template.type !== step.type) continue;
-      let option = document.createElement("option");
-      option.value = template.id;
-      option.innerText = template.id;
-      idInput.appendChild(option);
+    if (
+      step.type === "group" ||
+      step.type === "command" ||
+      step.type === "macro"
+    ) {
+      let idInput = document.createElement("select");
+      let idLabel = document.createElement("label");
+      idLabel.className = "form-label";
+      idLabel.innerText = "ID: ";
+      form.appendChild(idLabel);
+      idInput.onchange = () => {
+        step.id = idInput.value;
+        unsaved = true;
+        regenerateGraph();
+        updateGraphInputs(step, parent);
+      };
+      for (let template of templateList) {
+        if (template.type !== step.type) continue;
+        let option = document.createElement("option");
+        option.value = template.id;
+        option.innerText = template.id;
+        idInput.appendChild(option);
+      }
+      idInput.value = step.id;
+      form.appendChild(idInput);
+      form.appendChild(document.createElement("br"));
     }
-    idInput.value = step.id;
-    form.appendChild(idInput);
-    form.appendChild(document.createElement("br"));
     let typeInput = document.createElement("select");
     let typeLabel = document.createElement("label");
     typeLabel.className = "form-label";
     typeLabel.innerText = "Type: ";
     form.appendChild(typeLabel);
-    let types = ["command", "group", "macro"];
+    let types = ["command", "group", "macro", "if", "while"];
     for (let type of types) {
       let option = document.createElement("option");
       option.value = type;
@@ -601,9 +681,9 @@ export async function initialize() {
       };
       form.appendChild(addCommandButton);
       form.appendChild(document.createElement("br"));
-    } else {
+    } else if (step.type === "command" || step.type == "macro") {
       let template = templateList.find(
-        (t) => t.id === step.id,
+        (t) => t.id === step.id
       ) as CommandTemplate;
       if (!template) {
         let error = document.createElement("span");
@@ -637,7 +717,7 @@ export async function initialize() {
           jsoneditor.id = "jsoneditor";
           form.appendChild(jsoneditor);
           let containsArray = Object.values(template.parameters).some(
-            Array.isArray,
+            Array.isArray
           );
           console.log(containsArray);
           const options: JSONEditorOptions = {

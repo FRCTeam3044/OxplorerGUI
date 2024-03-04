@@ -31,6 +31,11 @@
   },
   {
     "type": "command",
+    "id": "require_note",
+    "parameters": {}
+  },
+  {
+    "type": "command",
     "id": "go_to_note",
     "parameters": {}
   },
@@ -102,6 +107,25 @@
     "type": "command",
     "id": "set_amp_angle",
     "parameters": {}
+  },
+  {
+    "type": "command",
+    "id": "intake",
+    "parameters": {}
+  },
+  {
+    "type": "command",
+    "id": "transit",
+    "parameters": {}
+  },
+  {
+    "type": "command",
+    "id": "wait_for_limit_switch",
+    "parameters": {
+      "subsystem": "intake",
+      "waitForOpen": false,
+      "time": 0.5
+    }
   },
   {
     "type": "macro",

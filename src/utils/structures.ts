@@ -21,7 +21,19 @@ export type AutoGroup = {
   id: string;
   children: AutoStep[];
 };
-export type AutoStep = AutoCommand | AutoGroup;
+export type AutoCondition = {
+  name: string;
+  id: string;
+  children: AutoCondition[];
+  parameters: { [key: string]: string };
+};
+export type AutoConditionalStep = {
+  name: string;
+  type: "if" | "while";
+  condtion: AutoCondition;
+  child: AutoStep;
+};
+export type AutoStep = AutoCommand | AutoGroup | AutoConditionalStep;
 export type Auto = AutoStep[];
 
 type EditorState = {
