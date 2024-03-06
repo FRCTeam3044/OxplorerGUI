@@ -3,6 +3,7 @@ import {
   Auto,
   AutoCommand,
   AutoCondition,
+  AutoConditionalStep,
   AutoStep,
   CommandTemplate,
   Template,
@@ -10,6 +11,7 @@ import {
 import Toastify from "toastify-js";
 import JSONEditor, { JSONEditorOptions } from "jsoneditor";
 import "jsoneditor/dist/jsoneditor.css";
+import { instanceOf } from "java";
 
 let currentAuto: Auto;
 let currentAutoPath: string;
@@ -259,55 +261,6 @@ export async function initialize() {
 
   diagram.toolManager.hoverDelay = 75;
 
-  diagram.groupTemplateMap.add(
-    "conditional",
-    $(
-      go.Group,
-      "Auto",
-      { layout: $(go.LayeredDigraphLayout, { direction: 90 }) },
-      $(go.Shape, "Rectangle", {
-        fill: "lightblue",
-        stroke: "gray",
-        strokeWidth: 3,
-      }),
-      $(
-        go.Panel,
-        "Table",
-        $(go.RowColumnDefinition, { row: 0, separatorStroke: "black" }),
-        $(go.RowColumnDefinition, { row: 1, separatorStroke: "black" }),
-        $(
-          go.Placeholder,
-          { row: 0, padding: new go.Margin(30, 30, 20, 5) },
-          new go.Binding("itemArray", "conditions")
-        ),
-        $(
-          go.Placeholder,
-          { row: 1, padding: new go.Margin(30, 5, 20, 5) },
-          new go.Binding("itemArray", "child")
-        )
-      ),
-      $(
-        go.TextBlock,
-        {
-          alignment: go.Spot.Top,
-          font: "Bold 12pt Sans-Serif",
-          margin: new go.Margin(10, 10, 0, 10),
-        },
-        new go.Binding("text", "text")
-      )
-    )
-  );
-
-  // Define new node template for "conditions"
-  diagram.nodeTemplateMap.add(
-    "condition",
-    $(
-      go.Node,
-      "Auto",
-      $(go.Shape, "Diamond", { fill: "lightgreen" }),
-      $(go.TextBlock, { margin: 5 }, new go.Binding("text", "key"))
-    )
-  );
   diagram.nodeTemplate = $(
     go.Node,
     "Auto",
@@ -398,12 +351,30 @@ export async function initialize() {
     go.Group,
     "Auto",
     { layout: $(go.LayeredDigraphLayout, { direction: 90 }) },
-    $(go.Shape, "Rectangle", {
-      // Semi transparent grey fill
-      fill: "rgba(150,150,150,0.4)",
-      stroke: "gray",
-      strokeWidth: 3,
-    }), // increased border thickness
+    $(
+      go.Shape,
+      "Rectangle",
+      {
+        // Semi transparent grey fill
+        fill: "rgba(150,150,150,0.6)",
+        stroke: "gray",
+        strokeWidth: 3,
+      },
+      new go.Binding("stroke", "step", (step: AutoStep | AutoCondition) => {
+        return "type" in step ? "gray" : "#222";
+      }),
+      new go.Binding("fill", "step", (step: AutoStep | AutoCondition) => {
+        if ("type" in step) {
+          if (step.type === "if" || step.type === "while") {
+            return "rgba(170,75,225,0.5)";
+          } else {
+            return "rgba(100,100,100,0.6)";
+          }
+        } else {
+          return "rgba(200,200,30,0.7)";
+        }
+      })
+    ), // increased border thickness
     $(
       go.Placeholder,
       new go.Binding("padding", "isRoot", function (isRoot: boolean) {
@@ -479,15 +450,12 @@ export async function initialize() {
     key: number;
     text: string;
     color: string;
-    step: AutoStep;
+    step: AutoStep | AutoCondition;
     index: number;
     parent: AutoStep[];
     isGroup: boolean;
     group?: number;
     isRoot?: boolean;
-    category?: string;
-    condition?: AutoCondition;
-    child: AutoStep;
   };
 
   type LinkData = {
@@ -501,65 +469,94 @@ export async function initialize() {
 
   let key = 0;
   let toProcess = [] as {
-    auto: Auto;
+    auto: Auto | AutoCondition[];
     parent: number | null;
+    parentCondition?: boolean;
   }[];
   function processStep(
-    step: AutoStep,
-    parent: Auto,
+    step: AutoStep | AutoCondition,
+    parent: Auto | AutoCondition[],
     index: number,
-    parentKey: number | null
+    parentKey: number | null,
+    parentCondition?: boolean
   ) {
     let currentKey = key++;
-    let displayId;
-    if (
-      step.type === "group" ||
-      step.type === "command" ||
-      step.type === "macro"
-    ) {
-      displayId = step.id;
-    } else {
-      displayId = step.type;
-    }
-    console.log(
-      step.type === "if" || step.type === "while" ? "conditional" : ""
-    );
-    nodeDataArray.push({
-      key: currentKey,
-      text:
-        step.name !== undefined
-          ? `${step.name}${step.type === "group" ? " " : "\n"}(${displayId})`
-          : displayId,
-      color: step.type === "group" ? "lightblue" : "lightgreen",
-      step,
-      index,
-      parent,
-      isGroup:
-        step.type === "group" || step.type === "if" || step.type === "while",
-      group: parentKey !== null ? parentKey : undefined,
-      isRoot: parentKey === null,
-      category:
-        step.type === "if" || step.type === "while" ? "conditional" : "",
-      condition:
-        step.type === "if" || step.type === "while" ? step.condtion : undefined,
-      child:
-        step.type === "if" || step.type === "while" ? step.child : undefined,
-    });
-    if (index < parent.length - 1) {
-      linkDataArray.push({
-        from: currentKey,
-        to: key,
+    // If step is of type AutoStep
+    if ("type" in step && "type" in parent[index]) {
+      let displayId;
+      if (
+        step.type === "group" ||
+        step.type === "command" ||
+        step.type === "macro"
+      ) {
+        displayId = step.id;
+      } else {
+        displayId = step.type;
+      }
+      let isCondition = step.type === "if" || step.type === "while";
+      nodeDataArray.push({
+        key: currentKey,
+        text:
+          step.name !== undefined
+            ? `${step.name}${step.type === "group" || isCondition ? " " : "\n"}(${displayId})`
+            : displayId,
+        color: step.type === "group" ? "lightblue" : "lightgreen",
+        step,
+        index,
+        parent: parent as Auto,
+        isGroup: step.type === "group" || isCondition,
+        group: parentKey !== null ? parentKey : undefined,
+        isRoot: parentKey === null,
       });
-    }
-    if (parentKey !== null) {
-      // linkDataArray.push({
-      //   from: parentKey,
-      //   to: currentKey,
-      //   color: "gray",
-      // });
-    }
-    if (step.type === "group") {
-      toProcess.push({ auto: step.children, parent: currentKey });
+      if (index < parent.length - 1) {
+        linkDataArray.push({
+          from: currentKey,
+          to: key,
+        });
+      }
+      if (
+        parentKey !== null &&
+        !isCondition &&
+        !("condition" in parent[0]) &&
+        !parentCondition
+      ) {
+        // linkDataArray.push({
+        //   from: parentKey,
+        //   to: currentKey,
+        //   color: "gray",
+        // });
+      }
+      if (step.type === "group") {
+        toProcess.push({ auto: step.children, parent: currentKey });
+      } else if (isCondition) {
+        step = step as AutoConditionalStep;
+        toProcess.push({
+          auto: [step.child],
+          parent: currentKey,
+          parentCondition: true,
+        });
+        toProcess.push({
+          auto: [step.condition],
+          parent: currentKey,
+          parentCondition: true,
+        });
+      }
+    } else {
+      // If step is of type AutoCondition
+      let condition = step as AutoCondition;
+      nodeDataArray.push({
+        key: currentKey,
+        text: `Condition: ${condition.id}`,
+        color: "lightpink",
+        step,
+        index,
+        parent: parent as Auto,
+        isGroup: true,
+        group: parentKey !== null ? parentKey : undefined,
+        isRoot: parentKey === null,
+      });
+
+      toProcess.push({ auto: condition.children, parent: currentKey });
     }
   }
 
@@ -576,6 +573,7 @@ export async function initialize() {
     toProcess = [{ auto: currentAuto, parent: null }] as {
       auto: Auto;
       parent: number | null;
+      parentCondition?: boolean;
     }[];
     while (toProcess.length > 0) {
       let current = toProcess.pop();
@@ -585,7 +583,8 @@ export async function initialize() {
           current.auto,
           i,
           //i == 0 ? current.parent : null
-          current.parent
+          current.parent,
+          current.parentCondition
         );
       }
     }

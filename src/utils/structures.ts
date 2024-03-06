@@ -30,7 +30,7 @@ export type AutoCondition = {
 export type AutoConditionalStep = {
   name: string;
   type: "if" | "while";
-  condtion: AutoCondition;
+  condition: AutoCondition;
   child: AutoStep;
 };
 export type AutoStep = AutoCommand | AutoGroup | AutoConditionalStep;
