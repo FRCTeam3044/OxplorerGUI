@@ -274,7 +274,7 @@ export async function initialize() {
       go.TextBlock,
       new go.Binding("text", "text"),
       new go.Binding("margin", "isRoot", function (isRoot: boolean) {
-        return isRoot ? new go.Margin(8, 18, 8, 8) : new go.Margin(5, 8, 12, 8);
+        return isRoot ? new go.Margin(8, 18, 8, 8) : new go.Margin(5, 8, 15, 8);
       })
     ),
     $(
@@ -287,39 +287,48 @@ export async function initialize() {
       new go.Binding("padding", "isRoot", function (isRoot: boolean) {
         return isRoot ? new go.Margin(0, 0, 0, 0) : new go.Margin(20, 0, 0, 0);
       }),
-      $(go.Shape, "PlusLine", {
-        width: 10,
-        height: 10,
-        margin: 4,
-        click: function (e: any, obj: any) {
-          let node = obj.part;
-          let step = node.data.step as AutoStep;
-          let newStep = {
-            type: "command",
-            id:
-              templateList.find((t) => t.type === "command").id ??
-              "new_command",
-            name: "New Command",
-            parameters: {},
-          };
-          console.log(step, node.data.step, node.data.step.children);
-          if (step.type === "group") {
-            node.data.step.children.push(newStep);
-          } else {
-            let parent = node.data.parent;
-            let index = parent.indexOf(step);
-            parent.splice(index + 1, 0, newStep);
-          }
-          unsaved = true;
-          regenerateGraph();
+      $(
+        go.Shape,
+        "PlusLine",
+        {
+          width: 10,
+          height: 10,
+          margin: 4,
+          click: function (e: any, obj: any) {
+            let node = obj.part;
+            let step = node.data.step as AutoStep;
+            let newStep = {
+              type: "command",
+              id:
+                templateList.find((t) => t.type === "command").id ??
+                "new_command",
+              name: "New Command",
+              parameters: {},
+            };
+            console.log(step, node.data.step, node.data.step.children);
+            if (step.type === "group") {
+              node.data.step.children.push(newStep);
+            } else {
+              let parent = node.data.parent;
+              let index = parent.indexOf(step);
+              parent.splice(index + 1, 0, newStep);
+            }
+            unsaved = true;
+            regenerateGraph();
+          },
+          toolTip: $(
+            go.Adornment,
+            "Auto",
+            $(go.Shape, { fill: "#FFFFCC" }),
+            $(go.TextBlock, { margin: 4 }, "Add command after")
+          ),
         },
-        toolTip: $(
-          go.Adornment,
-          "Auto",
-          $(go.Shape, { fill: "#FFFFCC" }),
-          $(go.TextBlock, { margin: 4 }, "Add command after")
-        ),
-      })
+        new go.Binding(
+          "visible",
+          "parentCondition",
+          (parentCondition: boolean) => !parentCondition
+        )
+      )
     ),
     // add click event to the node to update the inputs
     {
@@ -350,7 +359,17 @@ export async function initialize() {
   diagram.groupTemplate = $(
     go.Group,
     "Auto",
-    { layout: $(go.LayeredDigraphLayout, { direction: 90 }) },
+    {
+      layout: $(go.LayeredDigraphLayout, { direction: 90 }),
+    },
+    new go.Binding("layout", "step", (step: AutoStep | AutoCondition) => {
+      return "type" in step
+        ? $(go.LayeredDigraphLayout, { direction: 90, columnSpacing: 10 })
+        : $(go.LayeredDigraphLayout, {
+            direction: 0,
+            columnSpacing: 5,
+          });
+    }),
     $(
       go.Shape,
       "Rectangle",
@@ -407,40 +426,76 @@ export async function initialize() {
           ? new go.Margin(10, 10, 10, 10)
           : new go.Margin(30, 10, 0, 10);
       }),
-      $(go.Shape, "PlusLine", {
-        width: 15,
-        height: 15,
-        margin: new go.Margin(4, 0, 4, 0),
-        strokeWidth: 2,
-        click: function (e: any, obj: any) {
-          let node = obj.part;
-          let step = node.data.step as AutoStep;
-          let newStep = {
-            type: "command",
-            id:
-              templateList.find((t) => t.type === "command").id ??
-              "new_command",
-            name: "New Command",
-            parameters: {},
-          };
-          let parent = node.data.parent;
-          let index = parent.indexOf(step);
-          parent.splice(index + 1, 0, newStep);
-          unsaved = true;
-          regenerateGraph();
+      $(
+        go.Shape,
+        "PlusLine",
+        {
+          width: 15,
+          height: 15,
+          margin: new go.Margin(4, 0),
+          strokeWidth: 2,
+          click: function (e: any, obj: any) {
+            let data = obj.part.data;
+            console.log(data);
+            if ("type" in data.step) {
+              let step = data.step as AutoStep;
+              let newStep = {
+                type: "command",
+                id:
+                  templateList.find((t) => t.type === "command").id ??
+                  "new_command",
+                name: "New Command",
+                parameters: {},
+              };
+              let parent = data.parent;
+              let index = parent.indexOf(step);
+              parent.splice(index + 1, 0, newStep);
+            } else {
+              let condition = data.step as AutoCondition;
+              let newStep = {
+                // TODO: Templates
+                id: "new_condition",
+                children: [] as AutoCondition[],
+                name: "New Condition",
+                parameters: {},
+              };
+              let parent = data.parent;
+              let index = parent.indexOf(condition);
+              parent.splice(index + 1, 0, newStep);
+            }
+            unsaved = true;
+            regenerateGraph();
+          },
+          toolTip: $(
+            go.Adornment,
+            "Auto",
+            $(go.Shape, { fill: "#FFFFCC" }),
+            $(
+              go.TextBlock,
+              { margin: 4 },
+              new go.Binding(
+                "text",
+                "step",
+                (step: AutoStep | AutoCondition) => {
+                  return "type" in step
+                    ? "Add command after"
+                    : "Add condition after";
+                }
+              )
+            )
+          ),
         },
-        toolTip: $(
-          go.Adornment,
-          "Auto",
-          $(go.Shape, { fill: "#FFFFCC" }),
-          $(go.TextBlock, { margin: 4 }, "Add command after")
-        ),
-      })
+        new go.Binding(
+          "visible",
+          "parentCondition",
+          (parentCondition: boolean) => !parentCondition
+        )
+      )
     ),
     {
       click: function (e: any, obj: any) {
         let node = obj.part;
-        let step = node.data.step as AutoStep;
+        let step = node.data.step as AutoStep | AutoCondition;
         updateGraphInputs(step, node.data.parent);
       },
     }
@@ -452,10 +507,12 @@ export async function initialize() {
     color: string;
     step: AutoStep | AutoCondition;
     index: number;
-    parent: AutoStep[];
+    parent: AutoStep[] | AutoCondition[];
     isGroup: boolean;
     group?: number;
     isRoot?: boolean;
+    parentCondition?: boolean;
+    parentIf?: boolean;
   };
 
   type LinkData = {
@@ -472,13 +529,15 @@ export async function initialize() {
     auto: Auto | AutoCondition[];
     parent: number | null;
     parentCondition?: boolean;
+    parentIf?: boolean;
   }[];
   function processStep(
     step: AutoStep | AutoCondition,
     parent: Auto | AutoCondition[],
     index: number,
     parentKey: number | null,
-    parentCondition?: boolean
+    parentCondition?: boolean,
+    parentIf?: boolean
   ) {
     let currentKey = key++;
     // If step is of type AutoStep
@@ -498,33 +557,24 @@ export async function initialize() {
         key: currentKey,
         text:
           step.name !== undefined
-            ? `${step.name}${step.type === "group" || isCondition ? " " : "\n"}(${displayId})`
+            ? `${step.name}${step.type === "group" || isCondition ? " " : "\n"}` +
+              (isCondition ? "" : `(${displayId})`)
             : displayId,
         color: step.type === "group" ? "lightblue" : "lightgreen",
         step,
         index,
-        parent: parent as Auto,
+        parent,
         isGroup: step.type === "group" || isCondition,
         group: parentKey !== null ? parentKey : undefined,
         isRoot: parentKey === null,
+        parentCondition,
+        parentIf: parentIf,
       });
       if (index < parent.length - 1) {
         linkDataArray.push({
           from: currentKey,
           to: key,
         });
-      }
-      if (
-        parentKey !== null &&
-        !isCondition &&
-        !("condition" in parent[0]) &&
-        !parentCondition
-      ) {
-        // linkDataArray.push({
-        //   from: parentKey,
-        //   to: currentKey,
-        //   color: "gray",
-        // });
       }
       if (step.type === "group") {
         toProcess.push({ auto: step.children, parent: currentKey });
@@ -534,26 +584,34 @@ export async function initialize() {
           auto: [step.child],
           parent: currentKey,
           parentCondition: true,
+          parentIf: step.type === "if",
         });
         toProcess.push({
           auto: [step.condition],
           parent: currentKey,
           parentCondition: true,
+          parentIf: step.type === "if",
         });
       }
     } else {
       // If step is of type AutoCondition
       let condition = step as AutoCondition;
+      let text = condition.id;
+      if (parentCondition) {
+        text = `${parentIf ? "If" : "While"}: ${text}`;
+      }
       nodeDataArray.push({
         key: currentKey,
-        text: `Condition: ${condition.id}`,
+        text,
         color: "lightpink",
         step,
         index,
-        parent: parent as Auto,
+        parent: parent,
         isGroup: true,
         group: parentKey !== null ? parentKey : undefined,
         isRoot: parentKey === null,
+        parentCondition: parentCondition,
+        parentIf: parentIf,
       });
 
       toProcess.push({ auto: condition.children, parent: currentKey });
@@ -571,9 +629,10 @@ export async function initialize() {
     fileSelect.style.display = "none";
     // clear the graph
     toProcess = [{ auto: currentAuto, parent: null }] as {
-      auto: Auto;
+      auto: Auto | AutoCondition[];
       parent: number | null;
       parentCondition?: boolean;
+      parentIf?: boolean;
     }[];
     while (toProcess.length > 0) {
       let current = toProcess.pop();
@@ -584,7 +643,8 @@ export async function initialize() {
           i,
           //i == 0 ? current.parent : null
           current.parent,
-          current.parentCondition
+          current.parentCondition,
+          current.parentIf
         );
       }
     }
@@ -592,26 +652,154 @@ export async function initialize() {
     diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
   }
 
-  function updateGraphInputs(step: AutoStep, parent: AutoStep[]) {
+  function updateGraphInputs(
+    step: AutoStep | AutoCondition,
+    parent: AutoStep[] | AutoCondition[]
+  ) {
     form.innerHTML = "";
-    let nameInput = document.createElement("input");
-    let nameLabel = document.createElement("label");
-    nameInput.value = step.name;
-    nameLabel.className = "form-label";
-    nameLabel.innerText = "Name: ";
-    form.appendChild(nameLabel);
-    nameInput.onchange = () => {
-      step.name = nameInput.value;
-      unsaved = true;
-      regenerateGraph();
-    };
-    form.appendChild(nameInput);
-    form.appendChild(document.createElement("br"));
-    if (
-      step.type === "group" ||
-      step.type === "command" ||
-      step.type === "macro"
-    ) {
+    if ("type" in step) {
+      if (
+        step.type === "group" ||
+        step.type === "command" ||
+        step.type === "macro"
+      ) {
+        let nameInput = document.createElement("input");
+        let nameLabel = document.createElement("label");
+        nameInput.value = step.name;
+        nameLabel.className = "form-label";
+        nameLabel.innerText = "Name: ";
+        form.appendChild(nameLabel);
+        nameInput.onchange = () => {
+          step.name = nameInput.value;
+          unsaved = true;
+          regenerateGraph();
+        };
+        form.appendChild(nameInput);
+        form.appendChild(document.createElement("br"));
+        let idInput = document.createElement("select");
+        let idLabel = document.createElement("label");
+        idLabel.className = "form-label";
+        idLabel.innerText = "ID: ";
+        form.appendChild(idLabel);
+        idInput.onchange = () => {
+          step.id = idInput.value;
+          unsaved = true;
+          regenerateGraph();
+          updateGraphInputs(step, parent);
+        };
+        for (let template of templateList) {
+          if (template.type !== step.type) continue;
+          let option = document.createElement("option");
+          option.value = template.id;
+          option.innerText = template.id;
+          idInput.appendChild(option);
+        }
+        idInput.value = step.id;
+        form.appendChild(idInput);
+        form.appendChild(document.createElement("br"));
+      }
+      let typeInput = document.createElement("select");
+      let typeLabel = document.createElement("label");
+      typeLabel.className = "form-label";
+      typeLabel.innerText = "Type: ";
+      form.appendChild(typeLabel);
+      let types = ["command", "group", "macro", "if", "while"];
+      for (let type of types) {
+        let option = document.createElement("option");
+        option.value = type;
+        option.innerText = type;
+        typeInput.appendChild(option);
+      }
+      typeInput.value = step.type;
+      typeInput.onchange = () => {
+        step.type = typeInput.value as "command" | "group" | "macro";
+        if (step.type === "group" && !step.children) {
+          step.children = [];
+        } else if (
+          (step.type === "command" || step.type === "macro") &&
+          !step.parameters
+        ) {
+          step.parameters = {};
+        }
+        unsaved = true;
+        regenerateGraph();
+        updateGraphInputs(step, parent);
+      };
+      form.appendChild(typeInput);
+      form.appendChild(document.createElement("br"));
+      if (step.type === "group") {
+        let addCommandButton = document.createElement("button");
+        addCommandButton.innerText = "+ Add Child";
+        addCommandButton.className = "form-button";
+        addCommandButton.onclick = () => {
+          step.children.push({
+            type: "command",
+            id:
+              templateList.find((t) => t.type === "command").id ??
+              "new_command",
+            name: "New Command",
+            parameters: {},
+          } as AutoCommand);
+          unsaved = true;
+          regenerateGraph();
+        };
+        form.appendChild(addCommandButton);
+        form.appendChild(document.createElement("br"));
+      } else if (step.type === "command" || step.type == "macro") {
+        let template = templateList.find(
+          (t) => t.id === step.id
+        ) as CommandTemplate;
+        if (!template) {
+          let error = document.createElement("span");
+          error.innerText = "No template found for this command";
+          error.style.color = "red";
+          form.appendChild(error);
+        } else {
+          // for (let key in template.parameters) {
+          //   let input = document.createElement("input");
+          //   let label = document.createElement("label");
+          //   label.className = "form-label";
+          //   label.innerText = key + ": ";
+          //   input.value = step.parameters[key] ?? template.parameters[key];
+          //   input.onchange = () => {
+          //     step.parameters[key] = input.value;
+          //     unsaved = true;
+          //   };
+          //   form.appendChild(label);
+          //   form.appendChild(input);
+          //   form.appendChild(document.createElement("br"));
+          // }
+          // if template parameters has no properties, dont create a json editor
+          let parameters = template.parameters;
+          // Fill in any paramaters from step.parameters, leaving the rest as default
+          for (let key in step.parameters) {
+            parameters[key] = step.parameters[key];
+          }
+
+          if (Object.keys(template.parameters).length !== 0) {
+            let jsoneditor = document.createElement("div");
+            jsoneditor.id = "jsoneditor";
+            form.appendChild(jsoneditor);
+            let containsArray = Object.values(template.parameters).some(
+              Array.isArray
+            );
+            console.log(containsArray);
+            const options: JSONEditorOptions = {
+              onChangeJSON: (json) => {
+                step.parameters = json;
+                unsaved = true;
+                regenerateGraph();
+              },
+              mode: containsArray ? "tree" : "form",
+              mainMenuBar: false,
+              name: "Parameters",
+            };
+            const editor = new JSONEditor(jsoneditor, options);
+            editor.set(parameters);
+          }
+        }
+      }
+    } else {
       let idInput = document.createElement("select");
       let idLabel = document.createElement("label");
       idLabel.className = "form-label";
@@ -623,123 +811,28 @@ export async function initialize() {
         regenerateGraph();
         updateGraphInputs(step, parent);
       };
-      for (let template of templateList) {
-        if (template.type !== step.type) continue;
-        let option = document.createElement("option");
-        option.value = template.id;
-        option.innerText = template.id;
-        idInput.appendChild(option);
-      }
+      // for (let template of templateList) {
+      //   if (template.type !== step.type) continue;
+      //   let option = document.createElement("option");
+      //   option.value = template.id;
+      //   option.innerText = template.id;
+      //   idInput.appendChild(option);
+      // }
       idInput.value = step.id;
       form.appendChild(idInput);
       form.appendChild(document.createElement("br"));
-    }
-    let typeInput = document.createElement("select");
-    let typeLabel = document.createElement("label");
-    typeLabel.className = "form-label";
-    typeLabel.innerText = "Type: ";
-    form.appendChild(typeLabel);
-    let types = ["command", "group", "macro", "if", "while"];
-    for (let type of types) {
-      let option = document.createElement("option");
-      option.value = type;
-      option.innerText = type;
-      typeInput.appendChild(option);
-    }
-    typeInput.value = step.type;
-    typeInput.onchange = () => {
-      step.type = typeInput.value as "command" | "group" | "macro";
-      if (step.type === "group" && !step.children) {
-        step.children = [];
-      } else if (
-        (step.type === "command" || step.type === "macro") &&
-        !step.parameters
-      ) {
-        step.parameters = {};
-      }
-      unsaved = true;
-      regenerateGraph();
-      updateGraphInputs(step, parent);
-    };
-    form.appendChild(typeInput);
-    form.appendChild(document.createElement("br"));
-    if (step.type === "group") {
-      let addCommandButton = document.createElement("button");
-      addCommandButton.innerText = "+ Add Child";
-      addCommandButton.className = "form-button";
-      addCommandButton.onclick = () => {
-        step.children.push({
-          type: "command",
-          id:
-            templateList.find((t) => t.type === "command").id ?? "new_command",
-          name: "New Command",
-          parameters: {},
-        } as AutoCommand);
-        unsaved = true;
-        regenerateGraph();
-      };
-      form.appendChild(addCommandButton);
-      form.appendChild(document.createElement("br"));
-    } else if (step.type === "command" || step.type == "macro") {
-      let template = templateList.find(
-        (t) => t.id === step.id
-      ) as CommandTemplate;
-      if (!template) {
-        let error = document.createElement("span");
-        error.innerText = "No template found for this command";
-        error.style.color = "red";
-        form.appendChild(error);
-      } else {
-        // for (let key in template.parameters) {
-        //   let input = document.createElement("input");
-        //   let label = document.createElement("label");
-        //   label.className = "form-label";
-        //   label.innerText = key + ": ";
-        //   input.value = step.parameters[key] ?? template.parameters[key];
-        //   input.onchange = () => {
-        //     step.parameters[key] = input.value;
-        //     unsaved = true;
-        //   };
-        //   form.appendChild(label);
-        //   form.appendChild(input);
-        //   form.appendChild(document.createElement("br"));
-        // }
-        // if template parameters has no properties, dont create a json editor
-        let parameters = template.parameters;
-        // Fill in any paramaters from step.parameters, leaving the rest as default
-        for (let key in step.parameters) {
-          parameters[key] = step.parameters[key];
-        }
-
-        if (Object.keys(template.parameters).length !== 0) {
-          let jsoneditor = document.createElement("div");
-          jsoneditor.id = "jsoneditor";
-          form.appendChild(jsoneditor);
-          let containsArray = Object.values(template.parameters).some(
-            Array.isArray
-          );
-          console.log(containsArray);
-          const options: JSONEditorOptions = {
-            onChangeJSON: (json) => {
-              step.parameters = json;
-              unsaved = true;
-              regenerateGraph();
-            },
-            mode: containsArray ? "tree" : "form",
-            mainMenuBar: false,
-            name: "Parameters",
-          };
-          const editor = new JSONEditor(jsoneditor, options);
-          editor.set(parameters);
-        }
-      }
     }
 
     let removeButton = document.createElement("button");
     removeButton.innerText = "Remove";
     removeButton.className = "form-button";
     removeButton.onclick = () => {
-      let index = parent.indexOf(step);
+      let index;
+      if ("type" in step && "type" in parent[0]) {
+        index = (parent as AutoStep[]).indexOf(step);
+      } else {
+        index = (parent as AutoCondition[]).indexOf(step as AutoCondition);
+      }
       parent.splice(index, 1);
       unsaved = true;
       regenerateGraph();
