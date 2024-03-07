@@ -712,7 +712,12 @@ export async function initialize() {
       }
       typeInput.value = step.type;
       typeInput.onchange = () => {
-        step.type = typeInput.value as "command" | "group" | "macro";
+        step.type = typeInput.value as
+          | "command"
+          | "group"
+          | "macro"
+          | "if"
+          | "while";
         if (step.type === "group" && !step.children) {
           step.children = [];
         } else if (
@@ -720,6 +725,23 @@ export async function initialize() {
           !step.parameters
         ) {
           step.parameters = {};
+        } else if (step.type === "if" || step.type === "while") {
+          if (!step.condition) {
+            step.condition = {
+              id: "new_condition",
+              children: [],
+              name: "New Condition",
+              parameters: {},
+            };
+          }
+          if (!step.child) {
+            step.child = {
+              type: "group",
+              id: "new_group",
+              name: "New Group",
+              children: [],
+            };
+          }
         }
         unsaved = true;
         regenerateGraph();
@@ -811,13 +833,13 @@ export async function initialize() {
         regenerateGraph();
         updateGraphInputs(step, parent);
       };
-      // for (let template of templateList) {
-      //   if (template.type !== step.type) continue;
-      //   let option = document.createElement("option");
-      //   option.value = template.id;
-      //   option.innerText = template.id;
-      //   idInput.appendChild(option);
-      // }
+      for (let template of templateList) {
+        if (template.type !== "conditional") continue;
+        let option = document.createElement("option");
+        option.value = template.id;
+        option.innerText = template.id;
+        idInput.appendChild(option);
+      }
       idInput.value = step.id;
       form.appendChild(idInput);
       form.appendChild(document.createElement("br"));

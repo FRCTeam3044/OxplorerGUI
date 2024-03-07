@@ -16,6 +16,40 @@
     "id": "sequence"
   },
   {
+    "type": "conditional",
+    "id": "not",
+    "parameters": {},
+    "maxChildren": 1
+  },
+  {
+    "type": "conditional",
+    "id": "and",
+    "parameters": {},
+    "maxChildren": -1
+  },
+  {
+    "type": "conditional",
+    "id": "or",
+    "parameters": {},
+    "maxChildren": -1
+  },
+  {
+    "type": "conditional",
+    "id": "has_note",
+    "parameters": {},
+    "max_children": 0
+  },
+  {
+    "type": "conditional",
+    "id": "note_in_area",
+    "max_children": 0,
+    "parameters": {
+      "regionX": 0,
+      "regionY": 0,
+      "regionRadius": 0
+    }
+  },
+  {
     "type": "command",
     "id": "wait_for_note",
     "parameters": {}

@@ -50,7 +50,7 @@ type PathState = {
 
 export type WindowState = EditorState | PathState;
 
-export type Template = GroupTemplate | CommandTemplate;
+export type Template = GroupTemplate | CommandTemplate | ConditionalTemplate;
 
 export type GroupTemplate = {
   type: "group";
@@ -61,4 +61,9 @@ export type CommandTemplate = {
   type: "command" | "macro";
   id: string;
   parameters: { [key: string]: string };
+};
+
+export type ConditionalTemplate = {
+  type: "conditional";
+  id: string;
 };

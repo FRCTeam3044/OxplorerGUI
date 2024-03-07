@@ -126,7 +126,7 @@ ipcMain.handle(
   async (event, theme: "dark" | "light" | "system") => {
     setPref("theme", theme);
     nativeTheme.themeSource = theme;
-  },
+  }
 );
 
 ipcMain.handle("getTemplates", async (event) => {
@@ -178,7 +178,7 @@ ipcMain.handle("updateWindowState", async (event, state: WindowState) => {
     }
     BrowserWindow.getFocusedWindow()?.setTitle(
       (state.unsaved ? `*${state.filename}` : state.filename) +
-        " - Auto Editor - Oxplorer GUI",
+        " - Auto Editor - Oxplorer GUI"
     );
   }
 });
@@ -410,12 +410,15 @@ let menuTemplate: Electron.MenuItemConstructorOptions[] = [
                 if (
                   c.type !== "command" &&
                   c.type !== "group" &&
-                  c.type !== "macro"
+                  c.type !== "macro" &&
+                  c.type !== "conditional"
                 )
                   return true;
                 if (c.id === undefined) return true;
                 return (
-                  (c.type === "command" || c.type === "macro") &&
+                  (c.type === "command" ||
+                    c.type === "macro" ||
+                    c.type === "conditional") &&
                   c.parameters === undefined
                 );
               })
@@ -426,12 +429,12 @@ let menuTemplate: Electron.MenuItemConstructorOptions[] = [
             // Save to userData
             let templatesPath = path.join(
               app.getPath("userData"),
-              "templates.json",
+              "templates.json"
             );
             fs.writeFileSync(templatesPath, content);
             BrowserWindow.getFocusedWindow()?.webContents.send(
               "importTemplates",
-              templates,
+              templates
             );
           }
         },
