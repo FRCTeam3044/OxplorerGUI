@@ -6,6 +6,7 @@ import {
   AutoConditionalStep,
   AutoStep,
   CommandTemplate,
+  ConditionalTemplate,
   Template,
 } from "../utils/structures";
 import Toastify from "toastify-js";
@@ -843,6 +844,78 @@ export async function initialize() {
       idInput.value = step.id;
       form.appendChild(idInput);
       form.appendChild(document.createElement("br"));
+      let addCommandButton = document.createElement("button");
+      addCommandButton.innerText = "+ Add Child";
+      addCommandButton.className = "form-button";
+      console.log(step.children);
+      let template = templateList.find(
+        (t) => t.type === "conditional" && t.id === step.id
+      ) as ConditionalTemplate;
+      addCommandButton.onclick = () => {
+        if (
+          template === undefined ||
+          step.children.length < (template.maxChildren ?? -1) ||
+          (template.maxChildren ?? -1) === -1
+        ) {
+          step.children.push({
+            id:
+              templateList.find((t) => t.type === "conditional").id ??
+              "new_conditon",
+            name: "New Condition",
+            parameters: {},
+            children: [],
+          } as AutoCondition);
+          unsaved = true;
+          regenerateGraph();
+        } else {
+          Toastify({
+            text: "Max children reached",
+            duration: 3000,
+            gravity: "bottom",
+            position: "right",
+            style: {
+              color: "black",
+              background: "yellow",
+            },
+          }).showToast();
+        }
+      };
+      form.appendChild(addCommandButton);
+      form.appendChild(document.createElement("br"));
+
+      if (!template) {
+        let error = document.createElement("span");
+        error.innerText = "No template found for this condition";
+        error.style.color = "red";
+        form.appendChild(error);
+      } else {
+        let parameters = template.parameters;
+        for (let key in step.parameters) {
+          parameters[key] = step.parameters[key];
+        }
+
+        if (Object.keys(template.parameters).length !== 0) {
+          let jsoneditor = document.createElement("div");
+          jsoneditor.id = "jsoneditor";
+          form.appendChild(jsoneditor);
+          let containsArray = Object.values(template.parameters).some(
+            Array.isArray
+          );
+          console.log(containsArray);
+          const options: JSONEditorOptions = {
+            onChangeJSON: (json) => {
+              step.parameters = json;
+              unsaved = true;
+              regenerateGraph();
+            },
+            mode: containsArray ? "tree" : "form",
+            mainMenuBar: false,
+            name: "Parameters",
+          };
+          const editor = new JSONEditor(jsoneditor, options);
+          editor.set(parameters);
+        }
+      }
     }
 
     let removeButton = document.createElement("button");

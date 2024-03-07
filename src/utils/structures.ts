@@ -66,4 +66,6 @@ export type CommandTemplate = {
 export type ConditionalTemplate = {
   type: "conditional";
   id: string;
+  maxChildren: number;
+  parameters: { [key: string]: string };
 };
