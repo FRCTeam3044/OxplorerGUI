@@ -777,6 +777,7 @@ export async function initialize() {
           error.innerText = "No template found for this command";
           error.style.color = "red";
           form.appendChild(error);
+          form.appendChild(document.createElement("br"));
         } else {
           // for (let key in template.parameters) {
           //   let input = document.createElement("input");
@@ -888,6 +889,7 @@ export async function initialize() {
         error.innerText = "No template found for this condition";
         error.style.color = "red";
         form.appendChild(error);
+        form.appendChild(document.createElement("br"));
       } else {
         let parameters = template.parameters;
         for (let key in step.parameters) {

@@ -1,7 +1,7 @@
 {
   "name": "oxplorer-gui",
   "productName": "OxplorerGUI",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "A frontend for Oxplorer with auto planning and path building capabilities",
   "main": ".webpack/main",
   "scripts": {
