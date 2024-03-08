@@ -45,30 +45,30 @@ export async function onFocus() {
 export async function initialize() {
   templateList = await window.util.getTemplates();
   let fileSelect = document.querySelector(
-    "#auto-editor-startup"
+    "#auto-editor-startup",
   ) as HTMLSelectElement;
   let mainContent = document.querySelector(
-    ".auto-editor-content"
+    ".auto-editor-content",
   ) as HTMLDivElement;
   let openBtn = document.querySelector("#autos-open") as HTMLButtonElement;
   let newBtn = document.querySelector("#autos-new") as HTMLButtonElement;
   let inspectorOpenBtn = document.querySelector(
-    "#autos-inspector-open"
+    "#autos-inspector-open",
   ) as HTMLButtonElement;
   let inspectorNewBtn = document.querySelector(
-    "#autos-inspector-new"
+    "#autos-inspector-new",
   ) as HTMLButtonElement;
   let saveBtn = document.querySelector("#autos-save") as HTMLButtonElement;
   let saveAsBtn = document.querySelector("#autos-save-as") as HTMLButtonElement;
   let recentDiv = document.querySelector("#recent-files") as HTMLDivElement;
   let newCommandBtn = document.querySelector(
-    "#autos-new-command"
+    "#autos-new-command",
   ) as HTMLButtonElement;
   let newGroupBtn = document.querySelector(
-    "#autos-new-group"
+    "#autos-new-group",
   ) as HTMLButtonElement;
   let newConditionalBtn = document.querySelector(
-    "#autos-new-conditional"
+    "#autos-new-conditional",
   ) as HTMLButtonElement;
   open = async () => {
     try {
@@ -120,7 +120,7 @@ export async function initialize() {
       try {
         await window.files.saveFile(
           JSON.stringify(currentAuto, null, 2),
-          currentAutoPath
+          currentAutoPath,
         );
         unsaved = false;
         onFocus();
@@ -141,7 +141,7 @@ export async function initialize() {
   saveAs = async () => {
     try {
       let path = await window.files.saveFileAs(
-        JSON.stringify(currentAuto, null, 2)
+        JSON.stringify(currentAuto, null, 2),
       );
       if (path) {
         currentAutoPath = path;
@@ -293,14 +293,14 @@ export async function initialize() {
       go.Shape,
       "Rectangle",
       { stroke: "black" },
-      new go.Binding("fill", "color")
+      new go.Binding("fill", "color"),
     ),
     $(
       go.TextBlock,
       new go.Binding("text", "text"),
       new go.Binding("margin", "isRoot", function (isRoot: boolean) {
         return isRoot ? new go.Margin(8, 18, 8, 8) : new go.Margin(5, 8, 15, 8);
-      })
+      }),
     ),
     $(
       go.Panel,
@@ -345,15 +345,15 @@ export async function initialize() {
             go.Adornment,
             "Auto",
             $(go.Shape, { fill: "#FFFFCC" }),
-            $(go.TextBlock, { margin: 4 }, "Add command after")
+            $(go.TextBlock, { margin: 4 }, "Add command after"),
           ),
         },
         new go.Binding(
           "visible",
           "parentCondition",
-          (parentCondition: boolean) => !parentCondition
-        )
-      )
+          (parentCondition: boolean) => !parentCondition,
+        ),
+      ),
     ),
     // add click event to the node to update the inputs
     {
@@ -362,7 +362,7 @@ export async function initialize() {
         let step = node.data.step as AutoStep;
         updateGraphInputs(step, node.data.parent);
       },
-    }
+    },
   );
 
   diagram.linkTemplate = $(
@@ -371,14 +371,14 @@ export async function initialize() {
     $(
       go.Shape,
       { strokeWidth: 3, stroke: "black" },
-      new go.Binding("stroke", "color")
+      new go.Binding("stroke", "color"),
     ), // this is the link shape
     $(
       go.Shape,
       { toArrow: "Standard", stroke: "black", fill: "black" },
       new go.Binding("stroke", "color"),
-      new go.Binding("fill", "color")
-    ) // this is the arrow at the end of the link
+      new go.Binding("fill", "color"),
+    ), // this is the arrow at the end of the link
   );
 
   diagram.groupTemplate = $(
@@ -417,7 +417,7 @@ export async function initialize() {
         } else {
           return "rgba(200,200,30,0.7)";
         }
-      })
+      }),
     ), // increased border thickness
     $(
       go.Placeholder,
@@ -425,7 +425,7 @@ export async function initialize() {
         return isRoot
           ? new go.Margin(30, 30, 20, 5)
           : new go.Margin(30, 5, 20, 5);
-      })
+      }),
     ),
     $(
       go.TextBlock, // this is the text
@@ -434,7 +434,7 @@ export async function initialize() {
         font: "Bold 12pt Sans-Serif",
         margin: new go.Margin(10, 10, 0, 10),
       }, // added top margin
-      new go.Binding("text", "text")
+      new go.Binding("text", "text"),
     ),
     $(
       go.Panel,
@@ -505,17 +505,17 @@ export async function initialize() {
                   return "type" in step
                     ? "Add command after"
                     : "Add condition after";
-                }
-              )
-            )
+                },
+              ),
+            ),
           ),
         },
         new go.Binding(
           "visible",
           "parentCondition",
-          (parentCondition: boolean) => !parentCondition
-        )
-      )
+          (parentCondition: boolean) => !parentCondition,
+        ),
+      ),
     ),
     {
       click: function (e: any, obj: any) {
@@ -523,7 +523,7 @@ export async function initialize() {
         let step = node.data.step as AutoStep | AutoCondition;
         updateGraphInputs(step, node.data.parent);
       },
-    }
+    },
   );
 
   type NodeData = {
@@ -562,7 +562,7 @@ export async function initialize() {
     index: number,
     parentKey: number | null,
     parentCondition?: boolean,
-    parentIf?: boolean
+    parentIf?: boolean,
   ) {
     let currentKey = key++;
     // If step is of type AutoStep
@@ -669,7 +669,7 @@ export async function initialize() {
           //i == 0 ? current.parent : null
           current.parent,
           current.parentCondition,
-          current.parentIf
+          current.parentIf,
         );
       }
     }
@@ -679,7 +679,7 @@ export async function initialize() {
 
   function updateGraphInputs(
     step: AutoStep | AutoCondition,
-    parent: AutoStep[] | AutoCondition[]
+    parent: AutoStep[] | AutoCondition[],
   ) {
     form.innerHTML = "";
     if ("type" in step) {
@@ -802,7 +802,7 @@ export async function initialize() {
         form.appendChild(document.createElement("br"));
       } else if (step.type === "command" || step.type == "macro") {
         let template = templateList.find(
-          (t) => t.id === step.id
+          (t) => t.id === step.id,
         ) as CommandTemplate;
         if (!template) {
           let error = document.createElement("span");
@@ -837,7 +837,7 @@ export async function initialize() {
             jsoneditor.id = "jsoneditor";
             form.appendChild(jsoneditor);
             let containsArray = Object.values(template.parameters).some(
-              Array.isArray
+              Array.isArray,
             );
             console.log(containsArray);
             const options: JSONEditorOptions = {
@@ -882,7 +882,7 @@ export async function initialize() {
       addCommandButton.className = "form-button";
       console.log(step.children);
       let template = templateList.find(
-        (t) => t.type === "conditional" && t.id === step.id
+        (t) => t.type === "conditional" && t.id === step.id,
       ) as ConditionalTemplate;
       addCommandButton.onclick = () => {
         if (
@@ -933,7 +933,7 @@ export async function initialize() {
           jsoneditor.id = "jsoneditor";
           form.appendChild(jsoneditor);
           let containsArray = Object.values(template.parameters).some(
-            Array.isArray
+            Array.isArray,
           );
           console.log(containsArray);
           const options: JSONEditorOptions = {
