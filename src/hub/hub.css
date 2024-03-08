@@ -210,7 +210,7 @@ input {
 
 .graph-buttons button {
   padding: 10px;
-  margin: 5px;
+  margin: 5px 4px;
   border: none;
   background-color: #0e73ad;
 }
