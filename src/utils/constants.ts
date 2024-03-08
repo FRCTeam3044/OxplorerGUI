@@ -24,4 +24,26 @@ export const defaultTemplates = [
     type: "group",
     id: "parallel",
   },
+  {
+    type: "group",
+    id: "sequence",
+  },
+  {
+    type: "conditional",
+    id: "not",
+    parameters: {},
+    maxChildren: 1,
+  },
+  {
+    type: "conditional",
+    id: "and",
+    parameters: {},
+    maxChildren: -1,
+  },
+  {
+    type: "conditional",
+    id: "or",
+    parameters: {},
+    maxChildren: -1,
+  },
 ];
