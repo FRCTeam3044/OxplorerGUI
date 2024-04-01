@@ -61,6 +61,8 @@
     "gojs": "^2.3.14",
     "java-bridge": "^2.4.0",
     "jsoneditor": "^10.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "semver": "^7.6.0",
     "toastify-js": "^1.12.0"
   },
