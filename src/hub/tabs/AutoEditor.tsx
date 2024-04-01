@@ -15,6 +15,7 @@ import JSONEditor, { JSONEditorOptions } from "jsoneditor";
 import "jsoneditor/dist/jsoneditor.css";
 import { Tab, TabProps } from "./Tabs";
 import React, { useEffect, useRef, useState } from "react";
+import "./AutoEditor.css";
 
 const $ = go.GraphObject.make;
 
