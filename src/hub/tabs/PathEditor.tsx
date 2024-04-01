@@ -1,7 +1,173 @@
-import { CRESCENDO_2024 } from "../utils/constants";
-import { SnapMode, Vertex } from "../utils/structures";
-import { convert } from "../utils/units";
+import { CRESCENDO_2024 } from "../../utils/constants";
+import { SnapMode, Vertex } from "../../utils/structures";
+import { convert } from "../../utils/units";
 import Toastify from "toastify-js";
+import React from "react";
+import { Tab, TabProps } from "./Tabs";
+
+const PathEditor: React.FC<TabProps> = ({ active }) => {
+  return (
+    <div id="patheditor" className={"tab" + (active ? " active" : "")}>
+      <div className="container">
+        <div className="field">
+          <div
+            className="canvas-container"
+            style={{ position: "relative", zIndex: 3, userSelect: "none" }}
+          >
+            <canvas className="field-canvas"></canvas>
+          </div>
+        </div>
+
+        <div className="mouseCoords">
+          <p>
+            (<span id="mouseX"></span>, <span id="mouseY"></span>)
+          </p>
+        </div>
+
+        <table className="config">
+          <thead>
+            <tr>
+              <td>
+                <h3>Setup</h3>
+              </td>
+              <td>
+                <h3>Point Spacing</h3>
+              </td>
+              <td>
+                <h3>Corners</h3>
+              </td>
+              <td>
+                <h3>Robot Setup</h3>
+              </td>
+              <td>
+                <h3>Extras</h3>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <label htmlFor="field">Field</label>
+                <select id="field" value="2024">
+                  <option value="2024">2024</option>
+                </select>
+              </td>
+              <td>
+                <label htmlFor="injectPoints">Inject Ponts</label>
+                <input type="checkbox" id="injectPoints" />
+              </td>
+
+              <td>
+                <label htmlFor="normalizeCorners">Normalize Corners</label>
+                <input type="checkbox" id="normalizeCorners" checked />
+              </td>
+              <td>
+                <label htmlFor="robotLength">Robot Length</label>
+                <input type="number" id="robotLength" value="0.7" step="0.01" />
+              </td>
+              <td>
+                <label htmlFor="cornerCutDist">Corner Cutting Distance</label>
+                <input
+                  type="number"
+                  id="cornerCutDist"
+                  value="0.01"
+                  step="0.001"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Start</label>
+                (<input type="number" id="startX" value="4" />
+                ,
+                <input type="number" id="startY" value="3" />)
+              </td>
+              <td>
+                <label htmlFor="straightawayPointSpacing">
+                  Straightaway Point Spacing
+                </label>
+                <input
+                  type="number"
+                  id="straightawayPointSpacing"
+                  value="0.15"
+                  step="0.01"
+                />
+              </td>
+              <td>
+                <label htmlFor="splitPercent">Split Percent</label>
+                <div className="slidecontainer">
+                  <input
+                    type="range"
+                    min="0"
+                    max="0.5"
+                    step="0.01"
+                    value="0.45"
+                    className="slider"
+                    id="splitPercent"
+                  />
+                  <p>
+                    <span id="splitPercentValue">45</span>%
+                  </p>
+                </div>
+              </td>
+              <td>
+                <label htmlFor="robotWidth">Robot Width</label>
+                <input type="number" id="robotWidth" value="0.7" step="0.01" />
+              </td>
+              <td>
+                <label htmlFor="snapMode">Snap Mode</label>
+                <select id="snapMode" value="">
+                  <option value="NONE">NONE</option>
+                  <option value="SNAP_ALL">SNAP_ALL</option>
+                  <option value="SNAP_START">SNAP_START</option>
+                  <option value="SNAP_TARGEt">SNAP_TARGET</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Target</label>
+                (<input type="number" id="targetX" value="14" />
+                ,
+                <input type="number" id="targetY" value="6" />)
+              </td>
+              <td>
+                <label htmlFor="cornerPointSpacing">Corner Point Spacing</label>
+                <input
+                  type="number"
+                  id="cornerPointSpacing"
+                  value="0.08"
+                  step="0.01"
+                />
+              </td>
+              <td>
+                <label htmlFor="cornerSize">Corner Size</label>
+                <input type="number" id="cornerSize" value="0.6" step="0.01" />
+              </td>
+              <td>
+                <label htmlFor="robotColor">Robot Color</label>
+                <input type="color" id="robotColor" value="#000000" />
+              </td>
+              <td>
+                <button className="form-button" id="export">
+                  Export
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const data: Tab = {
+  name: "Path Editor",
+  id: "patheditor",
+  component: PathEditor,
+};
+
+export default data;
 
 export function onFocus() {
   window.util.updateWindowState({ tab: "path" });
@@ -9,50 +175,50 @@ export function onFocus() {
 export function initialize() {
   const canvas = document.querySelector(".field-canvas") as HTMLCanvasElement;
   const container = document.querySelector(
-    ".canvas-container",
+    ".canvas-container"
   ) as HTMLDivElement;
   const fieldSelect = document.querySelector("#field") as HTMLSelectElement;
   const injectPointsCheckbox = document.querySelector(
-    "#injectPoints",
+    "#injectPoints"
   ) as HTMLInputElement;
   const normalizeCornersCheckbox = document.querySelector(
-    "#normalizeCorners",
+    "#normalizeCorners"
   ) as HTMLInputElement;
   const robotLengthInput = document.querySelector(
-    "#robotLength",
+    "#robotLength"
   ) as HTMLInputElement;
 
   const startXInput = document.querySelector("#startX") as HTMLInputElement;
   const startYInput = document.querySelector("#startY") as HTMLInputElement;
   const straightawayPointSpacingInput = document.querySelector(
-    "#straightawayPointSpacing",
+    "#straightawayPointSpacing"
   ) as HTMLInputElement;
   const splitPercentSlider = document.querySelector(
-    "#splitPercent",
+    "#splitPercent"
   ) as HTMLInputElement;
   const splitPercentValueSpan = document.querySelector(
-    "#splitPercentValue",
+    "#splitPercentValue"
   ) as HTMLSpanElement;
 
   const robotWidthInput = document.querySelector(
-    "#robotWidth",
+    "#robotWidth"
   ) as HTMLInputElement;
   const targetXInput = document.querySelector("#targetX") as HTMLInputElement;
   const targetYInput = document.querySelector("#targetY") as HTMLInputElement;
   const cornerPointSpacingInput = document.querySelector(
-    "#cornerPointSpacing",
+    "#cornerPointSpacing"
   ) as HTMLInputElement;
   const cornerSizeInput = document.querySelector(
-    "#cornerSize",
+    "#cornerSize"
   ) as HTMLInputElement;
   const robotColorInput = document.querySelector(
-    "#robotColor",
+    "#robotColor"
   ) as HTMLInputElement;
   const snapModeSelect = document.querySelector(
-    "#snapMode",
+    "#snapMode"
   ) as HTMLSelectElement;
   const cornerCutDistInput = document.querySelector(
-    "#cornerCutDist",
+    "#cornerCutDist"
   ) as HTMLInputElement;
   let exportButton = document.querySelector("#export") as HTMLButtonElement;
   exportButton.onclick = async () => {
@@ -117,7 +283,7 @@ export function initialize() {
   straightawayPointSpacingInput.onchange = () => {
     try {
       window.java.setPointSpacing(
-        parseFloat(straightawayPointSpacingInput.value),
+        parseFloat(straightawayPointSpacingInput.value)
       );
     } catch (e) {
       handleError(e);
@@ -128,7 +294,7 @@ export function initialize() {
   cornerPointSpacingInput.onchange = () => {
     try {
       window.java.setCornerPointSpacing(
-        parseFloat(cornerPointSpacingInput.value),
+        parseFloat(cornerPointSpacingInput.value)
       );
     } catch (e) {
       handleError(e);
@@ -182,11 +348,11 @@ export function initialize() {
     input.onchange = () => {
       currentStart = new Vertex(
         parseFloat(startXInput.value),
-        parseFloat(startYInput.value),
+        parseFloat(startYInput.value)
       );
       currentEnd = new Vertex(
         parseFloat(targetXInput.value),
-        parseFloat(targetYInput.value),
+        parseFloat(targetYInput.value)
       );
       regeneratePath();
     };
@@ -257,7 +423,7 @@ export function initialize() {
       renderValues[0],
       renderValues[1],
       renderValues[4],
-      renderValues[5],
+      renderValues[5]
     );
 
     let canvasFieldLeft = renderValues[0] + gameData.topLeft[0] * imageScalar;
@@ -273,7 +439,7 @@ export function initialize() {
 
     let calcCoordinates = (
       translation: [number, number],
-      alwaysFlipped = false,
+      alwaysFlipped = false
     ): [number, number] => {
       if (!gameData) return [0, 0];
       let positionInches = [
@@ -301,7 +467,7 @@ export function initialize() {
 
     let pixelsToCoordinates = (
       translation: [number, number],
-      alwaysFlipped = false,
+      alwaysFlipped = false
     ): [number, number] => {
       if (!gameData) return [0, 0];
       let positionPixels: [number, number] = [
@@ -352,7 +518,7 @@ export function initialize() {
     center: [number, number],
     radius: number,
     color: string,
-    fill = true,
+    fill = true
   ) {
     context.beginPath();
     context.arc(center[0], center[1], radius, 0, Math.PI * 2);

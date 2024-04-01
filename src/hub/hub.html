@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Oxplorer</title>
+  </head>
+
+  <body>
+    <div class="tab-buttons">
+      <button class="tab-button active" data-tab-target="#autoeditor">
+        Auto Editor
+      </button>
+      <button class="tab-button" data-tab-target="#patheditor">
+        Path Editor
+      </button>
+    </div>
+
+    <div id="patheditor" class="tab">
+      <div class="container">
+        <div class="field">
+          <div
+            class="canvas-container"
+            style="position: relative; z-index: 3; user-select: none"
+          >
+            <canvas class="field-canvas"></canvas>
+          </div>
+        </div>
+
+        <div class="mouseCoords">
+          <p>(<span id="mouseX"></span>, <span id="mouseY"></span>)</p>
+        </div>
+
+        <table class="config">
+          <tr>
+            <td>
+              <h3>Setup</h3>
+            </td>
+            <td>
+              <h3>Point Spacing</h3>
+            </td>
+            <td>
+              <h3>Corners</h3>
+            </td>
+            <td>
+              <h3>Robot Setup</h3>
+            </td>
+            <td>
+              <h3>Extras</h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="field">Field</label>
+              <select id="field" value="2024">
+                <option value="2024">2024</option>
+              </select>
+            </td>
+            <td>
+              <label for="injectPoints">Inject Ponts</label>
+              <input type="checkbox" id="injectPoints" />
+            </td>
+
+            <td>
+              <label for="normalizeCorners">Normalize Corners</label>
+              <input type="checkbox" id="normalizeCorners" checked />
+            </td>
+            <td>
+              <label for="robotLength">Robot Length</label>
+              <input type="number" id="robotLength" value="0.7" step="0.01" />
+            </td>
+            <td>
+              <label for="cornerCutDist">Corner Cutting Distance</label>
+              <input
+                type="number"
+                id="cornerCutDist"
+                value="0.01"
+                step="0.001"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Start</label>
+              (<input type="number" id="startX" value="4" />
+              ,
+              <input type="number" id="startY" value="3" />)
+            </td>
+            <td>
+              <label for="straightawayPointSpacing"
+                >Straightaway Point Spacing</label
+              >
+              <input
+                type="number"
+                id="straightawayPointSpacing"
+                value="0.15"
+                step="0.01"
+              />
+            </td>
+            <td>
+              <label for="splitPercent">Split Percent</label>
+              <div class="slidecontainer">
+                <input
+                  type="range"
+                  min="0"
+                  max="0.5"
+                  step="0.01"
+                  value="0.45"
+                  class="slider"
+                  id="splitPercent"
+                />
+                <p><span id="splitPercentValue">45</span>%</p>
+              </div>
+            </td>
+            <td>
+              <label for="robotWidth">Robot Width</label>
+              <input type="number" id="robotWidth" value="0.7" step="0.01" />
+            </td>
+            <td>
+              <label for="snapMode">Snap Mode</label>
+              <select id="snapMode" value="">
+                <option value="NONE">NONE</option>
+                <option value="SNAP_ALL">SNAP_ALL</option>
+                <option value="SNAP_START">SNAP_START</option>
+                <option value="SNAP_TARGEt">SNAP_TARGET</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Target</label>
+              (<input type="number" id="targetX" value="14" />
+              ,
+              <input type="number" id="targetY" value="6" />)
+            </td>
+            <td>
+              <label for="cornerPointSpacing">Corner Point Spacing</label>
+              <input
+                type="number"
+                id="cornerPointSpacing"
+                value="0.08"
+                step="0.01"
+              />
+            </td>
+            <td>
+              <label for="cornerSize">Corner Size</label>
+              <input type="number" id="cornerSize" value="0.6" step="0.01" />
+            </td>
+            <td>
+              <label for="robotColor">Robot Color</label>
+              <input type="color" id="robotColor" value="#000000" />
+            </td>
+            <td>
+              <button class="form-button" id="export">Export</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div id="autoeditor" class="tab active">
+      <div id="auto-editor-startup">
+        <div id="file-select">
+          <div id="recent">
+            <h3>Recent</h3>
+            <div class="divider"></div>
+            <div id="recent-files"></div>
+          </div>
+          <div id="start">
+            <button id="autos-open">Open</button>
+            <button id="autos-new">Create New</button>
+            <div id="templates">
+              <h3>Templates</h3>
+              <div class="divider"></div>
+              <p class="template">Coming soon!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auto-editor-content">
+        <div id="gojs"></div>
+        <div id="inspector">
+          <h2>Inspector</h2>
+          <div class="divider"></div>
+          <div id="form"></div>
+          <div class="divider"></div>
+          <div class="graph-buttons">
+            <button id="autos-new-command">New Command</button>
+            <button id="autos-new-group">New Group</button>
+            <button id="autos-new-conditional">New Conditional</button>
+          </div>
+          <div class="divider"></div>
+          <div class="save-buttons">
+            <button id="autos-save">Save</button>
+            <button id="autos-save-as">Save As</button>
+            <button id="autos-inspector-new">New</button>
+            <button id="autos-inspector-open">Open</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

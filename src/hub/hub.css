@@ -9,6 +9,10 @@ body {
   overflow: hidden;
 }
 
+#app {
+  height: 100% !important;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -151,6 +155,8 @@ input {
   cursor: pointer;
 }
 #gojs {
+  position: absolute;
+  top: 30px;
   height: 100%;
   width: calc(100% - 350px);
 }
@@ -198,7 +204,6 @@ input {
 }
 
 .auto-editor-content {
-  display: none;
   height: 100%;
   width: 100%;
 }
