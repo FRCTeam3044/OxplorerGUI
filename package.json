@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@types/react-dom": "^18.2.23",
+    "@uidotdev/usehooks": "^2.4.1",
     "electron-fetch": "^1.9.1",
     "electron-squirrel-startup": "^1.0.0",
     "gojs": "^2.3.14",

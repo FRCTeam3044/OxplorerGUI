@@ -32,6 +32,8 @@ yarn make
 
 Roadmap:
 
+- [ ] Render trajectories instead of raw paths
+- [ ] Update oxplorer (need to figure out haljni)
 - [ ] Import path settings
 - [ ] Path Waypoints
 - [ ] Export Built paths
