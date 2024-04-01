@@ -162,7 +162,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
     saveAs = async () => {
       try {
         let path = await window.files.saveFileAs(
-          JSON.stringify(currentAutoData, null, 2)
+          JSON.stringify(currentAutoData, null, 2),
         );
         if (path) {
           setCurrentAutoPath(path);
@@ -183,7 +183,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
         try {
           await window.files.saveFile(
             JSON.stringify(currentAutoData, null, 2),
-            currentAutoPath
+            currentAutoPath,
           );
           setUnsaved(false);
         } catch (e) {
@@ -205,7 +205,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
         undoList.pop();
         skipUndo.current = true;
         setCurrentAutoData(
-          JSON.parse(JSON.stringify(undoList[undoList.length - 1]))
+          JSON.parse(JSON.stringify(undoList[undoList.length - 1])),
         );
         setSelectedNode(undefined);
       }
@@ -241,7 +241,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
         go.Shape,
         "Rectangle",
         { stroke: "black" },
-        new go.Binding("fill", "color")
+        new go.Binding("fill", "color"),
       ),
       $(
         go.TextBlock,
@@ -250,7 +250,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           return isRoot
             ? new go.Margin(8, 18, 8, 8)
             : new go.Margin(5, 8, 15, 8);
-        })
+        }),
       ),
       $(
         go.Panel,
@@ -308,15 +308,15 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
               go.Adornment,
               "Auto",
               $(go.Shape, { fill: "#FFFFCC" }),
-              $(go.TextBlock, { margin: 4 }, "Add command after")
+              $(go.TextBlock, { margin: 4 }, "Add command after"),
             ),
           },
           new go.Binding(
             "visible",
             "parentCondition",
-            (parentCondition: boolean) => !parentCondition
-          )
-        )
+            (parentCondition: boolean) => !parentCondition,
+          ),
+        ),
       ),
       {
         click: function (e: any, obj: any) {
@@ -324,7 +324,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           let step = node.data.step as AutoStep;
           setSelectedNode({ step, parent: node.data.parent });
         },
-      }
+      },
     );
 
     diagram.linkTemplate = $(
@@ -333,14 +333,14 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
       $(
         go.Shape,
         { strokeWidth: 3, stroke: "black" },
-        new go.Binding("stroke", "color")
+        new go.Binding("stroke", "color"),
       ), // this is the link shape
       $(
         go.Shape,
         { toArrow: "Standard", stroke: "black", fill: "black" },
         new go.Binding("stroke", "color"),
-        new go.Binding("fill", "color")
-      ) // this is the arrow at the end of the link
+        new go.Binding("fill", "color"),
+      ), // this is the arrow at the end of the link
     );
 
     diagram.groupTemplate = $(
@@ -379,7 +379,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           } else {
             return "rgba(200,200,30,0.7)";
           }
-        })
+        }),
       ), // increased border thickness
       $(
         go.Placeholder,
@@ -387,7 +387,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           return isRoot
             ? new go.Margin(30, 30, 20, 5)
             : new go.Margin(30, 5, 20, 5);
-        })
+        }),
       ),
       $(
         go.TextBlock, // this is the text
@@ -396,7 +396,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           font: "Bold 12pt Sans-Serif",
           margin: new go.Margin(10, 10, 0, 10),
         }, // added top margin
-        new go.Binding("text", "text")
+        new go.Binding("text", "text"),
       ),
       $(
         go.Panel,
@@ -425,7 +425,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
               let data = obj.part.data;
               if ("type" in data.step) {
                 let firstCommand = templateList.find(
-                  (t) => t.type === "command"
+                  (t) => t.type === "command",
                 );
                 if (!firstCommand) {
                   Toastify({
@@ -479,17 +479,17 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
                     return "type" in step
                       ? "Add command after"
                       : "Add condition after";
-                  }
-                )
-              )
+                  },
+                ),
+              ),
             ),
           },
           new go.Binding(
             "visible",
             "parentCondition",
-            (parentCondition: boolean) => !parentCondition
-          )
-        )
+            (parentCondition: boolean) => !parentCondition,
+          ),
+        ),
       ),
       {
         click: function (e: any, obj: any) {
@@ -497,7 +497,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           let step = node.data.step as AutoStep | AutoCondition;
           setSelectedNode({ step, parent: node.data.parent });
         },
-      }
+      },
     );
   }, [templateList, currentAutoData]);
   // Update window title
@@ -544,7 +544,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           //i == 0 ? current.parent : null
           current.parent,
           current.parentCondition,
-          current.parentIf
+          current.parentIf,
         );
       }
     }
@@ -555,7 +555,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
       index: number,
       parentKey: number | null,
       parentCondition?: boolean,
-      parentIf?: boolean
+      parentIf?: boolean,
     ) {
       let currentKey = key++;
       // If step is of type AutoStep
@@ -778,7 +778,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
         form.current.appendChild(document.createElement("br"));
       } else if (step.type === "command" || step.type == "macro") {
         let template = templateList.find(
-          (t) => t.id === (step as AutoCommand).id
+          (t) => t.id === (step as AutoCommand).id,
         ) as CommandTemplate;
         if (!template) {
           let error = document.createElement("span");
@@ -813,7 +813,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
             jsoneditor.id = "jsoneditor";
             form.current.appendChild(jsoneditor);
             let containsArray = Object.values(template.parameters).some(
-              Array.isArray
+              Array.isArray,
             );
             const options: JSONEditorOptions = {
               onChangeJSON: (json) => {
@@ -859,7 +859,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
       addCommandButton.className = "form-button";
 
       let template = templateList.find(
-        (t) => t.type === "conditional" && t.id === (step as AutoCondition).id
+        (t) => t.type === "conditional" && t.id === (step as AutoCondition).id,
       ) as ConditionalTemplate;
       addCommandButton.onclick = () => {
         if (!("children" in step)) return;
@@ -869,7 +869,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           (template.maxChildren ?? -1) === -1
         ) {
           let firstCondition = templateList.find(
-            (t) => t.type === "conditional"
+            (t) => t.type === "conditional",
           );
           if (!firstCondition) {
             Toastify({
@@ -925,7 +925,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           jsoneditor.id = "jsoneditor";
           form.current.appendChild(jsoneditor);
           let containsArray = Object.values(template.parameters).some(
-            Array.isArray
+            Array.isArray,
           );
           const options: JSONEditorOptions = {
             onChangeJSON: (json) => {
@@ -978,7 +978,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
                   onClick={async () => {
                     try {
                       let fileContent = await window.files.openFileFromPath(
-                        file.path
+                        file.path,
                       );
                       if (fileContent) {
                         setCurrentAutoData(JSON.parse(fileContent) as Auto);
@@ -1033,7 +1033,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
               id="autos-new-command"
               onClick={() => {
                 let firstCommand = templateList.find(
-                  (t) => t.type === "command"
+                  (t) => t.type === "command",
                 );
                 if (!firstCommand) {
                   Toastify({

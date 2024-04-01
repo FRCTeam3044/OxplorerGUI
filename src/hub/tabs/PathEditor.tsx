@@ -2,10 +2,15 @@ import { CRESCENDO_2024 } from "../../utils/constants";
 import { SnapMode, Vertex } from "../../utils/structures";
 import { convert } from "../../utils/units";
 import Toastify from "toastify-js";
-import React from "react";
+import React, { useEffect } from "react";
 import { Tab, TabProps } from "./Tabs";
 
 const PathEditor: React.FC<TabProps> = ({ active }) => {
+  useEffect(() => {
+    if (active) {
+      window.util.updateWindowState({ tab: "path" });
+    }
+  }, [active]);
   return (
     <div id="patheditor" className={"tab" + (active ? " active" : "")}>
       <div className="container">
@@ -168,57 +173,53 @@ const data: Tab = {
 };
 
 export default data;
-
-export function onFocus() {
-  window.util.updateWindowState({ tab: "path" });
-}
 export function initialize() {
   const canvas = document.querySelector(".field-canvas") as HTMLCanvasElement;
   const container = document.querySelector(
-    ".canvas-container"
+    ".canvas-container",
   ) as HTMLDivElement;
   const fieldSelect = document.querySelector("#field") as HTMLSelectElement;
   const injectPointsCheckbox = document.querySelector(
-    "#injectPoints"
+    "#injectPoints",
   ) as HTMLInputElement;
   const normalizeCornersCheckbox = document.querySelector(
-    "#normalizeCorners"
+    "#normalizeCorners",
   ) as HTMLInputElement;
   const robotLengthInput = document.querySelector(
-    "#robotLength"
+    "#robotLength",
   ) as HTMLInputElement;
 
   const startXInput = document.querySelector("#startX") as HTMLInputElement;
   const startYInput = document.querySelector("#startY") as HTMLInputElement;
   const straightawayPointSpacingInput = document.querySelector(
-    "#straightawayPointSpacing"
+    "#straightawayPointSpacing",
   ) as HTMLInputElement;
   const splitPercentSlider = document.querySelector(
-    "#splitPercent"
+    "#splitPercent",
   ) as HTMLInputElement;
   const splitPercentValueSpan = document.querySelector(
-    "#splitPercentValue"
+    "#splitPercentValue",
   ) as HTMLSpanElement;
 
   const robotWidthInput = document.querySelector(
-    "#robotWidth"
+    "#robotWidth",
   ) as HTMLInputElement;
   const targetXInput = document.querySelector("#targetX") as HTMLInputElement;
   const targetYInput = document.querySelector("#targetY") as HTMLInputElement;
   const cornerPointSpacingInput = document.querySelector(
-    "#cornerPointSpacing"
+    "#cornerPointSpacing",
   ) as HTMLInputElement;
   const cornerSizeInput = document.querySelector(
-    "#cornerSize"
+    "#cornerSize",
   ) as HTMLInputElement;
   const robotColorInput = document.querySelector(
-    "#robotColor"
+    "#robotColor",
   ) as HTMLInputElement;
   const snapModeSelect = document.querySelector(
-    "#snapMode"
+    "#snapMode",
   ) as HTMLSelectElement;
   const cornerCutDistInput = document.querySelector(
-    "#cornerCutDist"
+    "#cornerCutDist",
   ) as HTMLInputElement;
   let exportButton = document.querySelector("#export") as HTMLButtonElement;
   exportButton.onclick = async () => {
@@ -283,7 +284,7 @@ export function initialize() {
   straightawayPointSpacingInput.onchange = () => {
     try {
       window.java.setPointSpacing(
-        parseFloat(straightawayPointSpacingInput.value)
+        parseFloat(straightawayPointSpacingInput.value),
       );
     } catch (e) {
       handleError(e);
@@ -294,7 +295,7 @@ export function initialize() {
   cornerPointSpacingInput.onchange = () => {
     try {
       window.java.setCornerPointSpacing(
-        parseFloat(cornerPointSpacingInput.value)
+        parseFloat(cornerPointSpacingInput.value),
       );
     } catch (e) {
       handleError(e);
@@ -348,11 +349,11 @@ export function initialize() {
     input.onchange = () => {
       currentStart = new Vertex(
         parseFloat(startXInput.value),
-        parseFloat(startYInput.value)
+        parseFloat(startYInput.value),
       );
       currentEnd = new Vertex(
         parseFloat(targetXInput.value),
-        parseFloat(targetYInput.value)
+        parseFloat(targetYInput.value),
       );
       regeneratePath();
     };
@@ -423,7 +424,7 @@ export function initialize() {
       renderValues[0],
       renderValues[1],
       renderValues[4],
-      renderValues[5]
+      renderValues[5],
     );
 
     let canvasFieldLeft = renderValues[0] + gameData.topLeft[0] * imageScalar;
@@ -439,7 +440,7 @@ export function initialize() {
 
     let calcCoordinates = (
       translation: [number, number],
-      alwaysFlipped = false
+      alwaysFlipped = false,
     ): [number, number] => {
       if (!gameData) return [0, 0];
       let positionInches = [
@@ -467,7 +468,7 @@ export function initialize() {
 
     let pixelsToCoordinates = (
       translation: [number, number],
-      alwaysFlipped = false
+      alwaysFlipped = false,
     ): [number, number] => {
       if (!gameData) return [0, 0];
       let positionPixels: [number, number] = [
@@ -518,7 +519,7 @@ export function initialize() {
     center: [number, number],
     radius: number,
     color: string,
-    fill = true
+    fill = true,
   ) {
     context.beginPath();
     context.arc(center[0], center[1], radius, 0, Math.PI * 2);

@@ -36,3 +36,4 @@ Roadmap:
 - [ ] Path Waypoints
 - [ ] Export Built paths
 - [ ] Improved autonomous parameter validation
+- [ ] Hot reload autos without code push
