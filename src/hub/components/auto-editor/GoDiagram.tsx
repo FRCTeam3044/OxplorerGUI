@@ -122,7 +122,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
         go.Shape,
         "Rectangle",
         { stroke: "black" },
-        new go.Binding("fill", "color")
+        new go.Binding("fill", "color"),
       ),
       $(
         go.TextBlock,
@@ -131,7 +131,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
           return isRoot
             ? new go.Margin(8, 18, 8, 8)
             : new go.Margin(5, 8, 15, 8);
-        })
+        }),
       ),
       $(
         go.Panel,
@@ -189,15 +189,15 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
               go.Adornment,
               "Auto",
               $(go.Shape, { fill: "#FFFFCC" }),
-              $(go.TextBlock, { margin: 4 }, "Add command after")
+              $(go.TextBlock, { margin: 4 }, "Add command after"),
             ),
           },
           new go.Binding(
             "visible",
             "parentCondition",
-            (parentCondition: boolean) => !parentCondition
-          )
-        )
+            (parentCondition: boolean) => !parentCondition,
+          ),
+        ),
       ),
       {
         click: function (e: any, obj: any) {
@@ -205,7 +205,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
           let step = node.data.step as AutoStep;
           setSelectedNode({ step, parent: node.data.parent });
         },
-      }
+      },
     );
 
     diagram.linkTemplate = $(
@@ -214,14 +214,14 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
       $(
         go.Shape,
         { strokeWidth: 3, stroke: "black" },
-        new go.Binding("stroke", "color")
+        new go.Binding("stroke", "color"),
       ), // this is the link shape
       $(
         go.Shape,
         { toArrow: "Standard", stroke: "black", fill: "black" },
         new go.Binding("stroke", "color"),
-        new go.Binding("fill", "color")
-      ) // this is the arrow at the end of the link
+        new go.Binding("fill", "color"),
+      ), // this is the arrow at the end of the link
     );
 
     diagram.groupTemplate = $(
@@ -260,7 +260,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
           } else {
             return "rgba(200,200,30,0.7)";
           }
-        })
+        }),
       ), // increased border thickness
       $(
         go.Placeholder,
@@ -268,7 +268,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
           return isRoot
             ? new go.Margin(30, 30, 20, 5)
             : new go.Margin(30, 5, 20, 5);
-        })
+        }),
       ),
       $(
         go.TextBlock, // this is the text
@@ -277,7 +277,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
           font: "Bold 12pt Sans-Serif",
           margin: new go.Margin(10, 10, 0, 10),
         }, // added top margin
-        new go.Binding("text", "text")
+        new go.Binding("text", "text"),
       ),
       $(
         go.Panel,
@@ -306,7 +306,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
               let data = obj.part.data;
               if ("type" in data.step) {
                 let firstCommand = templateList.find(
-                  (t) => t.type === "command"
+                  (t) => t.type === "command",
                 );
                 if (!firstCommand) {
                   Toastify({
@@ -360,17 +360,17 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
                     return "type" in step
                       ? "Add command after"
                       : "Add condition after";
-                  }
-                )
-              )
+                  },
+                ),
+              ),
             ),
           },
           new go.Binding(
             "visible",
             "parentCondition",
-            (parentCondition: boolean) => !parentCondition
-          )
-        )
+            (parentCondition: boolean) => !parentCondition,
+          ),
+        ),
       ),
       {
         click: function (e: any, obj: any) {
@@ -378,7 +378,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
           let step = node.data.step as AutoStep | AutoCondition;
           setSelectedNode({ step, parent: node.data.parent });
         },
-      }
+      },
     );
   }, [templateList, currentAutoData]);
   useEffect(() => {
@@ -409,7 +409,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
           //i == 0 ? current.parent : null
           current.parent,
           current.parentCondition,
-          current.parentIf
+          current.parentIf,
         );
       }
     }
@@ -420,7 +420,7 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
       index: number,
       parentKey: number | null,
       parentCondition?: boolean,
-      parentIf?: boolean
+      parentIf?: boolean,
     ) {
       let currentKey = key++;
       // If step is of type AutoStep

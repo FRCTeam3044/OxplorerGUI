@@ -50,7 +50,7 @@ const FileSelect: React.FC<FileSelectProps> = ({
               onClick={async () => {
                 try {
                   let fileContent = await window.files.openFileFromPath(
-                    file.path
+                    file.path,
                   );
                   if (fileContent) {
                     setCurrentAutoData(JSON.parse(fileContent) as Auto);

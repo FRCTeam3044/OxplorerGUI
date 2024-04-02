@@ -101,7 +101,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
     saveAs = async () => {
       try {
         let path = await window.files.saveFileAs(
-          JSON.stringify(currentAutoDataRef.current, null, 2)
+          JSON.stringify(currentAutoDataRef.current, null, 2),
         );
         if (path) {
           setCurrentAutoPath(path);
@@ -122,7 +122,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
         try {
           await window.files.saveFile(
             JSON.stringify(currentAutoDataRef.current, null, 2),
-            currentAutoPathRef.current
+            currentAutoPathRef.current,
           );
           setUnsaved(false);
         } catch (e) {
@@ -143,7 +143,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
         setCurrentAutoData((prevAutoData) => {
           redoList.push(JSON.parse(JSON.stringify(prevAutoData)));
           const newAutoData = JSON.parse(
-            JSON.stringify(undoList[undoList.length - 1])
+            JSON.stringify(undoList[undoList.length - 1]),
           );
           undoList.pop();
           skipUndo.current = true;
@@ -230,7 +230,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
               id="autos-new-command"
               onClick={() => {
                 let firstCommand = templateList.find(
-                  (t) => t.type === "command"
+                  (t) => t.type === "command",
                 );
                 if (!firstCommand) {
                   Toastify({

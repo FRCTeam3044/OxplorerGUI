@@ -169,7 +169,7 @@ const Inspector: React.FC<InspectorProps> = ({
         form.current.appendChild(document.createElement("br"));
       } else if (step.type === "command" || step.type == "macro") {
         let template = templateList.find(
-          (t) => t.id === (step as AutoCommand).id
+          (t) => t.id === (step as AutoCommand).id,
         ) as CommandTemplate;
         if (!template) {
           let error = document.createElement("span");
@@ -204,7 +204,7 @@ const Inspector: React.FC<InspectorProps> = ({
             jsoneditor.id = "jsoneditor";
             form.current.appendChild(jsoneditor);
             let containsArray = Object.values(template.parameters).some(
-              Array.isArray
+              Array.isArray,
             );
             const options: JSONEditorOptions = {
               onChangeJSON: (json) => {
@@ -250,7 +250,7 @@ const Inspector: React.FC<InspectorProps> = ({
       addCommandButton.className = "form-button";
 
       let template = templateList.find(
-        (t) => t.type === "conditional" && t.id === (step as AutoCondition).id
+        (t) => t.type === "conditional" && t.id === (step as AutoCondition).id,
       ) as ConditionalTemplate;
       addCommandButton.onclick = () => {
         if (!("children" in step)) return;
@@ -260,7 +260,7 @@ const Inspector: React.FC<InspectorProps> = ({
           (template.maxChildren ?? -1) === -1
         ) {
           let firstCondition = templateList.find(
-            (t) => t.type === "conditional"
+            (t) => t.type === "conditional",
           );
           if (!firstCondition) {
             Toastify({
@@ -316,7 +316,7 @@ const Inspector: React.FC<InspectorProps> = ({
           jsoneditor.id = "jsoneditor";
           form.current.appendChild(jsoneditor);
           let containsArray = Object.values(template.parameters).some(
-            Array.isArray
+            Array.isArray,
           );
           const options: JSONEditorOptions = {
             onChangeJSON: (json) => {
