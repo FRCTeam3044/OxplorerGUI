@@ -103,3 +103,7 @@ input {
   left: 2px;
   z-index: 100;
 }
+
+#export {
+  padding: 10px;
+}

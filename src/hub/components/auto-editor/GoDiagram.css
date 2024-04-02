@@ -1,0 +1,6 @@
+#gojs {
+  position: absolute;
+  top: 30px;
+  height: 100%;
+  width: calc(100% - 350px);
+}
