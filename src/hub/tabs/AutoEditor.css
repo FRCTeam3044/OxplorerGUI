@@ -1,0 +1,73 @@
+#inspector {
+  position: absolute;
+  top: 27px;
+  background-color: var(--light-2);
+  right: 0;
+  bottom: 0;
+  width: 350px;
+  z-index: 10;
+  padding: 0;
+}
+
+#inspector h2 {
+  margin: 5px 10px;
+  padding: 0;
+  color: var(--main-text);
+}
+
+#form {
+  margin: 10px;
+  flex-grow: 1;
+}
+.form-label {
+  color: var(--main-text);
+  margin: 5px;
+}
+
+.form-button {
+  background-color: var(--light-3);
+  color: var(--main-text);
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin: 5px 0px;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background-color: var(--dark-3);
+}
+
+.auto-editor-content {
+  height: 100%;
+  width: 100%;
+}
+
+#inspector {
+  display: flex;
+  flex-direction: column;
+}
+
+.graph-buttons button {
+  padding: 10px;
+  margin: 5px 4px;
+  border: none;
+  background-color: #0e73ad;
+}
+.save-buttons button {
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  background-color: #0ead43;
+}
+
+#auto-editor-startup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+}

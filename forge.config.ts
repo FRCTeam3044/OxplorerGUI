@@ -60,7 +60,7 @@ const config: ForgeConfig = {
         entryPoints: [
           {
             html: "./src/hub/index.html",
-            js: "./src/hub/hub.ts",
+            js: "./src/hub/index.tsx",
             name: "main_window",
             preload: {
               js: "./src/hub/preload.ts",
