@@ -8,7 +8,7 @@ Download the binary for your platform from the [latest release](https://github.c
 
 Note: On windows, you may have to click "More Info" then "Run Anyway" on the SmartScreen prompt.
 
-OxplorerGUI currently does not run on arm macs, as arm macs require code signing and the intel mac build does not include the correct java bindings. As a workaround, you can clone the repo and run the development application.
+OxplorerGUI currently does not run on arm macs, as arm macs require code signing and the intel mac build does not include the correct java binding libraries to run on arm. As a workaround, you can clone the repo and run the development application.
 
 ## Development
 
