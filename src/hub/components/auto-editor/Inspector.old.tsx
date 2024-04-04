@@ -29,10 +29,6 @@ const Inspector: React.FC<InspectorProps> = ({
   templateList,
   currentAutoData,
 }) => {
-  function setModified() {
-    setUnsaved(true);
-    setRefreshCount((refresh) => refresh + 1);
-  }
   const form = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (selectedNode === undefined) {
@@ -49,16 +45,97 @@ const Inspector: React.FC<InspectorProps> = ({
         step.type === "command" ||
         step.type === "macro"
       ) {
-        // Name input
+        let nameInput = document.createElement("input");
+        let nameLabel = document.createElement("label");
+        nameInput.value = step.name;
+        nameLabel.className = "form-label";
+        nameLabel.innerText = "Name: ";
+        form.current.appendChild(nameLabel);
+        nameInput.onchange = () => {
+          step.name = nameInput.value;
+          setUnsaved(true);
+          setRefreshCount((refresh) => refresh + 1);
+        };
+        form.current.appendChild(nameInput);
+        form.current.appendChild(document.createElement("br"));
       }
       if (
         step.type === "group" ||
         step.type === "command" ||
         step.type === "macro"
       ) {
-        // ID Input
+        let idInput = document.createElement("select");
+        let idLabel = document.createElement("label");
+        idLabel.className = "form-label";
+        idLabel.innerText = "ID: ";
+        form.current.appendChild(idLabel);
+        idInput.onchange = () => {
+          (step as AutoGroup | AutoCommand).id = idInput.value;
+          setUnsaved(true);
+          setRefreshCount((refresh) => refresh + 1);
+        };
+        for (let template of templateList) {
+          if (template.type !== step.type) continue;
+          let option = document.createElement("option");
+          option.value = template.id;
+          option.innerText = template.id;
+          idInput.appendChild(option);
+        }
+        idInput.value = step.id;
+        form.current.appendChild(idInput);
+        form.current.appendChild(document.createElement("br"));
       }
-
+      let typeInput = document.createElement("select");
+      let typeLabel = document.createElement("label");
+      typeLabel.className = "form-label";
+      typeLabel.innerText = "Type: ";
+      form.current.appendChild(typeLabel);
+      let types = ["command", "group", "macro", "if", "while"];
+      for (let type of types) {
+        let option = document.createElement("option");
+        option.value = type;
+        option.innerText = type;
+        typeInput.appendChild(option);
+      }
+      typeInput.value = step.type;
+      typeInput.onchange = () => {
+        if (!("type" in step)) return;
+        step.type = typeInput.value as
+          | "command"
+          | "group"
+          | "macro"
+          | "if"
+          | "while";
+        if (step.type === "group" && !step.children) {
+          step.children = [];
+        } else if (
+          (step.type === "command" || step.type === "macro") &&
+          !step.parameters
+        ) {
+          step.parameters = {};
+        } else if (step.type === "if" || step.type === "while") {
+          if (!step.condition) {
+            step.condition = {
+              id: "new_condition",
+              children: [],
+              name: "New Condition",
+              parameters: {},
+            };
+          }
+          if (!step.child) {
+            step.child = {
+              type: "group",
+              id: "new_group",
+              name: "New Group",
+              children: [],
+            };
+          }
+        }
+        setUnsaved(true);
+        setRefreshCount((refresh) => refresh + 1);
+      };
+      form.current.appendChild(typeInput);
+      form.current.appendChild(document.createElement("br"));
       if (step.type === "group") {
         let addCommandButton = document.createElement("button");
         addCommandButton.innerText = "+ Add Child";
@@ -92,7 +169,7 @@ const Inspector: React.FC<InspectorProps> = ({
         form.current.appendChild(document.createElement("br"));
       } else if (step.type === "command" || step.type == "macro") {
         let template = templateList.find(
-          (t) => t.id === (step as AutoCommand).id,
+          (t) => t.id === (step as AutoCommand).id
         ) as CommandTemplate;
         if (!template) {
           let error = document.createElement("span");
@@ -127,7 +204,7 @@ const Inspector: React.FC<InspectorProps> = ({
             jsoneditor.id = "jsoneditor";
             form.current.appendChild(jsoneditor);
             let containsArray = Object.values(template.parameters).some(
-              Array.isArray,
+              Array.isArray
             );
             const options: JSONEditorOptions = {
               onChangeJSON: (json) => {
@@ -147,13 +224,33 @@ const Inspector: React.FC<InspectorProps> = ({
         }
       }
     } else {
-      // Id input
+      let idInput = document.createElement("select");
+      let idLabel = document.createElement("label");
+      idLabel.className = "form-label";
+      idLabel.innerText = "ID: ";
+      form.current.appendChild(idLabel);
+      idInput.onchange = () => {
+        if (!("id" in step)) return;
+        step.id = idInput.value;
+        setUnsaved(true);
+        setRefreshCount((refresh) => refresh + 1);
+      };
+      for (let template of templateList) {
+        if (template.type !== "conditional") continue;
+        let option = document.createElement("option");
+        option.value = template.id;
+        option.innerText = template.id;
+        idInput.appendChild(option);
+      }
+      idInput.value = step.id;
+      form.current.appendChild(idInput);
+      form.current.appendChild(document.createElement("br"));
       let addCommandButton = document.createElement("button");
       addCommandButton.innerText = "+ Add Child";
       addCommandButton.className = "form-button";
 
       let template = templateList.find(
-        (t) => t.type === "conditional" && t.id === (step as AutoCondition).id,
+        (t) => t.type === "conditional" && t.id === (step as AutoCondition).id
       ) as ConditionalTemplate;
       addCommandButton.onclick = () => {
         if (!("children" in step)) return;
@@ -163,7 +260,7 @@ const Inspector: React.FC<InspectorProps> = ({
           (template.maxChildren ?? -1) === -1
         ) {
           let firstCondition = templateList.find(
-            (t) => t.type === "conditional",
+            (t) => t.type === "conditional"
           );
           if (!firstCondition) {
             Toastify({
@@ -219,7 +316,7 @@ const Inspector: React.FC<InspectorProps> = ({
           jsoneditor.id = "jsoneditor";
           form.current.appendChild(jsoneditor);
           let containsArray = Object.values(template.parameters).some(
-            Array.isArray,
+            Array.isArray
           );
           const options: JSONEditorOptions = {
             onChangeJSON: (json) => {
