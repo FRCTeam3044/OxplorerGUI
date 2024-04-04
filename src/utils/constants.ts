@@ -17,7 +17,7 @@ export const FIELD_DATA: { [key: string]: FieldData } = {
   2024: FIELD_2024,
 };
 
-export const OXPLORER_VERSION = "0.9.11";
+export const OXPLORER_VERSION = "0.12.2";
 
 export const REPOSITORY = "nab138/OxplorerGUI";
 export const GITHUB_BASE_URL = "https://github.com/" + REPOSITORY;

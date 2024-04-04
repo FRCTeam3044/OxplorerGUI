@@ -2,13 +2,10 @@ import path from "path";
 import { appendClasspath, ensureJvm, importClass } from "java-bridge";
 import { SnapMode, Vertex } from "./structures";
 import { OXPLORER_VERSION } from "./constants";
-appendClasspath(
-  path
-    .join(__dirname, `java-libs/oxplorer-${OXPLORER_VERSION}-all.jar`)
-    .replace("app.asar", "app.asar.unpacked"),
-);
+
 ensureJvm({
   isPackagedElectron: true,
+  opts: ["-Dnohaljni=true"],
   // javaLibPath: path
   //   .join(
   //     app.getAppPath(),
@@ -16,6 +13,11 @@ ensureJvm({
   //   )
   //   .replace("app.asar", "app.asar.unpacked"),
 });
+appendClasspath(
+  path
+    .join(__dirname, `java-libs/oxplorer-${OXPLORER_VERSION}-all.jar`)
+    .replace("app.asar", "app.asar.unpacked"),
+);
 let JVertex = importClass("me.nabdev.pathfinding.structures.Vertex");
 let Field = importClass("me.nabdev.pathfinding.utilities.FieldLoader$Field");
 let PathfinderBuilder = importClass("me.nabdev.pathfinding.PathfinderBuilder");
