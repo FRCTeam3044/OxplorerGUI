@@ -25,13 +25,13 @@ const IDSelect: React.FC<IDSelectProps> = ({
       setOptions(
         templateList
           .filter((template) => template.type === step.type)
-          .map((template) => template.id)
+          .map((template) => template.id),
       );
     } else {
       setOptions(
         templateList
           .filter((template) => template.type === "conditional")
-          .map((template) => template.id)
+          .map((template) => template.id),
       );
     }
   }, [templateList, stepChange]);

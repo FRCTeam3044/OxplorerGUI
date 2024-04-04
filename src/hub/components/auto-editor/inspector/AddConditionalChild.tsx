@@ -24,13 +24,13 @@ const AddConditionalChild: React.FC<AddConditionalChildProps> = ({
 
   useMemo(() => {
     setFirstCondition(
-      templateList.find((t) => t.type === "conditional") as ConditionalTemplate
+      templateList.find((t) => t.type === "conditional") as ConditionalTemplate,
     );
   }, [templateList]);
 
   useMemo(() => {
     setTemplate(
-      templateList.find((t) => t.id === step.id) as ConditionalTemplate
+      templateList.find((t) => t.id === step.id) as ConditionalTemplate,
     );
   }, [templateList, step]);
 

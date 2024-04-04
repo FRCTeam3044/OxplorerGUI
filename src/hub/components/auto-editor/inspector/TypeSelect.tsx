@@ -28,13 +28,13 @@ const TypeSelect: React.FC<TypeSelectProps> = ({
     const group = templateList.find((template) => template.type === "group");
     if (group) setDefaultGroup(group.id);
     const command = templateList.find(
-      (template) => template.type === "command"
+      (template) => template.type === "command",
     );
     if (command) setDefaultCommand(command.id);
     const macro = templateList.find((template) => template.type === "macro");
     if (macro) setDefaultMacro(macro.id);
     const conditional = templateList.find(
-      (template) => template.type === "conditional"
+      (template) => template.type === "conditional",
     );
     if (conditional) setDefaultIf(conditional.id);
   }, [templateList]);
@@ -80,7 +80,7 @@ const TypeSelect: React.FC<TypeSelectProps> = ({
         value={type}
         onChange={(e) => {
           setType(
-            e.target.value as "command" | "group" | "macro" | "if" | "while"
+            e.target.value as "command" | "group" | "macro" | "if" | "while",
           );
         }}
       >

@@ -24,7 +24,7 @@ const AddGroupChild: React.FC<AddGroupChildProps> = ({
 
   useMemo(() => {
     setFirstCommand(
-      templateList.find((t) => t.type === "command") as CommandTemplate
+      templateList.find((t) => t.type === "command") as CommandTemplate,
     );
   }, [templateList]);
 
