@@ -33,7 +33,7 @@ const ParameterEditor: React.FC<ParameterEditorProps> = ({
       template = templateList.find((t) => t.id === step.id) as CommandTemplate;
     } else {
       template = templateList.find(
-        (t) => t.id === step.id
+        (t) => t.id === step.id,
       ) as ConditionalTemplate;
     }
     setTemplate(template);
