@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   AutoCommand,
   AutoCondition,
   AutoGroup,
   CommandTemplate,
-  ConditionalTemplate,
   Template,
 } from "../../../../utils/structures";
 import Toastify from "toastify-js";
@@ -23,7 +22,7 @@ const AddGroupChild: React.FC<AddGroupChildProps> = ({
     CommandTemplate | undefined
   >();
 
-  useEffect(() => {
+  useMemo(() => {
     setFirstCommand(
       templateList.find((t) => t.type === "command") as CommandTemplate
     );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AutoCommand,
   AutoConditionalStep,
@@ -8,17 +8,31 @@ import {
 export interface NameInputProps {
   setModified: () => void;
   step: AutoCommand | AutoGroup | AutoConditionalStep;
+  stepChange?: number;
 }
-const NameInput: React.FC<NameInputProps> = ({ setModified, step }) => {
+const NameInput: React.FC<NameInputProps> = ({
+  setModified,
+  step,
+  stepChange,
+}) => {
+  const [name, setName] = useState(step.name);
+  useEffect(() => {
+    if (name === step.name) return;
+    setModified();
+    step.name = name;
+  }, [name]);
+  useEffect(() => {
+    if (name === step.name) return;
+    setName(step.name);
+  }, [step.name, stepChange]);
   return (
     <>
       <label className="form-label">Name: </label>
       <input
         type="text"
-        value={step.name}
+        value={name}
         onChange={(e) => {
-          step.name = e.target.value;
-          setModified();
+          setName(e.target.value);
         }}
       />
     </>

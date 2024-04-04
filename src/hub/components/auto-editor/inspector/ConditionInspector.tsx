@@ -1,36 +1,33 @@
-import React, { useEffect } from "react";
-import { AutoCommand, AutoStep, Template } from "../../../../utils/structures";
-import NameInput from "./NameInput";
+import React from "react";
+import { AutoCondition, Template } from "../../../../utils/structures";
+import AddConditionalChild from "./AddConditionalChild";
 import IDSelect from "./IdSelect";
-import TypeSelect from "./TypeSelect";
 import ParameterEditor from "./ParameterEditor";
 import RemoveButton from "./RemoveButton";
 
-export interface CommandInspectorProps {
+export interface ConditionInspectorProps {
   setModified: () => void;
-  step: AutoCommand;
+  step: AutoCondition;
   stepChange: number;
-  parent: AutoStep[];
   templateList: Template[];
+  parent: AutoCondition[];
 }
-const CommandInspector: React.FC<CommandInspectorProps> = ({
+const ConditionInspector: React.FC<ConditionInspectorProps> = ({
   setModified,
   step,
+  templateList,
   stepChange,
   parent,
-  templateList,
 }) => {
   return (
     <>
-      <NameInput setModified={setModified} step={step} />
-      <br />
       <IDSelect
         setModified={setModified}
         step={step}
         templateList={templateList}
       />
       <br />
-      <TypeSelect
+      <AddConditionalChild
         setModified={setModified}
         step={step}
         templateList={templateList}
@@ -48,4 +45,4 @@ const CommandInspector: React.FC<CommandInspectorProps> = ({
   );
 };
 
-export default CommandInspector;
+export default ConditionInspector;

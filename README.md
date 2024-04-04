@@ -34,7 +34,6 @@ Roadmap:
 
 - [ ] Render trajectories instead of raw paths
 - [ ] Optionally render obstacles on field
-- [ ] Update oxplorer (need to figure out haljni)
 - [ ] Import path settings
 - [ ] Path Waypoints
 - [ ] Export Built paths

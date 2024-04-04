@@ -4,11 +4,11 @@ import { Template } from "../utils/structures";
 import "toastify-js/src/toastify.css";
 
 import * as AutoEditor from "./tabs/AutoEditor";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { tabList } from "./tabs/Tabs";
 
 const Hub: React.FC = () => {
-  const [activeTab, setActiveTab] = React.useState(tabList[0].id);
+  const [activeTab, setActiveTab] = useState(tabList[0].id);
 
   window.ipc.on("openFile", async () => {
     if (activeTab === "autoeditor") {

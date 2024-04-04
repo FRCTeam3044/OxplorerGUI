@@ -1,6 +1,6 @@
 [
   {
-    "type": "command",
+    "type": "macro",
     "id": "go_to_waypoints",
     "name": "New Command",
     "parameters": {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   AutoCommand,
   AutoCondition,
@@ -9,37 +9,47 @@ import {
 export interface IDSelectProps {
   setModified: () => void;
   step: AutoCommand | AutoGroup | AutoCondition;
+  stepChange?: number;
   templateList: Template[];
 }
 const IDSelect: React.FC<IDSelectProps> = ({
   setModified,
   step,
+  stepChange,
   templateList,
 }) => {
-  const [options, setOptions] = React.useState<string[]>([]);
-  React.useEffect(() => {
+  const [options, setOptions] = useState<string[]>([]);
+  const [id, setId] = useState(step.id);
+  useMemo(() => {
     if ("type" in step) {
       setOptions(
         templateList
-          .filter((template) => template.type == step.type)
-          .map((template) => template.id),
+          .filter((template) => template.type === step.type)
+          .map((template) => template.id)
       );
     } else {
       setOptions(
         templateList
-          .filter((template) => template.type == "conditional")
-          .map((template) => template.id),
+          .filter((template) => template.type === "conditional")
+          .map((template) => template.id)
       );
     }
-  }, [templateList]);
+  }, [templateList, stepChange]);
+  useEffect(() => {
+    if (step.id == id) return;
+    step.id = id;
+    setModified();
+  }, [id]);
+  useEffect(() => {
+    if (id !== step.id) setId(step.id);
+  }, [step.id, stepChange]);
   return (
     <>
       <label className="form-label">ID: </label>
       <select
-        value={step.id}
+        value={id}
         onChange={(e) => {
-          step.id = e.target.value;
-          setModified();
+          setId(e.target.value);
         }}
       >
         {options.map((id) => (

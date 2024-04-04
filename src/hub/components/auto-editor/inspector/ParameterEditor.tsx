@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   AutoCommand,
   AutoCondition,
@@ -10,11 +10,13 @@ import JSONEditor, { JSONEditorOptions } from "jsoneditor";
 
 export interface ParameterEditorProps {
   setModified: () => void;
+  stepChange: number;
   step: AutoCommand | AutoCondition;
   templateList: Template[];
 }
 const ParameterEditor: React.FC<ParameterEditorProps> = ({
   setModified,
+  stepChange,
   step,
   templateList,
 }) => {
@@ -25,7 +27,7 @@ const ParameterEditor: React.FC<ParameterEditorProps> = ({
 
   const jsonEditor = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useMemo(() => {
     let template;
     if ("type" in step) {
       template = templateList.find((t) => t.id === step.id) as CommandTemplate;
@@ -35,13 +37,16 @@ const ParameterEditor: React.FC<ParameterEditorProps> = ({
       ) as ConditionalTemplate;
     }
     setTemplate(template);
-    if (template && Object.keys(template.parameters).length > 0) {
-      setShouldDisplay(true);
-    }
-  }, [step, templateList]);
+    setShouldDisplay(template && Object.keys(template.parameters).length > 0);
+  }, [step, templateList, stepChange]);
 
   useEffect(() => {
     if (shouldDisplay && jsonEditor.current) {
+      let parameters = template.parameters;
+      // Fill in any paramaters from step.parameters, leaving the rest as default
+      for (let key in step.parameters) {
+        if (key in parameters) parameters[key] = step.parameters[key];
+      }
       const options: JSONEditorOptions = {
         onChangeJSON: (json) => {
           if (!("parameters" in step)) return;
@@ -56,7 +61,14 @@ const ParameterEditor: React.FC<ParameterEditorProps> = ({
         name: "Parameters",
       };
       const editor = new JSONEditor(jsonEditor.current, options);
-      editor.set(step.parameters);
+      editor.validate = () => {
+        return Promise.resolve([]);
+      };
+      editor.set(parameters);
+      if (step.parameters != parameters) {
+        step.parameters = parameters;
+        setModified();
+      }
       return () => {
         editor.destroy();
       };
@@ -66,7 +78,7 @@ const ParameterEditor: React.FC<ParameterEditorProps> = ({
   return (
     <>
       {shouldDisplay && <div id="jsoneditor" ref={jsonEditor}></div>}
-      {!shouldDisplay && (
+      {template === undefined && (
         <span style={{ color: "red" }}>
           No template found for this condition
         </span>

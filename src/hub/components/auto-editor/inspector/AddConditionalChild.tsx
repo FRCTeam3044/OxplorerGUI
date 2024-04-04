@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
-  AutoCommand,
   AutoCondition,
   AutoGroup,
-  CommandTemplate,
   ConditionalTemplate,
   Template,
 } from "../../../../utils/structures";
@@ -24,13 +22,13 @@ const AddConditionalChild: React.FC<AddConditionalChildProps> = ({
   >();
   const [template, setTemplate] = useState<ConditionalTemplate | undefined>();
 
-  useEffect(() => {
+  useMemo(() => {
     setFirstCondition(
       templateList.find((t) => t.type === "conditional") as ConditionalTemplate
     );
   }, [templateList]);
 
-  useEffect(() => {
+  useMemo(() => {
     setTemplate(
       templateList.find((t) => t.id === step.id) as ConditionalTemplate
     );
