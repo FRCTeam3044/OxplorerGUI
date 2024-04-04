@@ -222,7 +222,6 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
             setUnsaved={setUnsaved}
             setRefreshCount={setRefreshCount}
             templateList={templateList}
-            currentAutoData={currentAutoData}
           />
           <div className="divider"></div>
           <div className="graph-buttons">

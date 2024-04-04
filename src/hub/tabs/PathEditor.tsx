@@ -59,11 +59,9 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
   }, [field]);
   useEffect(() => {
     if (!gameData || !canvas.current || !container.current) return;
-    console.log("Rendering path");
     const context = canvas.current.getContext("2d");
     let width = container.current.clientWidth;
     let height = container.current.clientHeight;
-    console.log(width, height);
     canvas.current.style.width = width.toString() + "px";
     canvas.current.style.height = height.toString() + "px";
     canvas.current.width = width * window.devicePixelRatio;
