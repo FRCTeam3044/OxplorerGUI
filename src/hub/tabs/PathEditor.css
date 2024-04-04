@@ -89,12 +89,19 @@ td h3 {
   flex-grow: 1;
 }
 
-input {
+.config input {
   background-color: var(--light-2);
   border: none;
-  max-width: 100px;
+  max-width: 50px;
   padding: 2px;
   color: var(--main-text);
+  margin-left: 5px;
+}
+
+.config select {
+  background-color: var(--light-2);
+  color: var(--main-text);
+  margin-left: 5px;
 }
 
 .mouseCoords {
@@ -106,4 +113,12 @@ input {
 
 #export {
   padding: 10px;
+}
+
+#startX,
+#startY,
+#targetX,
+#targetY {
+  width: 35px;
+  margin-left: 0;
 }

@@ -33,6 +33,7 @@ declare global {
     };
     java: {
       generatePath: (start: Vertex, target: Vertex) => Promise<Vertex[]>;
+      setUseTrajectories: (use: boolean) => void;
       setPointSpacing: (spacing: number) => void;
       setCornerPointSpacing: (spacing: number) => void;
       setCornerDist: (distance: number) => void;

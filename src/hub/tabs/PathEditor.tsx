@@ -24,6 +24,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
   const [field, setField] = useState("2024");
   const [gameData, setGameData] = useState(FIELD_DATA[field]);
   const [currentPath, setCurrentPath] = useState<Vertex[]>([]);
+  const [useTrajectories, setUseTrajectories] = useState(true);
 
   const canvas = useRef<HTMLCanvasElement>(null);
   const container = useRef<HTMLDivElement>(null);
@@ -188,7 +189,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
       drawCircle(
         context,
         calcCoordinates([v.x, v.y]),
-        2.5 * pixelsPerInch,
+        1.5 * pixelsPerInch,
         "red"
       );
     }
@@ -224,6 +225,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
     cornerSize,
     cornerCutDist,
     snapMode,
+    useTrajectories,
     field,
   ]);
 
@@ -287,25 +289,6 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
         </div>
 
         <table className="config">
-          <thead>
-            <tr>
-              <td>
-                <h3>Setup</h3>
-              </td>
-              <td>
-                <h3>Point Spacing</h3>
-              </td>
-              <td>
-                <h3>Corners</h3>
-              </td>
-              <td>
-                <h3>Robot Setup</h3>
-              </td>
-              <td>
-                <h3>Extras</h3>
-              </td>
-            </tr>
-          </thead>
           <tbody>
             <tr>
               <td>
@@ -580,8 +563,16 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
                 />
               </td>
               <td>
-                <label htmlFor="robotColor">Robot Color</label>
-                <input type="color" id="robotColor" defaultValue="#000000" />
+                <label htmlFor="trajectories">Display Trajectories</label>
+                <input
+                  type="checkbox"
+                  id="trajectories"
+                  checked={useTrajectories}
+                  onChange={() => {
+                    setUseTrajectories(!useTrajectories);
+                    window.java.setUseTrajectories(!useTrajectories);
+                  }}
+                />
               </td>
               <td>
                 <button

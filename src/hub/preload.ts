@@ -45,6 +45,9 @@ contextBridge.exposeInMainWorld("java", {
   generatePath: async (start: Vertex, target: Vertex) => {
     return ipcRenderer.invoke("generatePath", start, target);
   },
+  setUseTrajectories: (use: boolean) => {
+    ipcRenderer.invoke("setUseTrajectories", use);
+  },
   setPointSpacing: (spacing: number) => {
     ipcRenderer.invoke("setPointSpacing", spacing);
   },
