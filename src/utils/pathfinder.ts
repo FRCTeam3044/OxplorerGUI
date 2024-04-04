@@ -16,16 +16,16 @@ ensureJvm({
 appendClasspath(
   path
     .join(__dirname, `java-libs/oxplorer-${OXPLORER_VERSION}-all.jar`)
-    .replace("app.asar", "app.asar.unpacked")
+    .replace("app.asar", "app.asar.unpacked"),
 );
 let JVertex = importClass("me.nabdev.pathfinding.structures.Vertex");
 let Field = importClass("me.nabdev.pathfinding.utilities.FieldLoader$Field");
 let PathfinderBuilder = importClass("me.nabdev.pathfinding.PathfinderBuilder");
 let JSnapMode = importClass(
-  "me.nabdev.pathfinding.Pathfinder$PathfindSnapMode"
+  "me.nabdev.pathfinding.Pathfinder$PathfindSnapMode",
 );
 let TrajectoryConfig = importClass(
-  "edu.wpi.first.math.trajectory.TrajectoryConfig"
+  "edu.wpi.first.math.trajectory.TrajectoryConfig",
 );
 let Pose2d = importClass("edu.wpi.first.math.geometry.Pose2d");
 let Rotation2d = importClass("edu.wpi.first.math.geometry.Rotation2d");
@@ -45,7 +45,7 @@ export const generatePath = (start: Vertex, end: Vertex) => {
       startPose,
       endPose,
       snapMode,
-      config
+      config,
     );
     let states = trajectory.getStatesSync();
     for (let i = 0; i < states.sizeSync(); i += 3) {
@@ -56,7 +56,7 @@ export const generatePath = (start: Vertex, end: Vertex) => {
     let pathRaw = pathfinder.generatePathSync(
       new JVertex(start.x, start.y),
       new JVertex(end.x, end.y),
-      snapMode
+      snapMode,
     );
     let pathDoubleArr = pathRaw.toDoubleArraySync();
 

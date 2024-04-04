@@ -127,7 +127,7 @@ ipcMain.handle(
   async (event, theme: "dark" | "light" | "system") => {
     setPref("theme", theme);
     nativeTheme.themeSource = theme;
-  }
+  },
 );
 
 ipcMain.handle("getTemplates", async (event) => {
@@ -179,7 +179,7 @@ ipcMain.handle("updateWindowState", async (event, state: WindowState) => {
     }
     BrowserWindow.getFocusedWindow()?.setTitle(
       (state.unsaved ? `*${state.filename}` : state.filename) +
-        " - Auto Editor - Oxplorer GUI"
+        " - Auto Editor - Oxplorer GUI",
     );
   }
 });
@@ -300,7 +300,7 @@ ipcMain.handle(
   "setUseTrajectories",
   async (event, useTrajectories: boolean) => {
     return setUseTrajectories(useTrajectories);
-  }
+  },
 );
 
 ipcMain.handle("getPointSpacing", async (event) => {
@@ -437,12 +437,12 @@ let menuTemplate: Electron.MenuItemConstructorOptions[] = [
             // Save to userData
             let templatesPath = path.join(
               app.getPath("userData"),
-              "templates.json"
+              "templates.json",
             );
             fs.writeFileSync(templatesPath, content);
             BrowserWindow.getFocusedWindow()?.webContents.send(
               "importTemplates",
-              templates
+              templates,
             );
           }
         },

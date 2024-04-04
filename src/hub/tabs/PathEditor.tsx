@@ -33,7 +33,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
     useRef<
       (
         translation: [number, number],
-        alwaysFlipped?: boolean
+        alwaysFlipped?: boolean,
       ) => [number, number]
     >();
   const size = useWindowSize();
@@ -112,7 +112,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
       renderValues[0],
       renderValues[1],
       renderValues[4],
-      renderValues[5]
+      renderValues[5],
     );
 
     let canvasFieldLeft = renderValues[0] + gameData.topLeft[0] * imageScalar;
@@ -128,7 +128,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
 
     let calcCoordinates = (
       translation: [number, number],
-      alwaysFlipped = false
+      alwaysFlipped = false,
     ): [number, number] => {
       if (!gameData) return [0, 0];
       let positionInches = [
@@ -156,7 +156,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
 
     pixelsToCoordinates.current = (
       translation: [number, number],
-      alwaysFlipped = false
+      alwaysFlipped = false,
     ): [number, number] => {
       if (!gameData) return [0, 0];
       let positionPixels: [number, number] = [
@@ -190,7 +190,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
         context,
         calcCoordinates([v.x, v.y]),
         1.5 * pixelsPerInch,
-        "red"
+        "red",
       );
     }
   }, [
@@ -234,7 +234,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
     center: [number, number],
     radius: number,
     color: string,
-    fill = true
+    fill = true,
   ) {
     context.beginPath();
     context.arc(center[0], center[1], radius, 0, Math.PI * 2);
@@ -438,7 +438,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
                     onInput={(e) => {
                       try {
                         let newVal = parseFloat(
-                          (e.target as HTMLInputElement).value
+                          (e.target as HTMLInputElement).value,
                         );
                         window.java.setCornerSplitPercent(newVal);
                         setSplitPercent(newVal);
