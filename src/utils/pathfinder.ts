@@ -24,22 +24,45 @@ let PathfinderBuilder = importClass("me.nabdev.pathfinding.PathfinderBuilder");
 let JSnapMode = importClass(
   "me.nabdev.pathfinding.Pathfinder$PathfindSnapMode",
 );
+let TrajectoryConfig = importClass(
+  "edu.wpi.first.math.trajectory.TrajectoryConfig",
+);
+let Pose2d = importClass("edu.wpi.first.math.geometry.Pose2d");
+let Rotation2d = importClass("edu.wpi.first.math.geometry.Rotation2d");
 
 let pathfinderBuilder = new PathfinderBuilder(Field.CRESCENDO_2024);
 let pathfinder = pathfinderBuilder.buildSync();
 let snapMode = JSnapMode.SNAP_ALL;
+let useTrajectories = true;
 
 export const generatePath = (start: Vertex, end: Vertex) => {
   let path = [];
-  let pathRaw = pathfinder.generatePathSync(
-    new JVertex(start.x, start.y),
-    new JVertex(end.x, end.y),
-    snapMode,
-  );
-  let pathDoubleArr = pathRaw.toDoubleArraySync();
+  if (useTrajectories) {
+    let startPose = new Pose2d(start.x, start.y, new Rotation2d(0));
+    let endPose = new Pose2d(end.x, end.y, new Rotation2d(0));
+    let config = new TrajectoryConfig(1, 1);
+    let trajectory = pathfinder.generateTrajectorySync(
+      startPose,
+      endPose,
+      snapMode,
+      config,
+    );
+    let states = trajectory.getStatesSync();
+    for (let i = 0; i < states.sizeSync(); i += 3) {
+      let pose = states.getSync(i).poseMeters;
+      path.push({ x: pose.getXSync(), y: pose.getYSync() });
+    }
+  } else {
+    let pathRaw = pathfinder.generatePathSync(
+      new JVertex(start.x, start.y),
+      new JVertex(end.x, end.y),
+      snapMode,
+    );
+    let pathDoubleArr = pathRaw.toDoubleArraySync();
 
-  for (let i = 0; i < pathDoubleArr.length; i += 3) {
-    path.push({ x: pathDoubleArr[i], y: pathDoubleArr[i + 1] });
+    for (let i = 0; i < pathDoubleArr.length; i += 3) {
+      path.push({ x: pathDoubleArr[i], y: pathDoubleArr[i + 1] });
+    }
   }
   return path;
 };
@@ -87,6 +110,10 @@ export const setRobotWidth = (width: number) => {
 export const setCornerCutDist = (dist: number) => {
   pathfinderBuilder.setCornerCutDistSync(dist);
   pathfinder = pathfinderBuilder.buildSync();
+};
+
+export const setUseTrajectories = (use: boolean) => {
+  useTrajectories = use;
 };
 
 export const setSnapMode = (snap: SnapMode) => {

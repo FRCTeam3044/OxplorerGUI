@@ -26,6 +26,7 @@ import {
   setRobotLength,
   setRobotWidth,
   setSnapMode,
+  setUseTrajectories,
 } from "./utils/pathfinder";
 import { SnapMode, Template, Vertex, WindowState } from "./utils/structures";
 import fs from "fs";
@@ -294,6 +295,13 @@ ipcMain.handle("setCornerCutDist", async (event, dist: number) => {
 ipcMain.handle("setSnapMode", async (event, snapMode: SnapMode) => {
   return setSnapMode(snapMode);
 });
+
+ipcMain.handle(
+  "setUseTrajectories",
+  async (event, useTrajectories: boolean) => {
+    return setUseTrajectories(useTrajectories);
+  },
+);
 
 ipcMain.handle("getPointSpacing", async (event) => {
   return getPointSpacing();

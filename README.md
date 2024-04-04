@@ -32,10 +32,10 @@ yarn make
 
 Roadmap:
 
-- [ ] Render trajectories instead of raw paths
 - [ ] Optionally render obstacles on field
 - [ ] Import path settings
 - [ ] Path Waypoints
 - [ ] Export Built paths
 - [ ] Improved autonomous parameter validation
 - [ ] Hot reload autos without code push
+- [ ] Add 2023 fields
