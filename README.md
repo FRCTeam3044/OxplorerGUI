@@ -2,6 +2,14 @@
 
 A frontend for oxplorer to easily visualize and edit paths in real time as well as visiualizing and editing autos.
 
+## Installation
+
+Download the binary for your platform from the [latest release](https://github.com/FRCTeam3044/OxplorerGUI/releases/latest) and install it.
+
+Note: On windows, you may have to click "More Info" then "Run Anyway" on the SmartScreen prompt.
+
+OxplorerGUI currently does not run on arm macs, as arm macs require code signing and the intel mac build does not include the correct java bindings. As a workaround, you can clone the repo and run the development application.
+
 ## Development
 
 1. Clone the repository

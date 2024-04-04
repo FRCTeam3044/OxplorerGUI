@@ -19,7 +19,7 @@ export const FIELD_DATA: { [key: string]: FieldData } = {
 
 export const OXPLORER_VERSION = "0.12.2";
 
-export const REPOSITORY = "nab138/OxplorerGUI";
+export const REPOSITORY = "FRCTeam3044/OxplorerGUI";
 export const GITHUB_BASE_URL = "https://github.com/" + REPOSITORY;
 
 export const defaultTemplates = [
