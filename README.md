@@ -5,6 +5,7 @@ A frontend for oxplorer to easily visualize and edit paths in real time as well 
 ## Installation
 
 Download the binary for your platform from the [latest release](https://github.com/FRCTeam3044/OxplorerGUI/releases/latest) and install it.
+You will need java installed on your machine for the application to run.
 
 Note: On windows, you may have to click "More Info" then "Run Anyway" on the SmartScreen prompt.
 
