@@ -4,8 +4,8 @@ import {
   AutoStep,
   Template,
 } from "../../utils/structures";
-import Toastify from "toastify-js";
 import "jsoneditor/dist/jsoneditor.css";
+import { toast } from "sonner";
 import { Tab, TabProps } from "./Tabs";
 import React, { useEffect, useRef, useState } from "react";
 import "./AutoEditor.css";
@@ -70,13 +70,9 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
         }
       } catch (e) {
         console.error(e);
-        Toastify({
-          text: "Unable to load file: " + e.message.split("Error: ")[1] ?? e,
-          duration: 3000,
-          gravity: "bottom",
-          position: "right",
-          backgroundColor: "red",
-        }).showToast();
+        toast.error(
+          "Unable to load file: " + e.message.split("Error: ")[1] ?? e,
+        );
       }
     };
     newHandler = async () => {
@@ -89,13 +85,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           undoList = [];
         }
       } catch (e) {
-        Toastify({
-          text: "Unable to create file: " + e.message.split("Error: ")[1],
-          duration: 3000,
-          gravity: "bottom",
-          position: "right",
-          backgroundColor: "red",
-        }).showToast();
+        toast.error("Unable to create file: " + e.message.split("Error: ")[1]);
       }
     };
     saveAs = async () => {
@@ -108,13 +98,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           setUnsaved(false);
         }
       } catch (e) {
-        Toastify({
-          text: "Unable to save file: " + e.message.split("Error: ")[1],
-          duration: 3000,
-          gravity: "bottom",
-          position: "right",
-          backgroundColor: "red",
-        }).showToast();
+        toast.error("Unable to save file: " + e.message.split("Error: ")[1]);
       }
     };
     save = async () => {
@@ -126,13 +110,7 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
           );
           setUnsaved(false);
         } catch (e) {
-          Toastify({
-            text: "Unable to save file: " + e.message.split("Error: ")[1],
-            duration: 3000,
-            gravity: "bottom",
-            position: "right",
-            backgroundColor: "red",
-          }).showToast();
+          toast.error("Unable to save file: " + e.message.split("Error: ")[1]);
         }
       } else {
         saveAs();
@@ -232,16 +210,9 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
                   (t) => t.type === "command",
                 );
                 if (!firstCommand) {
-                  Toastify({
-                    text: "No command template found. Create a template first!",
-                    duration: 3000,
-                    gravity: "bottom",
-                    position: "right",
-                    style: {
-                      color: "black",
-                      background: "red",
-                    },
-                  }).showToast();
+                  toast.error(
+                    "No command template found. Create a template first!",
+                  );
                   return;
                 }
                 currentAutoData.push({
@@ -261,16 +232,9 @@ const AutoEditor: React.FC<TabProps> = ({ active }) => {
               onClick={() => {
                 let firstGroup = templateList.find((t) => t.type === "group");
                 if (!firstGroup) {
-                  Toastify({
-                    text: "No group template found. Create a template first!",
-                    duration: 3000,
-                    gravity: "bottom",
-                    position: "right",
-                    style: {
-                      color: "black",
-                      background: "red",
-                    },
-                  }).showToast();
+                  toast.error(
+                    "No group template found. Create a template first!",
+                  );
                   return;
                 }
                 currentAutoData.push({

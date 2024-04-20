@@ -7,7 +7,7 @@ import {
   AutoStep,
   Template,
 } from "../../../utils/structures";
-import Toastify from "toastify-js";
+import { toast } from "sonner";
 import "./GoDiagram.css";
 
 const $ = go.GraphObject.make;
@@ -157,16 +157,9 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
               let step = node.data.step as AutoStep;
               let firstCommand = templateList.find((t) => t.type === "command");
               if (!firstCommand) {
-                Toastify({
-                  text: "No command template found. Create a template first!",
-                  duration: 3000,
-                  gravity: "bottom",
-                  position: "right",
-                  style: {
-                    color: "black",
-                    background: "red",
-                  },
-                }).showToast();
+                toast.error(
+                  "No command template found. Create a template first!",
+                );
                 return;
               }
               let newStep = {
@@ -309,16 +302,9 @@ const GoDiagram: React.FC<GoDiagramProps> = ({
                   (t) => t.type === "command",
                 );
                 if (!firstCommand) {
-                  Toastify({
-                    text: "No command template found. Create a template first!",
-                    duration: 3000,
-                    gravity: "bottom",
-                    position: "right",
-                    style: {
-                      color: "black",
-                      background: "red",
-                    },
-                  }).showToast();
+                  toast.error(
+                    "No command template found. Create a template first!",
+                  );
                   return;
                 }
                 let step = data.step as AutoStep;

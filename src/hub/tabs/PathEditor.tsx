@@ -1,10 +1,10 @@
 import { SnapMode, Vertex } from "../../utils/structures";
 import { convert } from "../../utils/units";
-import Toastify from "toastify-js";
 import React, { useEffect, useRef, useState } from "react";
 import { Tab, TabProps } from "./Tabs";
 import { FIELD_DATA } from "../../utils/constants";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { toast } from "sonner";
 import "./PathEditor.css";
 
 const PathEditor: React.FC<TabProps> = ({ active }) => {
@@ -593,13 +593,9 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
 `;
                     // Copy to clipboard
                     navigator.clipboard.writeText(config);
-                    Toastify({
-                      text: `Config copied to clipboard! You can paste it into your robot code. To use your selected snap mode, use PathfindSnapMode.${snapMode} when generating paths.`,
-                      duration: 3000,
-                      gravity: "bottom",
-                      position: "right",
-                      backgroundColor: "green",
-                    }).showToast();
+                    toast.success(
+                      `Config copied to clipboard! You can paste it into your robot code. To use your selected snap mode, use PathfindSnapMode.${snapMode} when generating paths.`,
+                    );
                   }}
                 >
                   Export
@@ -622,11 +618,5 @@ const data: Tab = {
 export default data;
 
 function handleError(e: Error) {
-  Toastify({
-    text: "Failed to generate path: " + e.message,
-    duration: 3000,
-    gravity: "bottom",
-    position: "right",
-    backgroundColor: "red",
-  }).showToast();
+  toast.error("Failed to generate path: " + e.message);
 }

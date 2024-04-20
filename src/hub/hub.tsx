@@ -1,7 +1,7 @@
 import "../theme.css";
 import "./hub.css";
 import { Template } from "../utils/structures";
-import "toastify-js/src/toastify.css";
+import { Toaster } from "sonner";
 
 import * as AutoEditor from "./tabs/AutoEditor";
 import React, { useState } from "react";
@@ -67,6 +67,18 @@ const Hub: React.FC = () => {
           </button>
         ))}
       </div>
+      <Toaster
+        expand
+        richColors
+        toastOptions={{
+          style: {
+            width: "600px",
+          },
+        }}
+        style={{
+          width: "600px",
+        }}
+      />
       {tabList.map((tab) => (
         <tab.component key={tab.id} active={activeTab === tab.id} />
       ))}

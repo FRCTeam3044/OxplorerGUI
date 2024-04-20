@@ -6,7 +6,7 @@ import {
   CommandTemplate,
   Template,
 } from "../../../../utils/structures";
-import Toastify from "toastify-js";
+import { toast } from "sonner";
 
 export interface AddGroupChildProps {
   setModified: () => void;
@@ -34,16 +34,7 @@ const AddGroupChild: React.FC<AddGroupChildProps> = ({
       onClick={() => {
         if (!("type" in step) || step.type !== "group") return;
         if (!firstCommand) {
-          Toastify({
-            text: "No command template found. Create a template first!",
-            duration: 3000,
-            gravity: "bottom",
-            position: "right",
-            style: {
-              color: "black",
-              background: "red",
-            },
-          }).showToast();
+          toast.error("No command template found. Create a template first!");
           return;
         }
         step.children.push({

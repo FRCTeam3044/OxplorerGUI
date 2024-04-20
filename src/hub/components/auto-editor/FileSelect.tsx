@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Auto } from "../../../utils/structures";
-import Toastify from "toastify-js";
+import { toast } from "sonner";
 import "./FileSelect.css";
 
 interface FileSelectProps {
@@ -57,14 +57,9 @@ const FileSelect: React.FC<FileSelectProps> = ({
                     setCurrentAutoPath(file.path);
                   }
                 } catch (e) {
-                  Toastify({
-                    text:
-                      "Unable to load file: " + e.message.split("Error: ")[1],
-                    duration: 3000,
-                    gravity: "bottom",
-                    position: "right",
-                    backgroundColor: "red",
-                  }).showToast();
+                  toast.error(
+                    "Unable to load file: " + e.message.split("Error: ")[1],
+                  );
                 }
               }}
             >

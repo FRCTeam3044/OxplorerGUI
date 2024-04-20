@@ -5,7 +5,7 @@ import {
   ConditionalTemplate,
   Template,
 } from "../../../../utils/structures";
-import Toastify from "toastify-js";
+import { toast } from "sonner";
 
 export interface AddConditionalChildProps {
   setModified: () => void;
@@ -40,16 +40,9 @@ const AddConditionalChild: React.FC<AddConditionalChildProps> = ({
       onClick={() => {
         if (!("children" in step)) return;
         if (!firstCondition) {
-          Toastify({
-            text: "No conditional template found. Create a template first!",
-            duration: 3000,
-            gravity: "bottom",
-            position: "right",
-            style: {
-              color: "black",
-              background: "red",
-            },
-          }).showToast();
+          toast.error(
+            "No conditional template found. Create a template first!",
+          );
           return;
         }
         if (
@@ -65,16 +58,7 @@ const AddConditionalChild: React.FC<AddConditionalChildProps> = ({
           } as AutoCondition);
           setModified();
         } else {
-          Toastify({
-            text: "Max children reached",
-            duration: 3000,
-            gravity: "bottom",
-            position: "right",
-            style: {
-              color: "black",
-              background: "yellow",
-            },
-          }).showToast();
+          toast.warning("Max children reached");
         }
       }}
     >
