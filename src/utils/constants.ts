@@ -14,11 +14,11 @@ export const FIELD_2024: FieldData = {
 };
 
 export const FIELD_2025: FieldData = {
-      topLeft: [421, 91],
-      bottomRight: [3352, 1437],
-      widthInches: 690.875,
-      heightInches: 317,
-    }
+  topLeft: [421, 91],
+  bottomRight: [3352, 1437],
+  widthInches: 690.875,
+  heightInches: 317,
+};
 
 export const FIELD_DATA: { [key: string]: FieldData } = {
   2024: FIELD_2024,
