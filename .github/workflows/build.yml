@@ -17,9 +17,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18.x"
           cache: "yarn"
@@ -42,9 +42,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18.x"
           cache: "yarn"
@@ -57,7 +57,7 @@ jobs:
           Move-Item -Path "out\make\squirrel.windows\${{ matrix.arch }}\OxplorerGUI*.exe" -Destination "OxplorerGUI-${{ matrix.arch }}-dev.exe"
       - name: Upload development artifact
         if: github.event_name != 'release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OxplorerGUI-${{ matrix.arch }}-dev.exe
           path: OxplorerGUI-${{ matrix.arch }}-dev.exe
@@ -92,9 +92,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18.x"
           cache: "yarn"
@@ -106,7 +106,7 @@ jobs:
         run: mv out/make/OxplorerGUI*.dmg OxplorerGUI-${{ matrix.arch }}-dev.dmg
       - name: Upload development artifact
         if: github.event_name != 'release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OxplorerGUI-${{ matrix.arch }}-dev.dmg
           path: OxplorerGUI-${{ matrix.arch }}-dev.dmg
@@ -141,9 +141,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18.x"
           cache: "yarn"
@@ -179,19 +179,19 @@ jobs:
           shopt -u nocaseglob
       - name: Upload development deb artifact
         if: github.event_name != 'release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OxplorerGUI-${{ matrix.arch }}-dev.deb
           path: OxplorerGUI-${{ matrix.arch }}-dev.deb
       - name: Upload development rpm artifact
         if: github.event_name != 'release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OxplorerGUI-${{ matrix.arch }}-dev.rpm
           path: OxplorerGUI-${{ matrix.arch }}-dev.rpm
       - name: Upload development AppImage artifact
         if: github.event_name != 'release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OxplorerGUI-${{ matrix.arch }}-dev.AppImage
           path: OxplorerGUI-${{ matrix.arch }}-dev.AppImage
