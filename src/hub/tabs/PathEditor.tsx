@@ -21,7 +21,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
   const [snapMode, setSnapMode] = useState<SnapMode>("NONE");
   const [start, setStart] = useState({ x: 4, y: 3 });
   const [target, setTarget] = useState({ x: 14, y: 6 });
-  const [field, setField] = useState("2024");
+  const [field, setField] = useState("2025");
   const [gameData, setGameData] = useState(FIELD_DATA[field]);
   const [currentPath, setCurrentPath] = useState<Vertex[]>([]);
   const [useTrajectories, setUseTrajectories] = useState(true);
@@ -300,6 +300,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
                     setField(e.target.value);
                   }}
                 >
+                  <option value="2025">2025</option>
                   <option value="2024">2024</option>
                 </select>
               </td>
@@ -582,7 +583,7 @@ const PathEditor: React.FC<TabProps> = ({ active }) => {
                   className="form-button"
                   id="export"
                   onClick={async () => {
-                    let config = `new PathfinderBuilder(Field.CRESCENDO_2024)
+                    let config = `new PathfinderBuilder(Field.REEFSCAPE_2025)
 .setRobotLength(${robotLength})
 .setRobotWidth(${robotWidth})
 .setPointSpacing(${straightawayPointSpacing})

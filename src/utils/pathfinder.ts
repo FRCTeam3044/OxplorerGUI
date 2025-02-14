@@ -30,7 +30,7 @@ let TrajectoryConfig = importClass(
 let Pose2d = importClass("edu.wpi.first.math.geometry.Pose2d");
 let Rotation2d = importClass("edu.wpi.first.math.geometry.Rotation2d");
 
-let pathfinderBuilder = new PathfinderBuilder(Field.CRESCENDO_2024);
+let pathfinderBuilder = new PathfinderBuilder(Field.REEFSCAPE_2025);
 let pathfinder = pathfinderBuilder.buildSync();
 let snapMode = JSnapMode.SNAP_ALL;
 let useTrajectories = true;
